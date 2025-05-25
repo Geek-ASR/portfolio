@@ -1,0 +1,91 @@
+%PDF-1.4
+%âãÏÓ
+1 0 obj
+<<
+/Title (BlockTerminal Placeholder Resume)
+/Creator (NextJS App)
+/Producer (Custom PDF Generator)
+/CreationDate (D:20231027000000Z)
+>>
+endobj
+2 0 obj
+<<
+/Type /Catalog
+/Pages 3 0 R
+>>
+endobj
+3 0 obj
+<<
+/Type /Pages
+/Kids [4 0 R]
+/Count 1
+>>
+endobj
+4 0 obj
+<<
+/Type /Page
+/Parent 3 0 R
+/Resources <<
+  /Font <<
+    /F1 5 0 R
+  >>
+>>
+/MediaBox [0 0 612 792]
+/Contents 6 0 R
+>>
+endobj
+5 0 obj
+<<
+/Type /Font
+/Subtype /Type1
+/BaseFont /Helvetica
+>>
+endobj
+6 0 obj
+<< /Length 200 >>
+stream
+BT
+/F1 24 Tf
+100 700 Td
+(BlockTerminal Placeholder Resume) Tj
+ET
+BT
+/F1 12 Tf
+100 650 Td
+(This is a placeholder PDF for Alex Johnson's resume.) Tj
+100 630 Td
+(A CS student passionate about Blockchain technology.) Tj
+100 590 Td
+(Skills:) Tj
+100 570 Td
+(- Solidity, JavaScript, Python, React, Next.js) Tj
+100 550 Td
+(- Ethereum, Smart Contracts, DeFi, NFTs) Tj
+100 510 Td
+(Projects:) Tj
+100 490 Td
+(- Decentralized Identity Management) Tj
+100 470 Td
+(- NFT Marketplace on Polygon) Tj
+100 430 Td
+(Contact: alex.johnson.portfolio@example.com) Tj
+endstream
+endobj
+xref
+0 7
+0000000000 65535 f 
+0000000015 00000 n 
+0000000102 00000 n 
+0000000150 00000 n 
+0000000200 00000 n 
+0000000332 00000 n 
+0000000396 00000 n 
+trailer
+<<
+/Size 7
+/Root 2 0 R
+/Info 1 0 R
+>>
+startxref
+645
+%%EOF
