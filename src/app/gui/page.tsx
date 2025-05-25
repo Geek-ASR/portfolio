@@ -108,24 +108,28 @@ export default function GuiPage() {
         if (currentCategory) {
           currentCategory.items.push(trimmedLine.substring(2).trim());
         } else {
+           // If a list item appears before a category, assign it to a default "General" category
            currentCategory = { category: "General", items: [trimmedLine.substring(2).trim()] };
         }
       } else if (trimmedLine.endsWith(':')) {
+        // If there was a previous category, push it before starting a new one
         if (currentCategory && (currentCategory.items.length > 0 || !skillCategories.find(sc => sc.category === currentCategory?.category))) {
           skillCategories.push(currentCategory);
         }
         currentCategory = { category: trimmedLine.slice(0, -1), items: [] };
-      } else if (trimmedLine) { 
-         if (currentCategory && (currentCategory.items.length > 0 || !skillCategories.find(sc => sc.category === currentCategory?.category))) {
+      } else if (trimmedLine) { // This line is a category title itself without a colon and not an item
+         // Push previous category if it exists and has items or is a new category
+        if (currentCategory && (currentCategory.items.length > 0 || (currentCategory.category && !skillCategories.find(sc => sc.category === currentCategory?.category)))) {
           skillCategories.push(currentCategory);
         }
         currentCategory = { category: trimmedLine, items: [] };
       }
     });
+    // Push the last processed category
     if (currentCategory && (currentCategory.items.length > 0 || (currentCategory.category && !skillCategories.find(sc => sc.category === currentCategory?.category)))) {
       skillCategories.push(currentCategory);
     }
-    return skillCategories.filter(cat => cat.category && cat.category.trim() !== '');
+    return skillCategories.filter(cat => cat.category && cat.category.trim() !== ''); // Ensure no empty category names
   };
   const parsedSkills = processSkills(skillsContent);
 
@@ -157,13 +161,13 @@ export default function GuiPage() {
           </h1>
           <div className="mt-6 md:mt-0">
             <Image
-              src="/profile.png" 
+              src="/profile.png" // Ensure this image exists in public/profile.png
               alt="Aditya Rekhe"
               width={200}
               height={200}
               className="rounded-full shadow-lg object-cover"
               data-ai-hint="profile photo"
-              priority 
+              priority // Good for LCP
             />
           </div>
         </div>
