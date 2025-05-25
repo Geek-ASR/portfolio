@@ -59,7 +59,7 @@ const Terminal: React.FC = () => {
     addHistory({
       output: (
         <TypingEffect
-          text={`Welcome to ${hostname}!\nType 'help' for a list of commands.`}
+          text={`Welcome to ASRWorkspace\nThis is my portfolio website\nType 'help' for a list of commands.\nIf you are more comfortable with GUI, then switch to GUI by typing cmd : 'gui'`}
         />
       ),
       isSpecial: true,
@@ -108,7 +108,8 @@ const Terminal: React.FC = () => {
   date          Display current date
   echo [text]   Display text
   export        Download resume.pdf
-  enhance-resume Enhance your resume using AI`;
+  enhance-resume Enhance your resume using AI
+  gui           Switch to GUI mode (placeholder)`; // Added gui to help
           break;
         case 'ls':
           const node = findNode(currentPath);
@@ -193,7 +194,7 @@ const Terminal: React.FC = () => {
            addHistory({
             output: (
               <TypingEffect
-                text={`Welcome to ${hostname}!\nType 'help' for a list of commands.`}
+                text={`Welcome to ASRWorkspace\nThis is my portfolio website\nType 'help' for a list of commands.\nIf you are more comfortable with GUI, then switch to GUI by typing cmd : 'gui'`}
               />
             ),
             isSpecial: true,
@@ -226,6 +227,12 @@ const Terminal: React.FC = () => {
           } else {
             output = "Error: resume.txt not found in the root directory.";
           }
+          break;
+        case 'gui': // Added 'gui' command handler (placeholder)
+          // For now, let's just acknowledge the command.
+          // You'll need to implement the actual GUI switching logic later.
+          output = 'Switching to GUI mode... (Feature not yet implemented)';
+          // Example: router.push('/gui-page');
           break;
         default:
           // Handled by initial value
