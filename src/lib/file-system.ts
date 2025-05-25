@@ -43,10 +43,19 @@ export const fileSystem: Directory = {
       type: 'file',
       name: 'experience.txt',
       content: `EXPERIENCE
-  Software Engineer Intern - TechSolutions Inc. (Summer 2024)
-    - Contributed to the development of a blockchain-based supply chain tracking system.
-    - Assisted in writing and testing smart contracts in Solidity.
-    - Participated in daily scrums and sprint planning.
+ASSOCIATION OF COMPUTER ENGINEERING STUDENTS, DIT
+  Aug, 2022 - Jul, 2023
+  Jr. Event Manager @ ACES
+  Led as Event Manager for the college club, ACES, orchestrating successful and 
+  engaging events that enhanced the campus community. Leveraged strong 
+  organizational skills to plan and execute a diverse range of activities, 
+  fostering team collaboration and ensuring seamless coordination.
+
+Google Developer Groups, DIT
+  Blockchain Co-lead
+  Sept, 2023 - current
+  Conducted multiple blockchain workshops and sessions, driving hands-on learning 
+  and developer engagement.
 `,
     },
     {
@@ -85,10 +94,19 @@ SKILLS
   Soft Skills: Problem Solving, Analytical Thinking, Team Collaboration, Communication, Agile/Scrum methodologies
 
 EXPERIENCE
-  Software Engineer Intern - TechSolutions Inc. (Summer 2024)
-    - Contributed to the development of a blockchain-based supply chain tracking system.
-    - Assisted in writing and testing smart contracts in Solidity.
-    - Participated in daily scrums and sprint planning.
+  ASSOCIATION OF COMPUTER ENGINEERING STUDENTS, DIT
+    Aug, 2022 - Jul, 2023
+    Jr. Event Manager @ ACES
+    Led as Event Manager for the college club, ACES, orchestrating successful and 
+    engaging events that enhanced the campus community. Leveraged strong 
+    organizational skills to plan and execute a diverse range of activities, 
+    fostering team collaboration and ensuring seamless coordination.
+
+  Google Developer Groups, DIT
+    Blockchain Co-lead
+    Sept, 2023 - current
+    Conducted multiple blockchain workshops and sessions, driving hands-on learning 
+    and developer engagement.
 
 PROJECTS
   Decentralized Identity Management (Ethereum)
