@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useEffect, type ReactNode } from 'react';
@@ -26,12 +27,22 @@ const TypingEffect: React.FC<TypingEffectProps> = ({
       return;
     }
 
-    setDisplayedText(''); // Reset if text changes
-    let i = 0;
+    // Display the first character immediately
+    setDisplayedText(text.charAt(0));
+
+    // If text is only one character, call onFinished and exit
+    if (text.length <= 1) {
+      if (onFinished) {
+        onFinished();
+      }
+      return;
+    }
+
+    let i = 1; // Start interval from the second character
     const timer = setInterval(() => {
       setDisplayedText((prev) => prev + text.charAt(i));
       i++;
-      if (i === text.length) {
+      if (i >= text.length) { // Changed to >= to handle the last character correctly
         clearInterval(timer);
         if (onFinished) {
           onFinished();
