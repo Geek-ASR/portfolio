@@ -171,7 +171,7 @@ export default function GuiPage() {
               {line1Text.split("").map((char, index) => (
                 <span
                   key={`line1-${index}`}
-                  className="inline-block animate-wave"
+                  className="inline-block animate-color-text-wave"
                   style={{ animationDelay: `${index * 0.07}s` }}
                   aria-hidden="true"
                 >
@@ -183,7 +183,7 @@ export default function GuiPage() {
               {line2Text.split("").map((char, index) => (
                 <span
                   key={`line2-${index}`}
-                  className="inline-block animate-wave font-extrabold"
+                  className="inline-block animate-color-text-wave font-extrabold"
                   style={{
                     animationDelay: `${(line1Text.length + index) * 0.07}s`, 
                   }}

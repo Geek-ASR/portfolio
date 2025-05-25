@@ -13,6 +13,7 @@ export default {
       fontFamily: {
         sans: [`var(--font-geist-sans)`, ...defaultTheme.fontFamily.sans],
         mono: [`var(--font-geist-mono)`, ...defaultTheme.fontFamily.mono],
+        // Removed pacifico
       },
   		colors: {
   			background: 'hsl(var(--background))',
@@ -88,15 +89,16 @@ export default {
   					height: '0'
   				}
   			},
-        wave: {
-          '0%, 100%': { transform: 'translateY(0px)' },
-          '50%': { transform: 'translateY(-10px)' },
+        'color-text-wave': {
+          '0%, 100%': { color: 'black' }, // Or your GUI's base text color
+          '15%, 35%': { color: 'hsl(var(--accent))' }, // Accent color for the wave peak
+          // Adjust percentages for wave speed and width. e.g., 20% to 30% for a faster wave
         }
   		},
   		animation: {
   			'accordion-down': 'accordion-down 0.2s ease-out',
   			'accordion-up': 'accordion-up 0.2s ease-out',
-        wave: 'wave 1.5s ease-in-out infinite',
+        'color-text-wave': 'color-text-wave 2.5s ease-in-out infinite', // Adjust duration as needed
   		}
   	}
   },
