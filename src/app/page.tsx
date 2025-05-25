@@ -10,11 +10,11 @@ export default function HomePage() {
       <Link href="/gui" passHref legacyBehavior>
         <Button
           variant="outline"
-          size="sm"
+          size="icon" // Changed from "sm"
           className="absolute top-4 right-4 z-10 bg-background/80 hover:bg-accent hover:text-accent-foreground text-foreground border-input shadow-md"
           aria-label="Switch to GUI Mode"
         >
-          <LayoutGrid className="mr-2 h-4 w-4" /> GUI Mode
+          <LayoutGrid className="h-5 w-5" /> {/* Adjusted icon size slightly and removed margin, size="icon" handles spacing */}
         </Button>
       </Link>
       <Terminal />
