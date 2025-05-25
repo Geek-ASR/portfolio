@@ -33,20 +33,10 @@ Use 'export' to download the resume.
     {
       type: 'file',
       name: 'about_me.txt', // Renamed from about.txt for consistency with command
-      content: `Name: Alex Johnson (Placeholder)
-Aspiring Software Engineer | Blockchain Enthusiast
-
-Currently pursuing a B.S. in Computer Science at Innovate University.
-Fascinated by decentralized systems, smart contracts, and the potential of Web3.
-Eager to contribute to innovative projects in the blockchain space.
-
-Key Interests:
-- Decentralized Applications (dApps)
-- Smart Contract Development (Solidity, Rust)
-- Cryptography and Security
-- Consensus Mechanisms
-- DeFi and NFTs
-`,
+      content: `Myself Aditya, I would define myself as a quick learner and a person who is eager to explore new
+technologies and environments, passionate for innovative solutions and programming. I embrace
+challenges as opportunities for growth, constantly seeking to expand my knowledge and skill set. I am
+ready to contribute with my adaptable nature and enthusiasm to any project or team.`,
     },
     {
       type: 'file',
@@ -245,3 +235,4 @@ export function getRootFileContent(fileName: string): string | undefined {
   }
   return `Error: File '${fileName}' not found in root directory.`;
 }
+
