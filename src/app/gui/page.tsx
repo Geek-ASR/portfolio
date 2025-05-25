@@ -2,11 +2,12 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image'; // Import next/image
 import { fileSystem, findNode, getRootFileContent, type Directory, type File as FileSystemFileType } from '@/lib/file-system';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { TerminalSquare, User, BookOpen, Wrench, Briefcase, Star, Mail, FolderGit2 } from 'lucide-react'; // Changed ArrowLeft to TerminalSquare
+import { TerminalSquare, User, BookOpen, Wrench, Briefcase, Star, Mail, FolderGit2 } from 'lucide-react';
 import React from 'react';
 import { cn } from '@/lib/utils';
 
@@ -28,7 +29,7 @@ const GuiContactLinkParser: React.FC<{ line: string }> = ({ line }) => {
 
   emailRegex.lastIndex = 0;
   while ((match = emailRegex.exec(line)) !== null) {
-    if (!matches.some(m => m.index <= match.index && (m.index + m.length) >= (match.index + m.length) && m.type === 'url')) {
+    if (!matches.some(m => m.index <= match.index && (m.index + m.length) >= (match.index + match[0].length) && m.type === 'url')) {
        matches.push({ index: match.index, length: match[0].length, text: match[0], type: 'email' });
     }
   }
@@ -136,17 +137,17 @@ export default function GuiPage() {
   return (
     <div className="min-h-screen bg-white text-black font-sans p-6 md:p-10 lg:p-12">
       <header className="mb-12 pb-6 border-b border-gray-200 flex justify-between items-center">
-        <h1 className="text-3xl md:text-4xl font-bold text-black"> {/* Title updated and size reduced */}
+        <h1 className="text-3xl font-bold text-black">
           ASR_Workspace
         </h1>
         <Link href="/" passHref legacyBehavior>
           <Button 
             variant="outline" 
             size="icon" 
-            className="bg-white border-black text-black hover:bg-gray-100 shadow-md" // Updated button style
+            className="bg-white border-black text-black hover:bg-gray-100 shadow-md"
             aria-label="Back to Terminal"
           >
-            <TerminalSquare className="h-6 w-6" /> {/* Icon changed to TerminalSquare */}
+            <TerminalSquare className="h-6 w-6" />
           </Button>
         </Link>
       </header>
@@ -154,6 +155,21 @@ export default function GuiPage() {
       <main className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-10">
         {aboutMe && (
           <SectionCard title="About Me" icon={<User size={28} />} className="md:col-span-2">
+            <div className="flex flex-col items-center text-center mb-6">
+              {/* 
+                TODO: Replace the placeholder below with your actual image.
+                1. Add your photo to the `public` folder (e.g., `public/your-photo.jpg`).
+                2. Change the `src` attribute below to `/your-photo.jpg`.
+              */}
+              <Image
+                src="https://placehold.co/150x150.png" // Replace with your image path, e.g., "/your-photo.jpg"
+                alt="Aditya Rekhe" // Or a more generic "User photo"
+                width={150}
+                height={150}
+                className="rounded-full mb-4 shadow-md"
+                data-ai-hint="profile photo"
+              />
+            </div>
             <p className="text-base leading-relaxed text-gray-700">{aboutMe}</p>
           </SectionCard>
         )}
