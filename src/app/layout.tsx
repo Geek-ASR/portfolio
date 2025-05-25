@@ -9,7 +9,7 @@ import { Toaster } from "@/components/ui/toaster";
 const knewave = Knewave({
   subsets: ['latin'],
   weight: '400', // Knewave only has a regular 400 weight
-  variable: '--font-knewave', // CSS variable for Tailwind
+  variable: '--font-knewave', // This defines the CSS variable name
   display: 'swap',
 });
 

@@ -108,7 +108,6 @@ export default function GuiPage() {
         if (currentCategory) {
           currentCategory.items.push(trimmedLine.substring(2).trim());
         } else {
-           // If the first content line is an item, create a "General" category
            currentCategory = { category: "General", items: [trimmedLine.substring(2).trim()] };
         }
       } else if (trimmedLine.endsWith(':')) {
@@ -116,18 +115,17 @@ export default function GuiPage() {
           skillCategories.push(currentCategory);
         }
         currentCategory = { category: trimmedLine.slice(0, -1), items: [] };
-      } else if (trimmedLine) { // A line that is not an item and doesn't end with ':' is a category title
+      } else if (trimmedLine) { 
          if (currentCategory && (currentCategory.items.length > 0 || !skillCategories.find(sc => sc.category === currentCategory?.category))) {
           skillCategories.push(currentCategory);
         }
         currentCategory = { category: trimmedLine, items: [] };
       }
     });
-    // Push the last category
     if (currentCategory && (currentCategory.items.length > 0 || (currentCategory.category && !skillCategories.find(sc => sc.category === currentCategory?.category)))) {
       skillCategories.push(currentCategory);
     }
-    return skillCategories.filter(cat => cat.category && cat.category.trim() !== ''); // Ensure category name is not empty
+    return skillCategories.filter(cat => cat.category && cat.category.trim() !== '');
   };
   const parsedSkills = processSkills(skillsContent);
 
@@ -154,7 +152,7 @@ export default function GuiPage() {
         </div>
 
         <div className="flex flex-col md:flex-row items-center justify-center gap-8 lg:gap-12 text-center md:text-left">
-          <h1 className="font-knewave text-5xl md:text-6xl lg:text-7xl tracking-tight text-neutral-900">
+          <h1 className="font-knewave text-5xl md:text-6xl lg:text-7xl text-neutral-900">
             Hello, I am Aditya Rekhe
           </h1>
           <div className="mt-6 md:mt-0">

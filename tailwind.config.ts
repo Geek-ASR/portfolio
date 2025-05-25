@@ -13,7 +13,7 @@ export default {
       fontFamily: {
         sans: [`var(--font-geist-sans)`, ...defaultTheme.fontFamily.sans],
         mono: [`var(--font-geist-mono)`, ...defaultTheme.fontFamily.mono],
-        knewave: [`var(--font-knewave)`, 'cursive'], // Add Knewave here
+        knewave: [`var(--font-knewave)`, ...defaultTheme.fontFamily.sans], // Use --font-knewave variable
       },
   		colors: {
   			background: 'hsl(var(--background))',
