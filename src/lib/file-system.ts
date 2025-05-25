@@ -32,7 +32,7 @@ export const fileSystem: Directory = {
     {
       type: 'file',
       name: 'education.txt',
-      content: `EDUCATION
+      content: `Edducation
  Dr.D.Y.Patil Institute of Technology, Pimpri, Pune
  Bachelor of Engineering - BE, Computer Engineering
  Dec, 2021 – Dec, 2025
@@ -66,7 +66,7 @@ export const fileSystem: Directory = {
     },
     {
       type: 'file',
-      name: 'resume.txt', // This file is not directly used by a command but can be cat'd or opened
+      name: 'resume.txt',
       content: `Aditya S.R.
 aditya.sr.portfolio@example.com | +91-9876543210 | linkedin.com/in/adityasr | github.com/adityasr
 
