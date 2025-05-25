@@ -2,7 +2,7 @@
 'use client';
 
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { fileSystem, findNode, type Directory, type File, type FileSystemNode } from '@/lib/file-system';
+import { fileSystem, findNode, getRootFileContent, type Directory, type File, type FileSystemNode } from '@/lib/file-system';
 import TypingEffect from './TypingEffect';
 import InstallationProgress from './InstallationProgress';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -26,7 +26,7 @@ const Terminal: React.FC = () => {
   const [history, setHistory] = useState<CommandHistoryItem[]>([]);
   const [inputValue, setInputValue] = useState('');
   const [currentPath, setCurrentPath] = useState('~');
-  const [isLoading, setIsLoading] = useState(true); 
+  const [isLoading, setIsLoading] = useState(true);
   const [currentCommandId, setCurrentCommandId] = useState(0);
   const [currentPhase, setCurrentPhase] = useState<TerminalPhase>(TerminalPhase.Installing);
 
@@ -44,11 +44,11 @@ const Terminal: React.FC = () => {
       }
     }
   }, []);
-  
+
   useEffect(scrollToBottom, [history, scrollToBottom]);
 
   useEffect(() => {
-    if (!isLoading) { 
+    if (!isLoading) {
       inputRef.current?.focus();
     }
   }, [isLoading]);
@@ -100,31 +100,80 @@ const Terminal: React.FC = () => {
     setIsLoading(true);
 
     addHistory({ command: commandInput, path: currentPath, isInput: true });
+
+    const commandArgs = args.join(' ');
+
     switch (command.toLowerCase()) {
       case 'help':
         output = `Available commands:
-  help          Show this help message
-  ls            List directory contents
-  cd [dir]      Change directory
-  cat [file]    Display file content
-  open [file]   Open a file (e.g., resume.pdf)
-  clear         Clear the terminal screen
-  whoami        Display current user
-  date          Display current date
-  echo [text]   Display text
-  export        Download resume.pdf
-  gui           Switch to GUI mode (placeholder)`;
+  about_me        Display information about me
+  education       Display my educational background
+  skills          List my technical skills
+  ls [dir]        List directory contents (e.g., ls projects)
+  experience      Display my work experience
+  achievements    Display my achievements
+  contacts        Show contact information
+  cd [dir]        Change directory
+  cat [file]      Display file content
+  open [file]     Open a file (e.g., resume.pdf)
+  export          Download resume.pdf
+  gui             Switch to GUI mode (placeholder)
+  whoami          Display current user
+  date            Display current date
+  echo [text]     Display text
+  clear           Clear the terminal screen`;
+        break;
+      case 'about_me':
+        output = getRootFileContent('about_me.txt');
+        break;
+      case 'education':
+        output = getRootFileContent('education.txt');
+        break;
+      case 'skills':
+        output = getRootFileContent('skills.txt');
+        break;
+      case 'experience':
+        output = getRootFileContent('experience.txt');
+        break;
+      case 'achievements':
+        output = getRootFileContent('achievements.txt');
+        break;
+      case 'contacts':
+        output = getRootFileContent('contacts.txt');
         break;
       case 'ls':
-        const node = findNode(currentPath);
+        let pathToLs = currentPath;
+        if (args[0]) {
+            if (args[0] === 'projects') { // Specific handler for 'ls projects'
+                 pathToLs = '~/projects';
+            } else if (args[0].startsWith('~/')) {
+                pathToLs = args[0];
+            } else if (args[0] === '..' && currentPath !== '~') {
+                const parts = currentPath.split('/');
+                parts.pop();
+                pathToLs = parts.join('/') || '~';
+            } else if (args[0] !== '..' && args[0] !== '~' && args[0] !== '/') {
+                 pathToLs = currentPath === '~' ? `~/${args[0]}` : `${currentPath}/${args[0]}`;
+            } else if (args[0] === '~' || args[0] === '/') {
+                 pathToLs = '~';
+            }
+        }
+        const node = findNode(pathToLs);
         if (node && node.type === 'directory') {
-          output = node.children.map(child => (
-            <span key={child.name} className={child.type === 'directory' ? 'text-[hsl(var(--accent))]' : ''}>
-              {child.name}{child.type === 'directory' ? '/' : ''}
-            </span>
-          )).reduce((prev, curr) => <>{prev}<br />{curr}</>);
-        } else {
-          output = 'Error: Not a directory.';
+          if (node.children.length === 0) {
+            output = 'Directory is empty.';
+          } else {
+            output = node.children.map(child => (
+              <span key={child.name} className={child.type === 'directory' ? 'text-[hsl(var(--accent))]' : ''}>
+                {child.name}{child.type === 'directory' ? '/' : ''}
+              </span>
+            )).reduce((prev, curr) => <>{prev}<br />{curr}</>);
+          }
+        } else if (node && node.type === 'file') {
+          output = args[0] ? args[0] : node.name;
+        }
+         else {
+          output = `ls: cannot access '${args[0] || '.'}': No such file or directory`;
         }
         break;
       case 'cd':
@@ -144,9 +193,10 @@ const Terminal: React.FC = () => {
           }
         } else if (targetDir.startsWith('~/')) {
           newPath = targetDir;
-        } else if (targetDir === '~' || targetDir === '/') {
+        } else if (targetDir === '~' || targetDir === '/') { // Treat / as ~
           newPath = '~';
-        } else {
+        }
+         else {
           newPath = currentPath === '~' ? `~/${targetDir}` : `${currentPath}/${targetDir}`;
         }
         const targetNode = findNode(newPath);
@@ -163,14 +213,17 @@ const Terminal: React.FC = () => {
           output = 'Usage: cat [filename]';
           break;
         }
-        const filePathCat = currentPath === '~' ? fileToCat : `${currentPath.substring(2)}/${fileToCat}`;
-        const catNode = findNode(filePathCat);
+        // Determine if it's an absolute or relative path
+        const pathForCat = fileToCat.startsWith('~/') ? fileToCat :
+                           fileToCat.includes('/') ? fileToCat : // if it's already a relative path with slashes
+                           currentPath === '~' ? `~/${fileToCat}` : `${currentPath}/${fileToCat}`;
+
+        const catNode = findNode(pathForCat);
         if (catNode && catNode.type === 'file' && catNode.content) {
           output = catNode.content;
         } else if (catNode && catNode.type === 'file' && !catNode.content) {
           output = `cat: ${fileToCat} is not a text file or is empty. Try 'open ${fileToCat}'.`;
-        }
-        else {
+        } else {
           output = `cat: ${fileToCat}: No such file or directory`;
         }
         break;
@@ -180,8 +233,11 @@ const Terminal: React.FC = () => {
           output = 'Usage: open [filename]';
           break;
         }
-        const filePathOpen = currentPath === '~' ? fileToOpen : `${currentPath.substring(2)}/${fileToOpen}`;
-        const openNode = findNode(filePathOpen);
+        const pathForOpen = fileToOpen.startsWith('~/') ? fileToOpen :
+                           fileToOpen.includes('/') ? fileToOpen :
+                           currentPath === '~' ? `~/${fileToOpen}` : `${currentPath}/${fileToOpen}`;
+
+        const openNode = findNode(pathForOpen);
         if (openNode && openNode.type === 'file' && openNode.url) {
           window.open(openNode.url, '_blank');
           output = `Opening ${fileToOpen}...`;
@@ -193,7 +249,7 @@ const Terminal: React.FC = () => {
         break;
       case 'clear':
         setHistory([]);
-        output = ''; 
+        output = '';
         break;
       case 'whoami':
         output = username;
@@ -202,47 +258,47 @@ const Terminal: React.FC = () => {
         output = new Date().toString();
         break;
       case 'echo':
-        output = args.join(' ');
+        output = commandArgs;
         break;
       case 'export':
         output = 'Downloading resume.pdf...';
         const link = document.createElement('a');
-        link.href = '/resume.pdf';
+        link.href = '/resume.pdf'; // Assumes resume.pdf is in public folder
         link.setAttribute('download', 'ASRWorkspace_Resume.pdf');
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
         break;
-      case 'gui': 
+      case 'gui':
         output = 'Switching to GUI mode... (Feature not yet implemented)';
         break;
       default:
         // Handled by initial value
         break;
     }
-    
+
     if (output !== '') {
       if (typeof output === 'string') {
         addHistory({ output: <TypingEffect text={output} speed={10} onFinished={() => setIsLoading(false)} /> });
       } else {
-         addHistory({ output: output }); 
-         setIsLoading(false); 
+         addHistory({ output: output });
+         setIsLoading(false);
       }
     } else {
-      setIsLoading(false); 
+      setIsLoading(false);
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentPath, addHistory]);
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
-    if (isLoading && currentPhase !== TerminalPhase.Idle) return; 
+    if (isLoading && currentPhase !== TerminalPhase.Idle) return;
 
     if (inputValue.trim() === '') {
       addHistory({ command: '', path: currentPath, isInput: true });
-      addHistory({ output: '' }); 
-      setCurrentCommandId(prev => prev + 1); 
-      setIsLoading(false); 
+      addHistory({ output: '' });
+      setCurrentCommandId(prev => prev + 1);
+      setIsLoading(false);
     } else {
       processCommand(inputValue);
     }
@@ -293,7 +349,7 @@ const Terminal: React.FC = () => {
           />
         </form>
       ) : (
-         <div className="mt-2 flex h-6"> 
+         <div className="mt-2 flex h-6">
             {currentPhase !== TerminalPhase.Installing && currentPhase !== TerminalPhase.Welcoming && (
               <>
                 <span className="text-[hsl(var(--accent))]">{username}@{hostname}:{currentPath}$</span>
@@ -307,4 +363,3 @@ const Terminal: React.FC = () => {
 };
 
 export default Terminal;
-    

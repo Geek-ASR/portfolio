@@ -25,14 +25,14 @@ export const fileSystem: Directory = {
       content: `Welcome to ASRWorkspace!
 This is the portfolio of a Computer Science student passionate about Blockchain technology.
 Type 'help' to see available commands.
-      
+
 Navigate using 'ls', 'cd [directory]', 'cat [file.txt]', 'open [file.pdf]'.
 Use 'export' to download the resume.
 `,
     },
     {
       type: 'file',
-      name: 'about.txt',
+      name: 'about_me.txt', // Renamed from about.txt for consistency with command
       content: `Name: Alex Johnson (Placeholder)
 Aspiring Software Engineer | Blockchain Enthusiast
 
@@ -46,6 +46,31 @@ Key Interests:
 - Cryptography and Security
 - Consensus Mechanisms
 - DeFi and NFTs
+`,
+    },
+    {
+      type: 'file',
+      name: 'education.txt',
+      content: `Innovate University - B.S. Computer Science (Expected: May 2025)
+  - Relevant Coursework: Data Structures, Algorithms, Operating Systems, Database Management, Blockchain Fundamentals, Network Security.
+`,
+    },
+    {
+      type: 'file',
+      name: 'experience.txt',
+      content: `Software Engineer Intern - TechSolutions Inc. (Summer 2024)
+  - Contributed to the development of a blockchain-based supply chain tracking system.
+  - Assisted in writing and testing smart contracts in Solidity.
+  - Participated in daily scrums and sprint planning.
+`,
+    },
+    {
+      type: 'file',
+      name: 'achievements.txt',
+      content: `(Placeholder for achievements)
+- Dean's List - Fall 2023, Spring 2024
+- Winner, University Hackathon 2023 (Blockchain Track)
+- Certified Ethereum Developer (Placeholder Certification Body)
 `,
     },
     {
@@ -174,7 +199,7 @@ Soft Skills:
     },
     {
       type: 'file',
-      name: 'contact.txt',
+      name: 'contacts.txt', // Renamed from contact.txt for consistency
       content: `Email: alex.johnson.portfolio@example.com (Placeholder)
 LinkedIn: linkedin.com/in/alexjohnsonportfolio (Placeholder)
 GitHub: github.com/alexjohnsonportfolio (Placeholder)
@@ -188,7 +213,10 @@ export function findNode(path: string, root: Directory = fileSystem): FileSystem
     return root;
   }
 
-  const parts = path.split('/').filter(p => p !== '' && p !== '~');
+  // Normalize path: remove leading/trailing slashes, handle '~'
+  const normalizedPath = path.startsWith('~/') ? path.substring(2) : path.startsWith('/') ? path.substring(1) : path;
+  const parts = normalizedPath.split('/').filter(p => p !== '');
+
   let currentNode: FileSystemNode = root;
 
   for (const part of parts) {
@@ -204,4 +232,16 @@ export function findNode(path: string, root: Directory = fileSystem): FileSystem
     }
   }
   return currentNode;
+}
+
+// Helper function to get content of a file, typically from the root directory
+export function getRootFileContent(fileName: string): string | undefined {
+  const node = findNode(fileName); // findNode defaults to root if path doesn't start with traversal
+  if (node && node.type === 'file' && node.content) {
+    return node.content;
+  }
+  if (node && node.type === 'file' && !node.content) {
+    return `Error: ${fileName} is not a text file or is empty.`;
+  }
+  return `Error: File '${fileName}' not found in root directory.`;
 }
