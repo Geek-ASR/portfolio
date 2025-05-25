@@ -4,6 +4,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { fileSystem, findNode, type Directory, type File, type FileSystemNode } from '@/lib/file-system';
 import TypingEffect from './TypingEffect';
+import InstallationProgress from './InstallationProgress';
 import { enhanceResumeWithAI } from '@/app/portfolio-actions';
 import { ScrollArea } from '@/components/ui/scroll-area';
 
@@ -16,19 +17,27 @@ interface CommandHistoryItem {
   isSpecial?: boolean; // For messages like "Enhancing resume..."
 }
 
-enum TerminalState {
+enum TerminalInputState {
   Idle,
   AwaitingJobDescription,
+}
+
+enum TerminalPhase {
+  Installing,
+  BootingText,
+  Welcoming,
+  Idle,
 }
 
 const Terminal: React.FC = () => {
   const [history, setHistory] = useState<CommandHistoryItem[]>([]);
   const [inputValue, setInputValue] = useState('');
   const [currentPath, setCurrentPath] = useState('~');
-  const [isLoading, setIsLoading] = useState(true); // Start as true for initial animation
+  const [isLoading, setIsLoading] = useState(true); 
   const [currentCommandId, setCurrentCommandId] = useState(0);
-  const [terminalState, setTerminalState] = useState<TerminalState>(TerminalState.Idle);
+  const [terminalInputState, setTerminalInputState] = useState<TerminalInputState>(TerminalInputState.Idle);
   const [resumeContentForAI, setResumeContentForAI] = useState<string | null>(null);
+  const [currentPhase, setCurrentPhase] = useState<TerminalPhase>(TerminalPhase.Installing);
 
   const inputRef = useRef<HTMLInputElement>(null);
   const scrollAreaRef = useRef<HTMLDivElement>(null);
@@ -48,7 +57,7 @@ const Terminal: React.FC = () => {
   useEffect(scrollToBottom, [history, scrollToBottom]);
 
   useEffect(() => {
-    if (!isLoading) { // Only focus if not loading (e.g. after initial animation)
+    if (!isLoading) { 
       inputRef.current?.focus();
     }
   }, [isLoading]);
@@ -59,50 +68,63 @@ const Terminal: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    setIsLoading(true); // Ensure loading state is true for the boot sequence
+    setIsLoading(true); // Disable input during startup sequence
+    if (currentPhase === TerminalPhase.Installing) {
+      addHistory({
+        output: (
+          <InstallationProgress
+            onFinished={() => setCurrentPhase(TerminalPhase.BootingText)}
+          />
+        ),
+        isSpecial: true,
+      });
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // Runs once on mount to kick off installation
 
-    const actualWelcomeMessage = `Welcome to ASRWorkspace\nThis is my portfolio website\nType 'help' for a list of commands.\nIf you are more comfortable with GUI, then switch to GUI by typing cmd : 'gui'`;
-
-    const displayActualWelcome = () => {
+  useEffect(() => {
+    if (currentPhase === TerminalPhase.BootingText) {
+      const installationMessages = 
+        "Initializing ASRWorkspace v1.0.0...\n" +
+        "Scanning for available modules...\n" +
+        "Loading core components... [OK]\n" +
+        "Establishing secure connection to ASRNet...\n" +
+        "Virtual environment setup... [DONE]\n" +
+        "Fetching latest package manifests...\n" +
+        "Resolving dependencies... found 324 packages.\n" +
+        "Installing packages: [coreutils, net-tools, ai-enhancer, ui-kit]... Done.\n" +
+        "Verifying system integrity... [PASS]\n" +
+        "Finalizing setup...\n" +
+        "Boot sequence complete.";
+      
+      addHistory({
+        output: (
+          <TypingEffect
+            text={installationMessages}
+            speed={30}
+            onFinished={() => setCurrentPhase(TerminalPhase.Welcoming)}
+          />
+        ),
+        isSpecial: true,
+      });
+    } else if (currentPhase === TerminalPhase.Welcoming) {
+      const actualWelcomeMessage = `Welcome to ASRWorkspace\nThis is my portfolio website\nType 'help' for a list of commands.\nIf you are more comfortable with GUI, then switch to GUI by typing cmd : 'gui'`;
       addHistory({
         output: (
           <TypingEffect
             text={actualWelcomeMessage}
-            speed={20} // Regular speed for welcome
+            speed={20}
             onFinished={() => {
-              setIsLoading(false); // Enable input after the final welcome message
+              setCurrentPhase(TerminalPhase.Idle);
+              setIsLoading(false); // Enable input
             }}
           />
         ),
         isSpecial: true,
       });
-    };
-
-    const installationMessages = 
-      "Initializing ASRWorkspace v1.0.0...\n" +
-      "Scanning for available modules...\n" +
-      "Loading core components... [OK]\n" +
-      "Establishing secure connection to ASRNet...\n" +
-      "Virtual environment setup... [DONE]\n" +
-      "Fetching latest package manifests...\n" +
-      "Resolving dependencies... found 324 packages.\n" +
-      "Installing packages: [coreutils, net-tools, ai-enhancer, ui-kit]... Done.\n" +
-      "Verifying system integrity... [PASS]\n" +
-      "Finalizing setup...\n" +
-      "Boot sequence complete.";
-
-    addHistory({
-      output: (
-        <TypingEffect
-          text={installationMessages}
-          speed={30} // Slightly faster for boot messages
-          onFinished={displayActualWelcome}
-        />
-      ),
-      isSpecial: true,
-    });
+    }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []); // Empty dependency array to run only once on mount
+  }, [currentPhase, addHistory]);
 
 
   const processCommand = useCallback(async (commandInput: string) => {
@@ -110,7 +132,7 @@ const Terminal: React.FC = () => {
     let output: React.ReactNode = `Command not found: ${command}`;
     setIsLoading(true);
 
-    if (terminalState === TerminalState.AwaitingJobDescription) {
+    if (terminalInputState === TerminalInputState.AwaitingJobDescription) {
       const jobDescription = commandInput.trim() === '' ? undefined : commandInput.trim();
       if (resumeContentForAI) {
         addHistory({ output: "Enhancing resume with AI...", isSpecial: true });
@@ -128,7 +150,7 @@ const Terminal: React.FC = () => {
       } else {
         output = "Error: Resume content not found for AI enhancement.";
       }
-      setTerminalState(TerminalState.Idle);
+      setTerminalInputState(TerminalInputState.Idle);
       setResumeContentForAI(null);
     } else {
        addHistory({ command: commandInput, path: currentPath, isInput: true });
@@ -226,6 +248,11 @@ const Terminal: React.FC = () => {
           break;
         case 'clear':
           setHistory([]);
+          // Re-add the installation and welcome sequence if desired, or just clear.
+          // For now, just clears and provides a new prompt.
+          // If you want to restart the whole sequence:
+          // setCurrentPhase(TerminalPhase.Installing);
+          // setIsLoading(true); 
           output = ''; // Standard clear command just clears screen
           break;
         case 'whoami':
@@ -250,7 +277,7 @@ const Terminal: React.FC = () => {
           const resumeTxtNode = findNode('resume.txt');
           if (resumeTxtNode && resumeTxtNode.type === 'file' && resumeTxtNode.content) {
             setResumeContentForAI(resumeTxtNode.content);
-            setTerminalState(TerminalState.AwaitingJobDescription);
+            setTerminalInputState(TerminalInputState.AwaitingJobDescription);
             output = `(Optional) Paste job description below and press Enter, or just press Enter to skip:`;
           } else {
             output = "Error: resume.txt not found in the root directory.";
@@ -266,21 +293,28 @@ const Terminal: React.FC = () => {
     }
     
     if (output !== '') {
-      addHistory({ output: <TypingEffect text={output} onFinished={() => setIsLoading(false)} /> });
+      // Use TypingEffect for command outputs for consistency, unless it's already a component
+      if (typeof output === 'string') {
+        addHistory({ output: <TypingEffect text={output} speed={10} onFinished={() => setIsLoading(false)} /> });
+      } else {
+         addHistory({ output: output }); // output is already a ReactNode (e.g. from ls or AI suggestions)
+         setIsLoading(false); // Assume components like TypingEffect within output will handle their own loading
+      }
     } else {
       setIsLoading(false); // If output is empty (e.g. 'cd', 'clear'), stop loading
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentPath, addHistory, terminalState, resumeContentForAI]); // setIsLoading is stable, not needed here
+  }, [currentPath, addHistory, terminalInputState, resumeContentForAI]);
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
-    if (inputValue.trim() === '' && terminalState !== TerminalState.AwaitingJobDescription) {
-      // For an empty command, add the command to history and then an empty output line.
+    if (isLoading && currentPhase !== TerminalPhase.Idle) return; // Don't process commands during startup
+
+    if (inputValue.trim() === '' && terminalInputState !== TerminalInputState.AwaitingJobDescription) {
       addHistory({ command: '', path: currentPath, isInput: true });
-      addHistory({ output: '' }); // This creates the empty line for an empty command
+      addHistory({ output: '' }); 
       setCurrentCommandId(prev => prev + 1); 
-      setIsLoading(false); // Ensure prompt is ready for next input
+      setIsLoading(false); 
     } else {
       processCommand(inputValue);
     }
@@ -288,7 +322,7 @@ const Terminal: React.FC = () => {
   };
 
   const handleTerminalClick = () => {
-    if (!isLoading || terminalState === TerminalState.AwaitingJobDescription) {
+    if (!isLoading || terminalInputState === TerminalInputState.AwaitingJobDescription) {
        inputRef.current?.focus();
     }
   };
@@ -308,18 +342,19 @@ const Terminal: React.FC = () => {
                 <span className="ml-2 flex-1 whitespace-pre-wrap">{item.command}</span>
               </div>
             )}
+            {/* Ensure output is rendered, checking if it's a string or ReactNode */}
             {item.output && (
               <div className={`whitespace-pre-wrap ${item.isSpecial ? 'my-2' : ''}`}>
-                {item.output}
+                {typeof item.output === 'string' ? <TypingEffect text={item.output} speed={10} onFinished={item.isSpecial ? undefined : () => setIsLoading(false)} /> : item.output}
               </div>
             )}
           </div>
         ))}
         </div>
       </ScrollArea>
-      {(!isLoading || terminalState === TerminalState.AwaitingJobDescription) ? (
+      {(!isLoading || terminalInputState === TerminalInputState.AwaitingJobDescription) && currentPhase === TerminalPhase.Idle ? (
          <form onSubmit={handleSubmit} className="mt-2 flex">
-          {terminalState === TerminalState.Idle ? (
+          {terminalInputState === TerminalInputState.Idle ? (
              <span className="text-[hsl(var(--accent))]">{username}@{hostname}:{currentPath}$</span>
           ) : (
             <span className="text-[hsl(var(--accent))]">&gt;</span>
@@ -331,15 +366,17 @@ const Terminal: React.FC = () => {
             onChange={(e) => setInputValue(e.target.value)}
             className="ml-2 flex-1 border-none bg-transparent text-[hsl(var(--foreground))] outline-none"
             autoFocus
-            disabled={isLoading && terminalState !== TerminalState.AwaitingJobDescription} // Should be fine
+            disabled={isLoading && terminalInputState !== TerminalInputState.AwaitingJobDescription}
           />
         </form>
       ) : (
-         // This part shows when isLoading is true AND not awaiting job description.
-         // During initial boot, this will show "Processing..." which is acceptable.
-         <div className="mt-2 flex">
-            <span className="text-[hsl(var(--accent))]">{username}@{hostname}:{currentPath}$</span>
-            <span className="ml-2">Processing...</span>
+         <div className="mt-2 flex h-6"> {/* Keep space for prompt even when loading */}
+            {currentPhase !== TerminalPhase.Installing && currentPhase !== TerminalPhase.BootingText && currentPhase !== TerminalPhase.Welcoming && (
+              <>
+                <span className="text-[hsl(var(--accent))]">{username}@{hostname}:{currentPath}$</span>
+                <span className="ml-2">Processing...</span>
+              </>
+            )}
           </div>
       )}
     </div>
