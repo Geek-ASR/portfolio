@@ -62,9 +62,9 @@ export const fileSystem: Directory = {
       type: 'file',
       name: 'achievements.txt',
       content: `ACHIEVEMENTS
-  - Dean's List - Fall 2023, Spring 2024
-  - Winner, University Hackathon 2023 (Blockchain Track)
-  - Certified Ethereum Developer (Placeholder Certification Body)
+  - Won 3rd price in blockchain hackathon held by All India Blockchain Alliance.
+  - Got selected and participated in Unfold@2023 hackathon.
+  - Conducted workshops on blockchain technology in multiple Universities over time.
 `,
     },
     {
@@ -126,9 +126,9 @@ PROJECTS
     - Tech: Next.js, React, TypeScript.
 
 ACHIEVEMENTS
-  - Dean's List - Fall 2023, Spring 2024
-  - Winner, University Hackathon 2023 (Blockchain Track)
-  - Certified Ethereum Developer (Placeholder Certification Body)
+  - Won 3rd price in blockchain hackathon held by All India Blockchain Alliance.
+  - Got selected and participated in Unfold@2023 hackathon.
+  - Conducted workshops on blockchain technology in multiple Universities over time.
 `,
     },
     {
@@ -262,3 +262,4 @@ export function getRootFileContent(fileName: string): string | undefined {
   }
   return `Error: File '${fileName}' not found.`;
 }
+
