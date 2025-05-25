@@ -42,7 +42,7 @@ export const fileSystem: Directory = {
     {
       type: 'file',
       name: 'experience.txt',
-      content: `EXPERIENCE
+      content: `Exxperience
 ASSOCIATION OF COMPUTER ENGINEERING STUDENTS, DIT
   Aug, 2022 - Jul, 2023
   Jr. Event Manager @ ACES
@@ -93,7 +93,7 @@ SKILLS
   DevOps & Tools: Git, GitHub, GitLab, Docker, Kubernetes (Basic understanding), CI/CD (GitHub Actions - Basic), Cloud (AWS (EC2, S3, Lambda - Basic), Firebase), Operating Systems (Linux (Ubuntu), macOS, Windows)
   Soft Skills: Problem Solving, Analytical Thinking, Team Collaboration, Communication, Agile/Scrum methodologies
 
-EXPERIENCE
+Exxperience
   ASSOCIATION OF COMPUTER ENGINEERING STUDENTS, DIT
     Aug, 2022 - Jul, 2023
     Jr. Event Manager @ ACES
