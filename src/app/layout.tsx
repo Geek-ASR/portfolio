@@ -16,7 +16,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${GeistSans.variable} ${GeistMono.variable}`} suppressHydrationWarning>
-      <body className="antialiased font-mono">
+      <body className="antialiased font-mono" suppressHydrationWarning>
         {children}
         <Toaster />
       </body>
