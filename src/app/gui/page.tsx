@@ -131,7 +131,26 @@ export default function GuiPage() {
 
   const formatPreText = (text: string | undefined) => {
     if (!text) return null;
-    return <pre className="whitespace-pre-wrap font-sans text-base leading-relaxed text-gray-700">{text}</pre>;
+    // Display the first line as a title, rest as preformatted text
+    const lines = text.split('\n');
+    const title = lines[0];
+    const restOfText = lines.slice(1).join('\n');
+    
+    if (lines.length === 1 && title.startsWith('Error:')) {
+        return <p className="text-red-500">{title}</p>;
+    }
+    if (lines.length === 1 && !title.startsWith('Edducation') && !title.startsWith('Exxperience') && !title.startsWith('Acchievements')) {
+      return <pre className="whitespace-pre-wrap font-sans text-base leading-relaxed text-gray-700">{text}</pre>;
+    }
+    if (!title.startsWith('Edducation') && !title.startsWith('Exxperience') && !title.startsWith('Acchievements')) {
+        return <pre className="whitespace-pre-wrap font-sans text-base leading-relaxed text-gray-700">{text}</pre>;
+    }
+    return (
+      <>
+        {title && <h3 className="font-semibold text-black mb-3 text-xl">{title}</h3>}
+        {restOfText && <pre className="whitespace-pre-wrap font-sans text-base leading-relaxed text-gray-700">{restOfText}</pre>}
+      </>
+    );
   };
 
   return (
@@ -152,8 +171,10 @@ export default function GuiPage() {
         </div>
 
         <div className="flex flex-col md:flex-row items-center justify-center gap-8 lg:gap-12 text-center md:text-left">
-          <h1 className="font-sans text-5xl md:text-6xl lg:text-7xl text-black font-extrabold">
-            Hello, I am Aditya Rekhe
+          <h1 className="font-sans text-5xl md:text-6xl lg:text-7xl text-black">
+            <span className="font-normal">Hello, I am</span>
+            <br />
+            <span className="font-extrabold">Aditya Rekhe</span>
           </h1>
           <div className="mt-6 md:mt-0">
             <Image
@@ -172,8 +193,8 @@ export default function GuiPage() {
       {/* Main Content Area */}
       <main className="px-6 md:px-10 lg:px-12 py-16 grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-10">
         {aboutMe && (
-          <SectionCard title="About Me" icon={<User size={28} />} className="md:col-span-2">
-            <p className="text-base leading-relaxed text-gray-700">{aboutMe}</p>
+          <SectionCard title="About Me" icon={<User size={28} />}>
+             <p className="text-base leading-relaxed text-gray-700">{aboutMe}</p>
           </SectionCard>
         )}
 
