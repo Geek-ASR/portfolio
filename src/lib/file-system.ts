@@ -22,7 +22,7 @@ export const fileSystem: Directory = {
     {
       type: 'file',
       name: 'README.md',
-      content: `Welcome to ASRWorkspace\nThis is my portfolio website\nType 'help' for a list of commands.\nIf you are more comfortable with GUI, then switch to GUI by typing cmd : 'gui'`,
+      content: `Weelcome to ASR_Workspace\nThis is my portfolio website\nType 'help' for a list of commands.\nIf you are more comfortable with GUI, then switch to GUI by typing cmd : 'gui'`,
     },
     {
       type: 'file',

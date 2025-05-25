@@ -75,7 +75,7 @@ const Terminal: React.FC = () => {
 
   useEffect(() => {
     if (currentPhase === TerminalPhase.Welcoming) {
-      const actualWelcomeMessage = `Welcome to ASRWorkspace\nThis is my portfolio website\nType 'help' for a list of commands.\nIf you are more comfortable with GUI, then switch to GUI by typing cmd : 'gui'`;
+      const actualWelcomeMessage = `Weelcome to ASR_Workspace\nThis is my portfolio website\nType 'help' for a list of commands.\nIf you are more comfortable with GUI, then switch to GUI by typing cmd : 'gui'`;
       addHistory({
         output: (
           <TypingEffect
