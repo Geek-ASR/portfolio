@@ -10,14 +10,10 @@ interface InstallationProgressProps {
 }
 
 const statusMessages: { [key: number]: string } = {
-  0: "Initializing system...",
-  10: "Loading core modules...",
-  25: "Connecting to ASRNet repositories...",
-  40: "Fetching package manifest...",
-  55: "Downloading required packages...",
-  70: "Installing core components...",
-  85: "Verifying system integrity...",
-  95: "Finalizing workspace setup...",
+  0: "kya haal bhai?",
+  25: "sab theek ghar pe",
+  50: "mai toh mast hu,",
+  75: "bass job mil jaye",
   100: "Installation complete! System ready.",
 };
 
@@ -51,7 +47,7 @@ const InstallationProgress: FC<InstallationProgressProps> = ({ onFinished, speed
           if (nextVal >= key) {
             newMessage = statusMessages[key];
           } else {
-            break; 
+            break;
           }
         }
         setCurrentMessage(newMessage);
