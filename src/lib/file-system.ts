@@ -43,19 +43,19 @@ export const fileSystem: Directory = {
       type: 'file',
       name: 'experience.txt',
       content: `Exxperience
-ASSOCIATION OF COMPUTER ENGINEERING STUDENTS, DIT
-  Aug, 2022 - Jul, 2023
-  Jr. Event Manager @ ACES
-  Led as Event Manager for the college club, ACES, orchestrating successful and 
-  engaging events that enhanced the campus community. Leveraged strong 
-  organizational skills to plan and execute a diverse range of activities, 
-  fostering team collaboration and ensuring seamless coordination.
+  Association of Computer Engineering Students, DIT
+    Aug, 2022 - Jul, 2023
+    Jr. Event Manager @ ACES
+    Led as Event Manager for the college club, ACES, orchestrating successful and 
+    engaging events that enhanced the campus community. Leveraged strong 
+    organizational skills to plan and execute a diverse range of activities, 
+    fostering team collaboration and ensuring seamless coordination.
 
-Google Developer Groups, DIT
-  Blockchain Co-lead
-  Sept, 2023 - current
-  Conducted multiple blockchain workshops and sessions, driving hands-on learning 
-  and developer engagement.
+  Google Developer Groups, DIT
+    Blockchain Co-lead
+    Sept, 2023 - current
+    Conducted multiple blockchain workshops and sessions, driving hands-on learning 
+    and developer engagement.
 `,
     },
     {
@@ -94,7 +94,7 @@ SKILLS
   Soft Skills: Problem Solving, Analytical Thinking, Team Collaboration, Communication, Agile/Scrum methodologies
 
 Exxperience
-  ASSOCIATION OF COMPUTER ENGINEERING STUDENTS, DIT
+  Association of Computer Engineering Students, DIT
     Aug, 2022 - Jul, 2023
     Jr. Event Manager @ ACES
     Led as Event Manager for the college club, ACES, orchestrating successful and 
