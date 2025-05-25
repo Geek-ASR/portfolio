@@ -6,6 +6,8 @@ import { fileSystem, findNode, getRootFileContent, type Directory, type File, ty
 import TypingEffect from './TypingEffect';
 import InstallationProgress from './InstallationProgress';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { useRouter } from 'next/navigation';
+
 
 interface CommandHistoryItem {
   id: number;
@@ -13,7 +15,7 @@ interface CommandHistoryItem {
   output: React.ReactNode;
   path?: string;
   isInput?: boolean;
-  isSpecial?: boolean; // For messages like "Enhancing resume..."
+  isSpecial?: boolean; 
 }
 
 enum TerminalPhase {
@@ -27,9 +29,7 @@ const InteractiveContactLine: React.FC<{ line: string }> = ({ line }) => {
   const parts: React.ReactNode[] = [];
   let lastIndex = 0;
 
-  // Updated Regex for URLs
   const urlRegex = /(https?:\/\/[\w\-\.\/\?\#\&\=\%\@\:]+)/g;
-  // Regex for email
   const emailRegex = /([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6})/g;
 
   interface Match {
@@ -41,16 +41,13 @@ const InteractiveContactLine: React.FC<{ line: string }> = ({ line }) => {
   const matches: Match[] = [];
   let match;
 
-  // Find all URL matches
-  urlRegex.lastIndex = 0; // Reset regex state
+  urlRegex.lastIndex = 0; 
   while ((match = urlRegex.exec(line)) !== null) {
     matches.push({ index: match.index, length: match[0].length, text: match[0], type: 'url' });
   }
 
-  // Find all email matches
-  emailRegex.lastIndex = 0; // Reset regex state
+  emailRegex.lastIndex = 0; 
   while ((match = emailRegex.exec(line)) !== null) {
-    // Avoid double-matching if email is part of a URL
     if (!matches.some(m => m.index <= match.index && (m.index + m.length) >= (match.index + match[0].length) && m.type === 'url')) {
        matches.push({ index: match.index, length: match[0].length, text: match[0], type: 'email' });
     }
@@ -59,16 +56,14 @@ const InteractiveContactLine: React.FC<{ line: string }> = ({ line }) => {
   matches.sort((a, b) => a.index - b.index);
 
   for (const currentMatch of matches) {
-    // Add text before the match
     if (currentMatch.index > lastIndex) {
       parts.push(line.substring(lastIndex, currentMatch.index));
     }
-    // Add the link
     const linkText = currentMatch.text;
     const href = currentMatch.type === 'email' ? `mailto:${linkText}` : linkText;
     parts.push(
       <a
-        key={`${currentMatch.type}-${currentMatch.index}-${linkText}`} // Added linkText to key for more uniqueness
+        key={`${currentMatch.type}-${currentMatch.index}-${linkText}`} 
         href={href}
         target="_blank"
         rel="noopener noreferrer"
@@ -80,12 +75,10 @@ const InteractiveContactLine: React.FC<{ line: string }> = ({ line }) => {
     lastIndex = currentMatch.index + currentMatch.length;
   }
 
-  // Add any remaining text after the last match
   if (lastIndex < line.length) {
     parts.push(line.substring(lastIndex));
   }
 
-  // If no links were found, parts will be empty. In this case, just return the original line.
   if (parts.length === 0) {
     return <>{line}</>;
   }
@@ -101,6 +94,7 @@ const Terminal: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [currentCommandId, setCurrentCommandId] = useState(0);
   const [currentPhase, setCurrentPhase] = useState<TerminalPhase>(TerminalPhase.Installing);
+  const router = useRouter();
 
   const inputRef = useRef<HTMLInputElement>(null);
   const scrollAreaRef = useRef<HTMLDivElement>(null);
@@ -131,7 +125,7 @@ const Terminal: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    setIsLoading(true); // Disable input during startup sequence
+    setIsLoading(true); 
     if (currentPhase === TerminalPhase.Installing) {
       addHistory({
         output: (
@@ -143,7 +137,7 @@ const Terminal: React.FC = () => {
       });
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []); // Runs once on mount to kick off installation
+  }, []); 
 
   useEffect(() => {
     if (currentPhase === TerminalPhase.Welcoming) {
@@ -155,7 +149,7 @@ const Terminal: React.FC = () => {
             speed={20}
             onFinished={() => {
               setCurrentPhase(TerminalPhase.Idle);
-              setIsLoading(false); // Enable input
+              setIsLoading(false); 
             }}
           />
         ),
@@ -189,7 +183,7 @@ const Terminal: React.FC = () => {
   cat [file]      Display file content
   open [file]     Open a file (e.g., resume.pdf)
   export          Download resume.pdf
-  gui             Switch to GUI mode (placeholder)
+  gui             Switch to GUI mode
   whoami          Display current user
   date            Display current date
   echo [text]     Display text
@@ -230,7 +224,7 @@ const Terminal: React.FC = () => {
       case 'ls':
         let pathToLs = currentPath;
         if (args[0]) {
-            if (args[0] === 'projects' && currentPath === '~') { // specific 'ls projects' from root
+            if (args[0] === 'projects' && currentPath === '~') { 
                  pathToLs = '~/projects';
             } else if (args[0].startsWith('~/')) {
                 pathToLs = args[0];
@@ -246,11 +240,11 @@ const Terminal: React.FC = () => {
                 }
             } else if (args[0] === '~') {
                  pathToLs = '~';
-            } else { // relative path like "mydir" or "mydir/subdir"
+            } else { 
                  pathToLs = currentPath === '~' ? `~/${args[0]}` : `${currentPath}/${args[0]}`;
             }
         }
-        // Normalize path
+        
         pathToLs = pathToLs.replace(/~[/]+/g, '~/').replace(/\/\//g, '/');
         if (pathToLs === '/') pathToLs = '~';
 
@@ -298,7 +292,7 @@ const Terminal: React.FC = () => {
         } else {
           newPath = currentPath === '~' ? `~/${targetDir}` : `${currentPath}/${targetDir}`;
         }
-        // Normalize newPath
+        
         newPath = newPath.replace(/~[/]+/g, '~/').replace(/\/\//g, '/');
         if (newPath === '/') newPath = '~';
 
@@ -391,7 +385,11 @@ const Terminal: React.FC = () => {
         document.body.removeChild(link);
         break;
       case 'gui':
-        output = 'Switching to GUI mode... (Feature not yet implemented)';
+        output = 'Switching to GUI mode...';
+        router.push('/gui');
+        // Set isLoading to false after a short delay to allow navigation
+        // Or handle this more robustly if navigation takes time
+        setTimeout(() => setIsLoading(false), 100); 
         break;
       default:
         // Handled by initial value
@@ -399,17 +397,20 @@ const Terminal: React.FC = () => {
     }
 
     if (output !== '') {
-      if (typeof output === 'string') {
+      if (typeof output === 'string' && command.toLowerCase() !== 'gui') {
         addHistory({ output: <TypingEffect text={output} speed={10} onFinished={() => setIsLoading(false)} /> });
       } else {
          addHistory({ output: output });
-         setIsLoading(false);
+         // For GUI command, isLoading is handled above to allow navigation
+         if (command.toLowerCase() !== 'gui') {
+            setIsLoading(false);
+         }
       }
     } else {
       setIsLoading(false);
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentPath, addHistory]);
+  }, [currentPath, addHistory, router]);
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
@@ -449,7 +450,7 @@ const Terminal: React.FC = () => {
             )}
             {item.output && (
               <div className={`whitespace-pre-wrap ${item.isSpecial ? 'my-2' : ''}`}>
-                {typeof item.output === 'string' && !item.isSpecial ? (
+                {typeof item.output === 'string' && !item.isSpecial && !item.command?.startsWith('gui') ? (
                   <TypingEffect text={item.output} speed={10} onFinished={() => setIsLoading(false)} />
                 ) : (
                   item.output
