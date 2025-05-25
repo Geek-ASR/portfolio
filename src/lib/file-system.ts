@@ -214,13 +214,12 @@ Soft Skills:
     {
       type: 'file',
       name: 'contacts.txt',
-      content: `Contact Info: Aditya Rekhe
-  Phone: 8446586979
-  Email: adityarekhe1030@gmail.com
-  LinkedIn: https://www.linkedin.com/in/aditya-rekhe-94b27122a/
-  GeeksforGeeks: https://www.geeksforgeeks.org/user/adityare545t/
-  GitHub: https://github.com/Geek-ASR
-  Location: Pune, Maharashtra
+      content: `Coontact Info: 
+8446586979 · adityarekhe1030@gmail.com
+LinkedIn: https://www.linkedin.com/in/aditya-rekhe-94b27122a/
+GFG: https://www.geeksforgeeks.org/user/adityare545t/
+GitHub: https://github.com/Geek-ASR
+Location: Pune, Maharashtra
 `,
     },
   ],
@@ -232,7 +231,7 @@ export function findNode(path: string, root: Directory = fileSystem): FileSystem
   }
 
   // Normalize path: remove leading/trailing slashes, handle '~'
-  const normalizedPath = path.startsWith('~/') ? path.substring(2) : path.startsWith('/') ? path.substring(1) : path;
+  const normalizedPath = path.startsWith('~/') ? path.substring(2) : path.startsWith('/') ? path.substring(1) : path.startsWith('./') ? path.substring(2) : path;
   const parts = normalizedPath.split('/').filter(p => p !== '');
 
   let currentNode: FileSystemNode = root;
@@ -263,4 +262,3 @@ export function getRootFileContent(fileName: string): string | undefined {
   }
   return `Error: File '${fileName}' not found.`;
 }
-
