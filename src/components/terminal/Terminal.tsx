@@ -212,7 +212,6 @@ const Terminal: React.FC = () => {
           output = (
             <>
               {lines.map((line, index) => (
-                // The second line (index 1) has the links
                 <div key={index}>
                   {index === 1 ? <InteractiveContactLine line={line} /> : line}
                 </div>
@@ -220,14 +219,13 @@ const Terminal: React.FC = () => {
             </>
           );
         } else {
-          // Fallback if content is not a string or is undefined
           output = contactsContent || `Error: Could not load contacts.txt`;
         }
         break;
       case 'ls':
         let pathToLs = currentPath;
         if (args[0]) {
-            if (args[0] === 'projects') { // Specific handler for 'ls projects'
+            if (args[0] === 'projects') {
                  pathToLs = '~/projects';
             } else if (args[0].startsWith('~/')) {
                 pathToLs = args[0];
@@ -276,7 +274,7 @@ const Terminal: React.FC = () => {
           }
         } else if (targetDir.startsWith('~/')) {
           newPath = targetDir;
-        } else if (targetDir === '~' || targetDir === '/') { // Treat / as ~
+        } else if (targetDir === '~' || targetDir === '/') {
           newPath = '~';
         }
          else {
@@ -285,7 +283,7 @@ const Terminal: React.FC = () => {
         const targetNode = findNode(newPath);
         if (targetNode && targetNode.type === 'directory') {
           setCurrentPath(newPath);
-          output = ''; // No output for successful cd
+          output = ''; 
         } else {
           output = `cd: no such file or directory: ${targetDir}`;
         }
@@ -296,9 +294,8 @@ const Terminal: React.FC = () => {
           output = 'Usage: cat [filename]';
           break;
         }
-        // Determine if it's an absolute or relative path
         const pathForCat = fileToCat.startsWith('~/') ? fileToCat :
-                           fileToCat.includes('/') ? fileToCat : // if it's already a relative path with slashes
+                           fileToCat.includes('/') ? fileToCat : 
                            currentPath === '~' ? `~/${fileToCat}` : `${currentPath}/${fileToCat}`;
 
         const catNode = findNode(pathForCat);
@@ -346,7 +343,7 @@ const Terminal: React.FC = () => {
       case 'export':
         output = 'Downloading resume.pdf...';
         const link = document.createElement('a');
-        link.href = '/resume.pdf'; // Assumes resume.pdf is in public folder
+        link.href = '/resume.pdf'; 
         link.setAttribute('download', 'ASRWorkspace_Resume.pdf');
         document.body.appendChild(link);
         link.click();
@@ -365,7 +362,7 @@ const Terminal: React.FC = () => {
         addHistory({ output: <TypingEffect text={output} speed={10} onFinished={() => setIsLoading(false)} /> });
       } else {
          addHistory({ output: output });
-         setIsLoading(false); // Set loading to false for non-string, non-TypingEffect outputs
+         setIsLoading(false); 
       }
     } else {
       setIsLoading(false);
@@ -411,7 +408,6 @@ const Terminal: React.FC = () => {
             )}
             {item.output && (
               <div className={`whitespace-pre-wrap ${item.isSpecial ? 'my-2' : ''}`}>
-                {/* Render TypingEffect for string outputs that are not special messages, otherwise render directly */}
                 {typeof item.output === 'string' && !item.isSpecial ? (
                   <TypingEffect text={item.output} speed={10} onFinished={() => setIsLoading(false)} />
                 ) : (
@@ -444,7 +440,6 @@ const Terminal: React.FC = () => {
                 <span className="ml-2">Processing...</span>
               </>
             )}
-            {/* Keep a placeholder for input area during loading to prevent layout shift if needed, or remove if not desired */}
           </div>
       )}
     </div>
@@ -452,4 +447,3 @@ const Terminal: React.FC = () => {
 };
 
 export default Terminal;
-
