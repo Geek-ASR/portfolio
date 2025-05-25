@@ -62,9 +62,9 @@ export const fileSystem: Directory = {
       type: 'file',
       name: 'achievements.txt',
       content: `Acchievements
-  - Won 3rd price in blockchain hackathon held by All India Blockchain Alliance.
-  - Got selected and participated in Unfold@2023 hackathon.
-  - Conducted workshops on blockchain technology in multiple Universities over time.
+  -Won 3rd price in blockchain hackathon held by All India Blockchain Alliance.
+  -Got selected and participated in Unfold@2023 hackathon.
+  -Conducted workshops on blockchain technology in multiple Universities over time.
 `,
     },
     {
@@ -113,22 +113,21 @@ Exxperience
     and developer engagement.
 
 PROJECTS
-  Decentralized Identity Management (Ethereum)
-    - Developed smart contracts allowing users to control their digital identity.
-    - Built a React frontend for users to manage their identity attributes.
-    - Tech: Solidity, Hardhat, Ethers.js, React, IPFS for storing claims.
-  NFT Marketplace (Polygon)
-    - Created a simple NFT marketplace for minting and trading digital art.
-    - Implemented ERC721 token standard and auction functionalities.
-    - Tech: Solidity, OpenZeppelin, Next.js, Pinata (for IPFS).
+  VedKarn - Mentorship Platform
+    - Responsive, full-stack web application connecting mentees with mentors for career and university admissions support.
+    - Tech: Next.js, React, TypeScript, ShadCN UI, Tailwind CSS.
+  VisART - DSA Visualisation platform
+    - Website for teaching DSA with visualisations, theory, videos, quizzes, and an in-built compiler.
+  ConnectWell - Health Community Platform
+    - Platform for supportive online communities based on medical conditions, with profiles, posts, and comments.
   ASRWorkspace Portfolio (This Website)
     - Designed and developed an interactive terminal-based portfolio.
     - Tech: Next.js, React, TypeScript.
 
 Acchievements
-  - Won 3rd price in blockchain hackathon held by All India Blockchain Alliance.
-  - Got selected and participated in Unfold@2023 hackathon.
-  - Conducted workshops on blockchain technology in multiple Universities over time.
+  -Won 3rd price in blockchain hackathon held by All India Blockchain Alliance.
+  -Got selected and participated in Unfold@2023 hackathon.
+  -Conducted workshops on blockchain technology in multiple Universities over time.
 `,
     },
     {
@@ -137,35 +136,22 @@ Acchievements
       children: [
         {
           type: 'file',
-          name: 'decentralized_identity.txt',
-          content: `Project Name: Decentralized Identity Management
-Description: A platform built on Ethereum allowing users to own and control their digital identity.
-             It aims to provide a secure and user-centric alternative to traditional identity systems.
-Technologies: Solidity, Hardhat, Ethers.js, React, IPFS
-Role: Lead Developer
-Key Features:
-  - Smart contracts for identity creation and attribute management.
-  - Verifiable credentials stored on IPFS.
-  - User-friendly React interface for interaction.
-Status: MVP Completed
-GitHub: github.com/adityasr/decentralized-id (Placeholder)
-`,
+          name: 'vedkarn_mentorship.txt',
+          content: `Project Name: VedKarn - Mentorship Platform
+Description: VedKarn is a responsive, full-stack web application developed to connect individuals seeking guidance (mentees) with experienced professionals and alumni (mentors) for both career development and university admissions support. The platform is built using Next.js, React, TypeScript, ShadCN UI for components, and Tailwind CSS for styling.
+Technologies: Next.js, React, TypeScript, ShadCN UI, Tailwind CSS`,
         },
         {
           type: 'file',
-          name: 'nft_marketplace.txt',
-          content: `Project Name: NFT Marketplace (Polygon)
-Description: A simple marketplace for minting, buying, and selling Non-Fungible Tokens (NFTs) on the Polygon network.
-             Focused on low transaction fees and a smooth user experience.
-Technologies: Solidity, OpenZeppelin Contracts, Next.js, Ethers.js, Pinata (IPFS)
-Role: Full-Stack Developer
-Key Features:
-  - ERC721 token minting.
-  - Fixed-price sales and basic auction mechanism.
-  - Browsing and filtering NFTs.
-Status: In Development
-GitHub: github.com/adityasr/nft-marketplace (Placeholder)
-`,
+          name: 'visart_dsa.txt',
+          content: `Project Name: VisART - DSA Visualisation platform
+Description: It is a website designed to teach DSA in a simpler and more engaging way by using visualisation of data structures on random or manual inputs. It also consists of theory, applications, YouTube videos and quizzes for each data structure. VisART has an in-built compiler which can be used to practice the questions.`,
+        },
+        {
+          type: 'file',
+          name: 'connectwell_health.txt',
+          content: `Project Name: ConnectWell - Health Community Platform
+Description: ConnectWell is designed to foster supportive online communities for individuals sharing similar medical conditions. The platform enables users to create personalised profiles, discover, join, and create interest-based communities, and engage in discussions through posts and comments.`,
         },
         {
             type: 'file',
