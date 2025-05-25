@@ -85,6 +85,11 @@ const InteractiveContactLine: React.FC<{ line: string }> = ({ line }) => {
     parts.push(line.substring(lastIndex));
   }
 
+  // If no links were found, parts will be empty. In this case, just return the original line.
+  if (parts.length === 0) {
+    return <>{line}</>;
+  }
+
   return <>{parts.map((part, i) => <React.Fragment key={i}>{part}</React.Fragment>)}</>;
 };
 
@@ -213,7 +218,7 @@ const Terminal: React.FC = () => {
             <>
               {lines.map((line, index) => (
                 <div key={index}>
-                  {index === 1 ? <InteractiveContactLine line={line} /> : line}
+                  <InteractiveContactLine line={line} />
                 </div>
               ))}
             </>
@@ -447,3 +452,4 @@ const Terminal: React.FC = () => {
 };
 
 export default Terminal;
+
