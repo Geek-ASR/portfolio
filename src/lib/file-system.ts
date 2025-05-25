@@ -21,7 +21,7 @@ export const fileSystem: Directory = {
     {
       type: 'file',
       name: 'README.md',
-      content: `Welcome to BlockTerminal!
+      content: `Welcome to ASRWorkspace!
 This is the portfolio of a Computer Science student passionate about Blockchain technology.
 Type 'help' to see available commands.
       
@@ -83,7 +83,7 @@ Projects:
    - Implemented ERC721 token standard and auction functionalities.
    - Tech: Solidity, OpenZeppelin, Next.js, Pinata (for IPFS).
 
-3. BlockTerminal Portfolio (This Website)
+3. ASRWorkspace Portfolio (This Website)
    - Designed and developed an interactive terminal-based portfolio.
    - Integrated AI for resume enhancement suggestions.
    - Tech: Next.js, React, TypeScript, Genkit.

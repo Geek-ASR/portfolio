@@ -5,8 +5,8 @@ import './globals.css';
 import { Toaster } from "@/components/ui/toaster";
 
 export const metadata: Metadata = {
-  title: 'BlockTerminal',
-  description: 'A portfolio website with a terminal interface for a CS student and blockchain enthusiast.',
+  title: 'ASRWorkspace',
+  description: 'A portfolio website with a terminal interface for ASR projects and development.',
 };
 
 export default function RootLayout({

@@ -33,7 +33,7 @@ const Terminal: React.FC = () => {
   const scrollAreaRef = useRef<HTMLDivElement>(null);
 
   const username = 'user';
-  const hostname = 'BlockTerminal';
+  const hostname = 'ASRWorkspace';
 
   const scrollToBottom = useCallback(() => {
     if (scrollAreaRef.current) {
@@ -212,7 +212,7 @@ const Terminal: React.FC = () => {
           output = 'Downloading resume.pdf...';
           const link = document.createElement('a');
           link.href = '/resume.pdf';
-          link.setAttribute('download', 'BlockTerminal_Resume.pdf');
+          link.setAttribute('download', 'ASRWorkspace_Resume.pdf');
           document.body.appendChild(link);
           link.click();
           document.body.removeChild(link);
