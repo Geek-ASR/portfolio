@@ -33,10 +33,7 @@ Use 'export' to download the resume.
     {
       type: 'file',
       name: 'about_me.txt', // Renamed from about.txt for consistency with command
-      content: `Myself Aditya, I would define myself as a quick learner and a person who is eager to explore new
-technologies and environments, passionate for innovative solutions and programming. I embrace
-challenges as opportunities for growth, constantly seeking to expand my knowledge and skill set. I am
-ready to contribute with my adaptable nature and enthusiasm to any project or team.`,
+      content: `Myself Aditya, I would define myself as a quick learner and a person who is eager to explore new technologies and environments, passionate for innovative solutions and programming. I embrace challenges as opportunities for growth, constantly seeking to expand my knowledge and skill set. I am ready to contribute with my adaptable nature and enthusiasm to any project or team.`,
     },
     {
       type: 'file',
