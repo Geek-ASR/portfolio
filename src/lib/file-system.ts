@@ -22,7 +22,7 @@ export const fileSystem: Directory = {
     {
       type: 'file',
       name: 'README.md',
-      content: `Welcome to ASRWorkspace!\nThis is my portfolio website\nType 'help' for a list of commands.\nIf you are more comfortable with GUI, then switch to GUI by typing cmd : 'gui'`,
+      content: `Welcome to ASRWorkspace\nThis is my portfolio website\nType 'help' for a list of commands.\nIf you are more comfortable with GUI, then switch to GUI by typing cmd : 'gui'`,
     },
     {
       type: 'file',
@@ -33,28 +33,29 @@ export const fileSystem: Directory = {
       type: 'file',
       name: 'education.txt',
       content: `EDUCATION
-Dr.D.Y.Patil Institute of Technology, Pimpri, Pune
-  Bachelor of Engineering - BE, Computer Engineering
-  Dec, 2021 – Dec, 2025
-  CGPA: 8.7/10
+  Dr.D.Y.Patil Institute of Technology, Pimpri, Pune
+    Bachelor of Engineering - BE, Computer Engineering
+    Dec, 2021 – Dec, 2025
+    CGPA: 8.7/10
 `,
     },
     {
       type: 'file',
       name: 'experience.txt',
-      content: `Software Engineer Intern - TechSolutions Inc. (Summer 2024)
-  - Contributed to the development of a blockchain-based supply chain tracking system.
-  - Assisted in writing and testing smart contracts in Solidity.
-  - Participated in daily scrums and sprint planning.
+      content: `EXPERIENCE
+  Software Engineer Intern - TechSolutions Inc. (Summer 2024)
+    - Contributed to the development of a blockchain-based supply chain tracking system.
+    - Assisted in writing and testing smart contracts in Solidity.
+    - Participated in daily scrums and sprint planning.
 `,
     },
     {
       type: 'file',
       name: 'achievements.txt',
-      content: `(Placeholder for achievements)
-- Dean's List - Fall 2023, Spring 2024
-- Winner, University Hackathon 2023 (Blockchain Track)
-- Certified Ethereum Developer (Placeholder Certification Body)
+      content: `ACHIEVEMENTS
+  - Dean's List - Fall 2023, Spring 2024
+  - Winner, University Hackathon 2023 (Blockchain Track)
+  - Certified Ethereum Developer (Placeholder Certification Body)
 `,
     },
     {
@@ -65,42 +66,47 @@ Dr.D.Y.Patil Institute of Technology, Pimpri, Pune
     },
     {
       type: 'file',
-      name: 'resume.txt',
-      content: `Alex Johnson
-alex.johnson@email.com | 555-123-4567 | linkedin.com/in/alexjohnson | github.com/alexjohnson
+      name: 'resume.txt', // This file is not directly used by a command but can be cat'd or opened
+      content: `Aditya S.R.
+aditya.sr.portfolio@example.com | +91-9876543210 | linkedin.com/in/adityasr | github.com/adityasr
 
-Education:
-Innovate University - B.S. Computer Science (Expected: May 2025)
-  - Relevant Coursework: Data Structures, Algorithms, Operating Systems, Database Management, Blockchain Fundamentals, Network Security.
+EDUCATION
+  Dr.D.Y.Patil Institute of Technology, Pimpri, Pune
+    Bachelor of Engineering - BE, Computer Engineering
+    Dec, 2021 – Dec, 2025
+    CGPA: 8.7/10
 
-Skills:
-- Programming: Python, JavaScript, Java, C++, Solidity
-- Blockchain: Ethereum, Smart Contracts, Web3.js, Ethers.js, Hardhat, Truffle, IPFS
-- Web Dev: React, Next.js, Node.js, HTML, CSS, Tailwind CSS
-- Databases: SQL (PostgreSQL), MongoDB
-- Tools: Git, Docker, Kubernetes (Basic), Linux, AWS (EC2, S3)
-- Other: Agile/Scrum, Problem Solving, Communication
+SKILLS
+  Programming Languages: Python (Advanced), JavaScript (Node.js, React, Next.js - Advanced), Java (Intermediate), C++ (Intermediate), Solidity (Advanced), Rust (Beginner)
+  Blockchain Technologies: Ethereum, Polygon, Bitcoin (Conceptual Understanding), Smart Contracts (Solidity, OpenZeppelin, ERC20, ERC721, ERC1155), Development Tools (Hardhat, Truffle, Ganache, Remix IDE), Libraries (Web3.js, Ethers.js), Concepts (DLT, Consensus Algorithms (PoW, PoS), Cryptography, Oracles (Chainlink), Layer 2 Scaling, DAOs, DeFi, NFTs, IPFS)
+  Web Development: Frontend (React, Next.js, HTML5, CSS3, TailwindCSS), Backend (Node.js, Express.js), APIs (RESTful APIs, GraphQL (Basic))
+  Databases: SQL (PostgreSQL, MySQL), NoSQL (MongoDB)
+  DevOps & Tools: Git, GitHub, GitLab, Docker, Kubernetes (Basic understanding), CI/CD (GitHub Actions - Basic), Cloud (AWS (EC2, S3, Lambda - Basic), Firebase), Operating Systems (Linux (Ubuntu), macOS, Windows)
+  Soft Skills: Problem Solving, Analytical Thinking, Team Collaboration, Communication, Agile/Scrum methodologies
 
-Projects:
-1. Decentralized Identity Management (Ethereum)
-   - Developed smart contracts allowing users to control their digital identity.
-   - Built a React frontend for users to manage their identity attributes.
-   - Tech: Solidity, Hardhat, Ethers.js, React, IPFS for storing claims.
+EXPERIENCE
+  Software Engineer Intern - TechSolutions Inc. (Summer 2024)
+    - Contributed to the development of a blockchain-based supply chain tracking system.
+    - Assisted in writing and testing smart contracts in Solidity.
+    - Participated in daily scrums and sprint planning.
 
-2. NFT Marketplace (Polygon)
-   - Created a simple NFT marketplace for minting and trading digital art.
-   - Implemented ERC721 token standard and auction functionalities.
-   - Tech: Solidity, OpenZeppelin, Next.js, Pinata (for IPFS).
+PROJECTS
+  Decentralized Identity Management (Ethereum)
+    - Developed smart contracts allowing users to control their digital identity.
+    - Built a React frontend for users to manage their identity attributes.
+    - Tech: Solidity, Hardhat, Ethers.js, React, IPFS for storing claims.
+  NFT Marketplace (Polygon)
+    - Created a simple NFT marketplace for minting and trading digital art.
+    - Implemented ERC721 token standard and auction functionalities.
+    - Tech: Solidity, OpenZeppelin, Next.js, Pinata (for IPFS).
+  ASRWorkspace Portfolio (This Website)
+    - Designed and developed an interactive terminal-based portfolio.
+    - Tech: Next.js, React, TypeScript.
 
-3. ASRWorkspace Portfolio (This Website)
-   - Designed and developed an interactive terminal-based portfolio.
-   - Tech: Next.js, React, TypeScript.
-
-Experience:
-Software Engineer Intern - TechSolutions Inc. (Summer 2024)
-  - Contributed to the development of a blockchain-based supply chain tracking system.
-  - Assisted in writing and testing smart contracts in Solidity.
-  - Participated in daily scrums and sprint planning.
+ACHIEVEMENTS
+  - Dean's List - Fall 2023, Spring 2024
+  - Winner, University Hackathon 2023 (Blockchain Track)
+  - Certified Ethereum Developer (Placeholder Certification Body)
 `,
     },
     {
@@ -120,7 +126,7 @@ Key Features:
   - Verifiable credentials stored on IPFS.
   - User-friendly React interface for interaction.
 Status: MVP Completed
-GitHub: github.com/alexjohnson/decentralized-id (Placeholder)
+GitHub: github.com/adityasr/decentralized-id (Placeholder)
 `,
         },
         {
@@ -136,12 +142,13 @@ Key Features:
   - Fixed-price sales and basic auction mechanism.
   - Browsing and filtering NFTs.
 Status: In Development
+GitHub: github.com/adityasr/nft-marketplace (Placeholder)
 `,
         },
         {
             type: 'file',
             name: 'project_details.pdf',
-            url: '/blockchain_project_details.pdf',
+            url: '/blockchain_project_details.pdf', // Placeholder URL, ensure this file exists in /public
             mimeType: 'application/pdf',
         }
       ],
@@ -149,44 +156,46 @@ Status: In Development
     {
       type: 'file',
       name: 'skills.txt',
-      content: `Programming Languages:
-- Python (Advanced), JavaScript (Node.js, React, Next.js - Advanced)
-- Java (Intermediate), C++ (Intermediate), Solidity (Advanced), Rust (Beginner)
+      content: `SKILLS
+Programming Languages:
+  - Python (Advanced), JavaScript (Node.js, React, Next.js - Advanced)
+  - Java (Intermediate), C++ (Intermediate), Solidity (Advanced), Rust (Beginner)
 
 Blockchain Technologies:
-- Ethereum, Polygon, Bitcoin (Conceptual Understanding)
-- Smart Contracts: Solidity, OpenZeppelin, ERC20, ERC721, ERC1155
-- Development Tools: Hardhat, Truffle, Ganache, Remix IDE
-- Libraries: Web3.js, Ethers.js
-- Concepts: DLT, Consensus Algorithms (PoW, PoS), Cryptography, Oracles (Chainlink), Layer 2 Scaling, DAOs, DeFi, NFTs, IPFS
+  - Ethereum, Polygon, Bitcoin (Conceptual Understanding)
+  - Smart Contracts: Solidity, OpenZeppelin, ERC20, ERC721, ERC1155
+  - Development Tools: Hardhat, Truffle, Ganache, Remix IDE
+  - Libraries: Web3.js, Ethers.js
+  - Concepts: DLT, Consensus Algorithms (PoW, PoS), Cryptography, Oracles (Chainlink), Layer 2 Scaling, DAOs, DeFi, NFTs, IPFS
 
 Web Development:
-- Frontend: React, Next.js, HTML5, CSS3, TailwindCSS
-- Backend: Node.js, Express.js
-- APIs: RESTful APIs, GraphQL (Basic)
+  - Frontend: React, Next.js, HTML5, CSS3, TailwindCSS
+  - Backend: Node.js, Express.js
+  - APIs: RESTful APIs, GraphQL (Basic)
 
 Databases:
-- SQL: PostgreSQL, MySQL
-- NoSQL: MongoDB
+  - SQL: PostgreSQL, MySQL
+  - NoSQL: MongoDB
 
 DevOps & Tools:
-- Git, GitHub, GitLab
-- Docker, Kubernetes (Basic understanding)
-- CI/CD (GitHub Actions - Basic)
-- Cloud: AWS (EC2, S3, Lambda - Basic), Firebase
-- Operating Systems: Linux (Ubuntu), macOS, Windows
+  - Git, GitHub, GitLab
+  - Docker, Kubernetes (Basic understanding)
+  - CI/CD (GitHub Actions - Basic)
+  - Cloud: AWS (EC2, S3, Lambda - Basic), Firebase
+  - Operating Systems: Linux (Ubuntu), macOS, Windows
 
 Soft Skills:
-- Problem Solving, Analytical Thinking, Team Collaboration, Communication
-- Agile/Scrum methodologies
+  - Problem Solving, Analytical Thinking, Team Collaboration, Communication
+  - Agile/Scrum methodologies
 `,
     },
     {
       type: 'file',
       name: 'contacts.txt',
-      content: `Email: alex.johnson.portfolio@example.com (Placeholder)
-LinkedIn: linkedin.com/in/alexjohnsonportfolio (Placeholder)
-GitHub: github.com/alexjohnsonportfolio (Placeholder)
+      content: `CONTACTS
+  Email: aditya.sr.portfolio@example.com (Placeholder)
+  LinkedIn: linkedin.com/in/adityasr (Placeholder)
+  GitHub: github.com/adityasr (Placeholder)
 `,
     },
   ],
@@ -229,3 +238,4 @@ export function getRootFileContent(fileName: string): string | undefined {
   }
   return `Error: File '${fileName}' not found.`;
 }
+
