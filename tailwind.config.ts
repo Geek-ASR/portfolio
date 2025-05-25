@@ -13,7 +13,7 @@ export default {
       fontFamily: {
         sans: [`var(--font-geist-sans)`, ...defaultTheme.fontFamily.sans],
         mono: [`var(--font-geist-mono)`, ...defaultTheme.fontFamily.mono],
-        pacifico: [`var(--font-pacifico)`, ...defaultTheme.fontFamily.sans], // Use --font-pacifico variable
+        // Removed pacifico
       },
   		colors: {
   			background: 'hsl(var(--background))',
