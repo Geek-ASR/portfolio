@@ -22,6 +22,73 @@ enum TerminalPhase {
   Idle,
 }
 
+// Helper component to parse a line and make links clickable
+const InteractiveContactLine: React.FC<{ line: string }> = ({ line }) => {
+  const parts: React.ReactNode[] = [];
+  let lastIndex = 0;
+
+  // Regex for URLs (simplified for this context)
+  const urlRegex = /(https?:\/\/[^\s.,;?!()]+)/g;
+  // Regex for email
+  const emailRegex = /([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6})/g;
+
+  interface Match {
+    index: number;
+    length: number;
+    text: string;
+    type: 'url' | 'email';
+  }
+  const matches: Match[] = [];
+  let match;
+
+  // Find all URL matches
+  urlRegex.lastIndex = 0; // Reset regex state
+  while ((match = urlRegex.exec(line)) !== null) {
+    matches.push({ index: match.index, length: match[0].length, text: match[0], type: 'url' });
+  }
+
+  // Find all email matches
+  emailRegex.lastIndex = 0; // Reset regex state
+  while ((match = emailRegex.exec(line)) !== null) {
+    // Avoid double-matching if email is part of a URL (though unlikely in this specific text)
+    if (!matches.some(m => m.index <= match.index && (m.index + m.length) >= (match.index + match[0].length) && m.type === 'url')) {
+       matches.push({ index: match.index, length: match[0].length, text: match[0], type: 'email' });
+    }
+  }
+
+  matches.sort((a, b) => a.index - b.index);
+
+  for (const currentMatch of matches) {
+    // Add text before the match
+    if (currentMatch.index > lastIndex) {
+      parts.push(line.substring(lastIndex, currentMatch.index));
+    }
+    // Add the link
+    const linkText = currentMatch.text;
+    const href = currentMatch.type === 'email' ? `mailto:${linkText}` : linkText;
+    parts.push(
+      <a
+        key={`${currentMatch.type}-${currentMatch.index}`}
+        href={href}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="text-[hsl(var(--accent))] hover:underline"
+      >
+        {linkText}
+      </a>
+    );
+    lastIndex = currentMatch.index + currentMatch.length;
+  }
+
+  // Add any remaining text after the last match
+  if (lastIndex < line.length) {
+    parts.push(line.substring(lastIndex));
+  }
+
+  return <>{parts.map((part, i) => <React.Fragment key={i}>{part}</React.Fragment>)}</>;
+};
+
+
 const Terminal: React.FC = () => {
   const [history, setHistory] = useState<CommandHistoryItem[]>([]);
   const [inputValue, setInputValue] = useState('');
@@ -139,7 +206,23 @@ const Terminal: React.FC = () => {
         output = getRootFileContent('achievements.txt');
         break;
       case 'contacts':
-        output = getRootFileContent('contacts.txt');
+        const contactsContent = getRootFileContent('contacts.txt');
+        if (contactsContent && typeof contactsContent === 'string') {
+          const lines = contactsContent.split('\n');
+          output = (
+            <>
+              {lines.map((line, index) => (
+                // The second line (index 1) has the links
+                <div key={index}>
+                  {index === 1 ? <InteractiveContactLine line={line} /> : line}
+                </div>
+              ))}
+            </>
+          );
+        } else {
+          // Fallback if content is not a string or is undefined
+          output = contactsContent || `Error: Could not load contacts.txt`;
+        }
         break;
       case 'ls':
         let pathToLs = currentPath;
@@ -328,7 +411,8 @@ const Terminal: React.FC = () => {
             )}
             {item.output && (
               <div className={`whitespace-pre-wrap ${item.isSpecial ? 'my-2' : ''}`}>
-                {typeof item.output === 'string' ? <TypingEffect text={item.output} speed={10} onFinished={item.isSpecial ? undefined : () => setIsLoading(false)} /> : item.output}
+                {typeof item.output === 'string' && !item.isSpecial ? <TypingEffect text={item.output} speed={10} onFinished={() => setIsLoading(false)} /> : item.output}
+                {typeof item.output === 'string' && item.isSpecial ? item.output : null}
               </div>
             )}
           </div>
