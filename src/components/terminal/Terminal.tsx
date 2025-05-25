@@ -27,7 +27,7 @@ const InteractiveContactLine: React.FC<{ line: string }> = ({ line }) => {
   const parts: React.ReactNode[] = [];
   let lastIndex = 0;
 
-  // Regex for URLs (simplified for this context)
+  // Regex for URLs
   const urlRegex = /(https?:\/\/[^\s.,;?!()]+)/g;
   // Regex for email
   const emailRegex = /([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6})/g;
@@ -50,7 +50,7 @@ const InteractiveContactLine: React.FC<{ line: string }> = ({ line }) => {
   // Find all email matches
   emailRegex.lastIndex = 0; // Reset regex state
   while ((match = emailRegex.exec(line)) !== null) {
-    // Avoid double-matching if email is part of a URL (though unlikely in this specific text)
+    // Avoid double-matching if email is part of a URL
     if (!matches.some(m => m.index <= match.index && (m.index + m.length) >= (match.index + match[0].length) && m.type === 'url')) {
        matches.push({ index: match.index, length: match[0].length, text: match[0], type: 'email' });
     }
@@ -365,7 +365,7 @@ const Terminal: React.FC = () => {
         addHistory({ output: <TypingEffect text={output} speed={10} onFinished={() => setIsLoading(false)} /> });
       } else {
          addHistory({ output: output });
-         setIsLoading(false);
+         setIsLoading(false); // Set loading to false for non-string, non-TypingEffect outputs
       }
     } else {
       setIsLoading(false);
@@ -411,8 +411,12 @@ const Terminal: React.FC = () => {
             )}
             {item.output && (
               <div className={`whitespace-pre-wrap ${item.isSpecial ? 'my-2' : ''}`}>
-                {typeof item.output === 'string' && !item.isSpecial ? <TypingEffect text={item.output} speed={10} onFinished={() => setIsLoading(false)} /> : item.output}
-                {typeof item.output === 'string' && item.isSpecial ? item.output : null}
+                {/* Render TypingEffect for string outputs that are not special messages, otherwise render directly */}
+                {typeof item.output === 'string' && !item.isSpecial ? (
+                  <TypingEffect text={item.output} speed={10} onFinished={() => setIsLoading(false)} />
+                ) : (
+                  item.output
+                )}
               </div>
             )}
           </div>
@@ -429,7 +433,7 @@ const Terminal: React.FC = () => {
             onChange={(e) => setInputValue(e.target.value)}
             className="ml-2 flex-1 border-none bg-transparent text-[hsl(var(--foreground))] outline-none"
             autoFocus
-            disabled={isLoading}
+            disabled={isLoading && currentPhase !== TerminalPhase.Idle}
           />
         </form>
       ) : (
@@ -440,6 +444,7 @@ const Terminal: React.FC = () => {
                 <span className="ml-2">Processing...</span>
               </>
             )}
+            {/* Keep a placeholder for input area during loading to prevent layout shift if needed, or remove if not desired */}
           </div>
       )}
     </div>
@@ -447,3 +452,4 @@ const Terminal: React.FC = () => {
 };
 
 export default Terminal;
+
