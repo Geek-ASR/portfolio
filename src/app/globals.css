@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 body {
-  font-family: Arial, Helvetica, sans-serif;
+  /* Applying Geist Mono globally via RootLayout, this font-family here is a fallback or can be removed if RootLayout is definitive */
 }
 
 @layer base {
