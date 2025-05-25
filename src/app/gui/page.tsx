@@ -108,6 +108,7 @@ export default function GuiPage() {
         if (currentCategory) {
           currentCategory.items.push(trimmedLine.substring(2).trim());
         } else {
+           // If a skill item appears before any category, assign it to a default "General" category
            currentCategory = { category: "General", items: [trimmedLine.substring(2).trim()] };
         }
       } else if (trimmedLine.endsWith(':')) {
@@ -115,7 +116,7 @@ export default function GuiPage() {
           skillCategories.push(currentCategory);
         }
         currentCategory = { category: trimmedLine.slice(0, -1), items: [] };
-      } else if (trimmedLine) { 
+      } else if (trimmedLine) { // A line that is not an item and doesn't end with ':' is treated as a category title
         if (currentCategory && (currentCategory.items.length > 0 || (currentCategory.category && !skillCategories.find(sc => sc.category === currentCategory?.category)))) {
           skillCategories.push(currentCategory);
         }
@@ -125,6 +126,7 @@ export default function GuiPage() {
     if (currentCategory && (currentCategory.items.length > 0 || (currentCategory.category && !skillCategories.find(sc => sc.category === currentCategory?.category)))) {
       skillCategories.push(currentCategory);
     }
+    // Filter out any categories that might have been created with no name (e.g. from empty lines)
     return skillCategories.filter(cat => cat.category && cat.category.trim() !== '');
   };
   const parsedSkills = processSkills(skillsContent);
@@ -137,14 +139,18 @@ export default function GuiPage() {
     const restOfText = lines.slice(1).join('\n');
     
     if (lines.length === 1 && title.startsWith('Error:')) {
+        // If it's an error message from getRootFileContent
         return <p className="text-red-500">{title}</p>;
     }
     if (lines.length === 1 && !title.startsWith('Edducation') && !title.startsWith('Exxperience') && !title.startsWith('Acchievements')) {
+      // If it's a single line of text that's not one of the special titles
       return <pre className="whitespace-pre-wrap font-sans text-base leading-relaxed text-gray-700">{text}</pre>;
     }
+    // If the title is NOT one of the special titles, just display the whole text as pre
     if (!title.startsWith('Edducation') && !title.startsWith('Exxperience') && !title.startsWith('Acchievements')) {
         return <pre className="whitespace-pre-wrap font-sans text-base leading-relaxed text-gray-700">{text}</pre>;
     }
+    // Otherwise, treat the first line as a title and the rest as preformatted content
     return (
       <>
         {title && <h3 className="font-semibold text-black mb-3 text-xl">{title}</h3>}
@@ -178,13 +184,13 @@ export default function GuiPage() {
           </h1>
           <div className="mt-6 md:mt-0">
             <Image
-              src="/profile.png" 
+              src="/profile.png" // Assumes profile.png is in public folder
               alt="Aditya Rekhe"
-              width={200}
-              height={200}
-              className="rounded-full shadow-lg object-cover"
+              width={200} // Adjust as needed
+              height={200} // Adjust as needed
+              className="shadow-lg object-cover" // Removed rounded-full
               data-ai-hint="profile photo"
-              priority 
+              priority // Good for LCP
             />
           </div>
         </div>
@@ -233,7 +239,7 @@ export default function GuiPage() {
           <SectionCard title="Projects" icon={<FolderGit2 size={28} />} className="md:col-span-2">
             <div className="space-y-8">
               {projectsList.map(project => (
-                project.content && project.name !== 'project_details.pdf' && (
+                project.content && project.name !== 'project_details.pdf' && ( // Ensure content exists and it's not the PDF
                   <Card key={project.name} className="bg-white shadow-md border border-gray-200 rounded-md">
                     <CardHeader className="p-5">
                       <CardTitle className="text-xl text-black font-medium">{project.name.replace(/_/g, ' ').replace('.txt', '')}</CardTitle>
