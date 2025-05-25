@@ -76,10 +76,14 @@ export const fileSystem: Directory = {
     {
       type: 'file',
       name: 'resume.txt',
-      content: `Aditya S.R.
-aditya.sr.portfolio@example.com | +91-9876543210 | linkedin.com/in/adityasr | github.com/adityasr
+      content: `Aditya Rekhe
+8446586979 · adityarekhe1030@gmail.com
+LinkedIn: https://www.linkedin.com/in/aditya-rekhe-94b27122a/
+GitHub: https://github.com/Geek-ASR
+GeeksforGeeks: https://www.geeksforgeeks.org/user/adityare545t/
+Location: Pune, Maharashtra
 
-EDUCATION
+Edducation
   Dr.D.Y.Patil Institute of Technology, Pimpri, Pune
     Bachelor of Engineering - BE, Computer Engineering
     Dec, 2021 – Dec, 2025
@@ -210,10 +214,13 @@ Soft Skills:
     {
       type: 'file',
       name: 'contacts.txt',
-      content: `CONTACTS
-  Email: aditya.sr.portfolio@example.com (Placeholder)
-  LinkedIn: linkedin.com/in/adityasr (Placeholder)
-  GitHub: github.com/adityasr (Placeholder)
+      content: `Contact Info: Aditya Rekhe
+  Phone: 8446586979
+  Email: adityarekhe1030@gmail.com
+  LinkedIn: https://www.linkedin.com/in/aditya-rekhe-94b27122a/
+  GeeksforGeeks: https://www.geeksforgeeks.org/user/adityare545t/
+  GitHub: https://github.com/Geek-ASR
+  Location: Pune, Maharashtra
 `,
     },
   ],
