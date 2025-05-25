@@ -1,3 +1,4 @@
+
 export interface File {
   type: 'file';
   name: string;
@@ -26,7 +27,6 @@ This is the portfolio of a Computer Science student passionate about Blockchain 
 Type 'help' to see available commands.
       
 Navigate using 'ls', 'cd [directory]', 'cat [file.txt]', 'open [file.pdf]'.
-Use 'enhance-resume' to get AI suggestions for your resume.
 Use 'export' to download the resume.
 `,
     },
@@ -56,7 +56,7 @@ Key Interests:
     },
     {
       type: 'file',
-      name: 'resume.txt', // For AI enhancement
+      name: 'resume.txt', // For AI enhancement (though AI feature is removed, file content can remain)
       content: `Alex Johnson
 alex.johnson@email.com | 555-123-4567 | linkedin.com/in/alexjohnson | github.com/alexjohnson
 
@@ -85,8 +85,7 @@ Projects:
 
 3. ASRWorkspace Portfolio (This Website)
    - Designed and developed an interactive terminal-based portfolio.
-   - Integrated AI for resume enhancement suggestions.
-   - Tech: Next.js, React, TypeScript, Genkit.
+   - Tech: Next.js, React, TypeScript.
 
 Experience:
 Software Engineer Intern - TechSolutions Inc. (Summer 2024)
