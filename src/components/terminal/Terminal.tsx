@@ -24,7 +24,7 @@ enum TerminalInputState {
 
 enum TerminalPhase {
   Installing,
-  BootingText,
+  BootingText, // This phase will be skipped
   Welcoming,
   Idle,
 }
@@ -73,7 +73,7 @@ const Terminal: React.FC = () => {
       addHistory({
         output: (
           <InstallationProgress
-            onFinished={() => setCurrentPhase(TerminalPhase.BootingText)}
+            onFinished={() => setCurrentPhase(TerminalPhase.Welcoming)} // Directly go to Welcoming
           />
         ),
         isSpecial: true,
@@ -83,31 +83,7 @@ const Terminal: React.FC = () => {
   }, []); // Runs once on mount to kick off installation
 
   useEffect(() => {
-    if (currentPhase === TerminalPhase.BootingText) {
-      const installationMessages = 
-        "Initializing ASRWorkspace v1.0.0...\n" +
-        "Scanning for available modules...\n" +
-        "Loading core components... [OK]\n" +
-        "Establishing secure connection to ASRNet...\n" +
-        "Virtual environment setup... [DONE]\n" +
-        "Fetching latest package manifests...\n" +
-        "Resolving dependencies... found 324 packages.\n" +
-        "Installing packages: [coreutils, net-tools, ai-enhancer, ui-kit]... Done.\n" +
-        "Verifying system integrity... [PASS]\n" +
-        "Finalizing setup...\n" +
-        "Boot sequence complete.";
-      
-      addHistory({
-        output: (
-          <TypingEffect
-            text={installationMessages}
-            speed={30}
-            onFinished={() => setCurrentPhase(TerminalPhase.Welcoming)}
-          />
-        ),
-        isSpecial: true,
-      });
-    } else if (currentPhase === TerminalPhase.Welcoming) {
+    if (currentPhase === TerminalPhase.Welcoming) {
       const actualWelcomeMessage = `Welcome to ASRWorkspace\nThis is my portfolio website\nType 'help' for a list of commands.\nIf you are more comfortable with GUI, then switch to GUI by typing cmd : 'gui'`;
       addHistory({
         output: (
