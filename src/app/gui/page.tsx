@@ -6,7 +6,7 @@ import { fileSystem, findNode, getRootFileContent, type Directory, type File as 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { ArrowLeft, User, BookOpen, Wrench, Briefcase, Star, Mail, FolderGit2 } from 'lucide-react';
+import { TerminalSquare, User, BookOpen, Wrench, Briefcase, Star, Mail, FolderGit2 } from 'lucide-react'; // Changed ArrowLeft to TerminalSquare
 import React from 'react';
 import { cn } from '@/lib/utils';
 
@@ -28,7 +28,6 @@ const GuiContactLinkParser: React.FC<{ line: string }> = ({ line }) => {
 
   emailRegex.lastIndex = 0;
   while ((match = emailRegex.exec(line)) !== null) {
-    // Avoid matching email if it's part of a URL (e.g., mailto: in href)
     if (!matches.some(m => m.index <= match.index && (m.index + m.length) >= (match.index + m.length) && m.type === 'url')) {
        matches.push({ index: match.index, length: match[0].length, text: match[0], type: 'email' });
     }
@@ -108,7 +107,6 @@ export default function GuiPage() {
         if (currentCategory) {
           currentCategory.items.push(trimmedLine.substring(2).trim());
         } else {
-           // If a skill item appears before any category is defined, assign it to a "General" category
            currentCategory = { category: "General", items: [trimmedLine.substring(2).trim()] };
         }
       } else if (trimmedLine.endsWith(':')) {
@@ -116,7 +114,7 @@ export default function GuiPage() {
           skillCategories.push(currentCategory);
         }
         currentCategory = { category: trimmedLine.slice(0, -1), items: [] };
-      } else if (trimmedLine) { // Handles category names that don't end with ':' and are not skill items
+      } else if (trimmedLine) { 
          if (currentCategory && (currentCategory.items.length > 0 || !skillCategories.find(sc => sc.category === currentCategory?.category))) {
           skillCategories.push(currentCategory);
         }
@@ -138,17 +136,17 @@ export default function GuiPage() {
   return (
     <div className="min-h-screen bg-white text-black font-sans p-6 md:p-10 lg:p-12">
       <header className="mb-12 pb-6 border-b border-gray-200 flex justify-between items-center">
-        <h1 className="text-4xl md:text-5xl font-bold text-black">
-          ASR_Workspace - Portfolio
+        <h1 className="text-3xl md:text-4xl font-bold text-black"> {/* Title updated and size reduced */}
+          ASR_Workspace
         </h1>
         <Link href="/" passHref legacyBehavior>
           <Button 
             variant="outline" 
             size="icon" 
-            className="shadow-md border-gray-300 hover:bg-gray-100 text-black"
+            className="bg-white border-black text-black hover:bg-gray-100 shadow-md" // Updated button style
             aria-label="Back to Terminal"
           >
-            <ArrowLeft className="h-6 w-6" />
+            <TerminalSquare className="h-6 w-6" /> {/* Icon changed to TerminalSquare */}
           </Button>
         </Link>
       </header>
