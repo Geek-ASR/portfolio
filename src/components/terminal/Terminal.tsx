@@ -27,8 +27,8 @@ const InteractiveContactLine: React.FC<{ line: string }> = ({ line }) => {
   const parts: React.ReactNode[] = [];
   let lastIndex = 0;
 
-  // Regex for URLs
-  const urlRegex = /(https?:\/\/[^\s.,;?!()]+)/g;
+  // Updated Regex for URLs
+  const urlRegex = /(https?:\/\/[\w\-\.\/\?\#\&\=\%\@\:]+)/g;
   // Regex for email
   const emailRegex = /([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6})/g;
 
@@ -68,7 +68,7 @@ const InteractiveContactLine: React.FC<{ line: string }> = ({ line }) => {
     const href = currentMatch.type === 'email' ? `mailto:${linkText}` : linkText;
     parts.push(
       <a
-        key={`${currentMatch.type}-${currentMatch.index}`}
+        key={`${currentMatch.type}-${currentMatch.index}-${linkText}`} // Added linkText to key for more uniqueness
         href={href}
         target="_blank"
         rel="noopener noreferrer"
@@ -288,7 +288,7 @@ const Terminal: React.FC = () => {
         const targetNode = findNode(newPath);
         if (targetNode && targetNode.type === 'directory') {
           setCurrentPath(newPath);
-          output = ''; 
+          output = '';
         } else {
           output = `cd: no such file or directory: ${targetDir}`;
         }
@@ -300,7 +300,7 @@ const Terminal: React.FC = () => {
           break;
         }
         const pathForCat = fileToCat.startsWith('~/') ? fileToCat :
-                           fileToCat.includes('/') ? fileToCat : 
+                           fileToCat.includes('/') ? fileToCat :
                            currentPath === '~' ? `~/${fileToCat}` : `${currentPath}/${fileToCat}`;
 
         const catNode = findNode(pathForCat);
@@ -348,7 +348,7 @@ const Terminal: React.FC = () => {
       case 'export':
         output = 'Downloading resume.pdf...';
         const link = document.createElement('a');
-        link.href = '/resume.pdf'; 
+        link.href = '/resume.pdf';
         link.setAttribute('download', 'ASRWorkspace_Resume.pdf');
         document.body.appendChild(link);
         link.click();
@@ -367,7 +367,7 @@ const Terminal: React.FC = () => {
         addHistory({ output: <TypingEffect text={output} speed={10} onFinished={() => setIsLoading(false)} /> });
       } else {
          addHistory({ output: output });
-         setIsLoading(false); 
+         setIsLoading(false);
       }
     } else {
       setIsLoading(false);
