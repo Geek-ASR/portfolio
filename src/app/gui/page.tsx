@@ -8,8 +8,9 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { TerminalSquare, User, BookOpen, Wrench, Briefcase, Star, Mail, FolderGit2 } from 'lucide-react';
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
+import TypingEffect from '@/components/terminal/TypingEffect';
 
 const GuiContactLinkParser: React.FC<{ line: string }> = ({ line }) => {
   const parts: React.ReactNode[] = [];
@@ -96,6 +97,28 @@ export default function GuiPage() {
   const projectsNode = findNode('~/projects');
   const projectsList = projectsNode && projectsNode.type === 'directory' ? projectsNode.children.filter(c => c.type === 'file') as FileSystemFileType[] : [];
 
+  const [isWaveAnimationComplete, setIsWaveAnimationComplete] = useState(false);
+
+  const line1Text = "Hello, I am";
+  const line2Text = "Aditya Rekhe";
+  const subtitleText = "Sooftware Engineer | Full-stack Developer | Blockchain Solutions ";
+
+  useEffect(() => {
+    const animationStaggerDelay = 0.07 * 1000; // 70ms
+    const nameAnimationDuration = 2500; // 2.5s from Tailwind config
+    // Time for the last character of the name to START its color wave
+    const timeForLastNameCharToStartWave = (line1Text.length + line2Text.length -1) * animationStaggerDelay;
+    // Total time until the color wave is visually complete on the last character
+    const totalWaveEffectDuration = timeForLastNameCharToStartWave + nameAnimationDuration;
+
+    const timer = setTimeout(() => {
+      setIsWaveAnimationComplete(true);
+    }, totalWaveEffectDuration);
+
+    return () => clearTimeout(timer);
+  }, [line1Text, line2Text]);
+
+
   const processSkills = (skillsText: string | undefined) => {
     if (!skillsText) return [];
     const lines = skillsText.split('\n').filter(line => line.trim() !== '' && !line.trim().toUpperCase().startsWith("SKILLS"));
@@ -109,7 +132,7 @@ export default function GuiPage() {
           currentCategory.items.push(trimmedLine.substring(2).trim());
         } else {
            currentCategory = { category: "General", items: [trimmedLine.substring(2).trim()] };
-           if (!skillCategories.find(sc => sc.category === currentCategory?.category)) { // ensure General is added only once if it's the first
+           if (!skillCategories.find(sc => sc.category === currentCategory?.category)) {
             skillCategories.push(currentCategory);
            }
         }
@@ -140,13 +163,8 @@ export default function GuiPage() {
     if (firstLine.startsWith('Error:')) {
         return <p className="text-red-500">{firstLine}</p>;
     }
-    // Always display the text as preformatted
     return <pre className="whitespace-pre-wrap font-sans text-base leading-relaxed text-gray-700">{text}</pre>;
   };
-
-  const line1Text = "Hello, I am";
-  const line2Text = "Aditya Rekhe";
-
 
   return (
     <div className="min-h-screen bg-white text-black font-sans">
@@ -165,45 +183,59 @@ export default function GuiPage() {
           </Link>
         </div>
 
-        <div className="flex flex-col md:flex-row items-center justify-center gap-8 lg:gap-12 text-center md:text-left">
-          <h1 className="font-sans text-5xl md:text-6xl lg:text-7xl text-black text-center">
-            <div>
-              {line1Text.split("").map((char, index) => (
-                <span
-                  key={`line1-${index}`}
-                  className="inline-block animate-color-text-wave"
-                  style={{ animationDelay: `${index * 0.07}s` }}
-                  aria-hidden="true"
-                >
-                  {char === " " ? "\u00A0" : char}
-                </span>
-              ))}
-            </div>
-            <div>
-              {line2Text.split("").map((char, index) => (
-                <span
-                  key={`line2-${index}`}
-                  className="inline-block animate-color-text-wave font-extrabold"
-                  style={{
-                    animationDelay: `${(line1Text.length + index) * 0.07}s`, 
-                  }}
-                  aria-hidden="true"
-                >
-                  {char === " " ? "\u00A0" : char}
-                </span>
-              ))}
-            </div>
-            <span className="sr-only">{`${line1Text} ${line2Text}`}</span>
-          </h1>
-          <div className="mt-6 md:mt-0">
+        <div className="flex flex-col md:flex-row items-center justify-center md:items-start md:justify-start gap-8 lg:gap-12 w-full max-w-4xl">
+          {/* Text content block */}
+          <div className="text-center md:text-left">
+            <h1 className="font-sans text-5xl md:text-6xl lg:text-7xl text-black">
+              <div>
+                {line1Text.split("").map((char, index) => (
+                  <span
+                    key={`line1-${index}`}
+                    className="inline-block animate-color-text-wave"
+                    style={{ animationDelay: `${index * 0.07}s` }}
+                    aria-hidden="true"
+                  >
+                    {char === " " ? "\u00A0" : char}
+                  </span>
+                ))}
+              </div>
+              <div>
+                {line2Text.split("").map((char, index) => (
+                  <span
+                    key={`line2-${index}`}
+                    className="inline-block animate-color-text-wave font-extrabold"
+                    style={{
+                      animationDelay: `${(line1Text.length + index) * 0.07}s`,
+                    }}
+                    aria-hidden="true"
+                  >
+                    {char === " " ? "\u00A0" : char}
+                  </span>
+                ))}
+              </div>
+              <span className="sr-only">{`${line1Text} ${line2Text}`}</span>
+            </h1>
+            {isWaveAnimationComplete && (
+              <div className="mt-2">
+                <TypingEffect
+                  text={subtitleText}
+                  speed={70}
+                  className="font-sans text-base md:text-lg lg:text-xl text-gray-700 tracking-wide block"
+                />
+              </div>
+            )}
+          </div>
+
+          {/* Image block */}
+          <div className="mt-6 md:mt-0 flex-shrink-0">
             <Image
-              src="/profile.png" 
+              src="/profile.png"
               alt="Aditya Rekhe"
-              width={200} 
-              height={200} 
-              className="shadow-lg object-cover" 
+              width={200}
+              height={200}
+              className="shadow-lg object-cover"
               data-ai-hint="profile photo"
-              priority 
+              priority
             />
           </div>
         </div>
@@ -224,7 +256,7 @@ export default function GuiPage() {
         )}
 
         {skillsContent && parsedSkills.length > 0 && (
-          <SectionCard title="Skills" icon={<Wrench size={28} />}>
+          <SectionCard title="Skills" icon={<Wrench size={28} />} className="md:col-span-2">
             <div className="space-y-6">
               {parsedSkills.map((cat, idx) => (
                 <div key={idx}>
