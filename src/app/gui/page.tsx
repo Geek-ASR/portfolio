@@ -108,56 +108,45 @@ export default function GuiPage() {
         if (currentCategory) {
           currentCategory.items.push(trimmedLine.substring(2).trim());
         } else {
-           // If a skill item appears before any category, assign it to a default "General" category
            currentCategory = { category: "General", items: [trimmedLine.substring(2).trim()] };
+           if (!skillCategories.find(sc => sc.category === currentCategory?.category)) { // ensure General is added only once if it's the first
+            skillCategories.push(currentCategory);
+           }
         }
       } else if (trimmedLine.endsWith(':')) {
         if (currentCategory && (currentCategory.items.length > 0 || !skillCategories.find(sc => sc.category === currentCategory?.category))) {
-          skillCategories.push(currentCategory);
+          if(!skillCategories.find(sc => sc.category === currentCategory?.category)) skillCategories.push(currentCategory);
         }
         currentCategory = { category: trimmedLine.slice(0, -1), items: [] };
-      } else if (trimmedLine) { // A line that is not an item and doesn't end with ':' is treated as a category title
+      } else if (trimmedLine) { 
         if (currentCategory && (currentCategory.items.length > 0 || (currentCategory.category && !skillCategories.find(sc => sc.category === currentCategory?.category)))) {
-          skillCategories.push(currentCategory);
+           if(!skillCategories.find(sc => sc.category === currentCategory?.category)) skillCategories.push(currentCategory);
         }
         currentCategory = { category: trimmedLine, items: [] };
       }
     });
     if (currentCategory && (currentCategory.items.length > 0 || (currentCategory.category && !skillCategories.find(sc => sc.category === currentCategory?.category)))) {
-      skillCategories.push(currentCategory);
+       if(!skillCategories.find(sc => sc.category === currentCategory?.category)) skillCategories.push(currentCategory);
     }
-    // Filter out any categories that might have been created with no name (e.g. from empty lines)
     return skillCategories.filter(cat => cat.category && cat.category.trim() !== '');
   };
   const parsedSkills = processSkills(skillsContent);
 
   const formatPreText = (text: string | undefined) => {
     if (!text) return null;
-    // Display the first line as a title, rest as preformatted text
     const lines = text.split('\n');
-    const title = lines[0];
-    const restOfText = lines.slice(1).join('\n');
+    const firstLine = lines[0];
     
-    if (lines.length === 1 && title.startsWith('Error:')) {
-        // If it's an error message from getRootFileContent
-        return <p className="text-red-500">{title}</p>;
+    if (firstLine.startsWith('Error:')) {
+        return <p className="text-red-500">{firstLine}</p>;
     }
-    if (lines.length === 1 && !title.startsWith('Edducation') && !title.startsWith('Exxperience') && !title.startsWith('Acchievements')) {
-      // If it's a single line of text that's not one of the special titles
-      return <pre className="whitespace-pre-wrap font-sans text-base leading-relaxed text-gray-700">{text}</pre>;
-    }
-    // If the title is NOT one of the special titles, just display the whole text as pre
-    if (!title.startsWith('Edducation') && !title.startsWith('Exxperience') && !title.startsWith('Acchievements')) {
-        return <pre className="whitespace-pre-wrap font-sans text-base leading-relaxed text-gray-700">{text}</pre>;
-    }
-    // Otherwise, treat the first line as a title and the rest as preformatted content
-    return (
-      <>
-        {title && <h3 className="font-semibold text-black mb-3 text-xl">{title}</h3>}
-        {restOfText && <pre className="whitespace-pre-wrap font-sans text-base leading-relaxed text-gray-700">{restOfText}</pre>}
-      </>
-    );
+    // Always display the text as preformatted
+    return <pre className="whitespace-pre-wrap font-sans text-base leading-relaxed text-gray-700">{text}</pre>;
   };
+
+  const line1Text = "Hello, I am";
+  const line2Text = "Aditya Rekhe";
+
 
   return (
     <div className="min-h-screen bg-white text-black font-sans">
@@ -177,27 +166,51 @@ export default function GuiPage() {
         </div>
 
         <div className="flex flex-col md:flex-row items-center justify-center gap-8 lg:gap-12 text-center md:text-left">
-          <h1 className="font-sans text-5xl md:text-6xl lg:text-7xl text-black">
-            <span className="font-normal">Hello, I am</span>
-            <br />
-            <span className="font-extrabold">Aditya Rekhe</span>
+          <h1 className="font-sans text-5xl md:text-6xl lg:text-7xl text-black text-center">
+            <div>
+              {line1Text.split("").map((char, index) => (
+                <span
+                  key={`line1-${index}`}
+                  className="inline-block animate-wave"
+                  style={{ animationDelay: `${index * 0.07}s` }}
+                  aria-hidden="true"
+                >
+                  {char === " " ? "\u00A0" : char}
+                </span>
+              ))}
+            </div>
+            <div>
+              {line2Text.split("").map((char, index) => (
+                <span
+                  key={`line2-${index}`}
+                  className="inline-block animate-wave font-extrabold"
+                  style={{
+                    animationDelay: `${(line1Text.length + index) * 0.07}s`, 
+                  }}
+                  aria-hidden="true"
+                >
+                  {char === " " ? "\u00A0" : char}
+                </span>
+              ))}
+            </div>
+            <span className="sr-only">{`${line1Text} ${line2Text}`}</span>
           </h1>
           <div className="mt-6 md:mt-0">
             <Image
-              src="/profile.png" // Assumes profile.png is in public folder
+              src="/profile.png" 
               alt="Aditya Rekhe"
-              width={200} // Adjust as needed
-              height={200} // Adjust as needed
-              className="shadow-lg object-cover" // Removed rounded-full
+              width={200} 
+              height={200} 
+              className="shadow-lg object-cover" 
               data-ai-hint="profile photo"
-              priority // Good for LCP
+              priority 
             />
           </div>
         </div>
       </section>
 
       {/* Main Content Area */}
-      <main className="px-6 md:px-10 lg:px-12 py-16 grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-10">
+      <main className="px-6 md:px-10 lg:px-16 py-16 grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-10">
         {aboutMe && (
           <SectionCard title="About Me" icon={<User size={28} />}>
              <p className="text-base leading-relaxed text-gray-700">{aboutMe}</p>
@@ -239,7 +252,7 @@ export default function GuiPage() {
           <SectionCard title="Projects" icon={<FolderGit2 size={28} />} className="md:col-span-2">
             <div className="space-y-8">
               {projectsList.map(project => (
-                project.content && project.name !== 'project_details.pdf' && ( // Ensure content exists and it's not the PDF
+                project.content && project.name !== 'project_details.pdf' && ( 
                   <Card key={project.name} className="bg-white shadow-md border border-gray-200 rounded-md">
                     <CardHeader className="p-5">
                       <CardTitle className="text-xl text-black font-medium">{project.name.replace(/_/g, ' ').replace('.txt', '')}</CardTitle>
