@@ -108,28 +108,24 @@ export default function GuiPage() {
         if (currentCategory) {
           currentCategory.items.push(trimmedLine.substring(2).trim());
         } else {
-           // This case should ideally not happen if format is Category: then - item
-           // But if it does, assign to a "General" category or handle as an error
            currentCategory = { category: "General", items: [trimmedLine.substring(2).trim()] };
         }
       } else if (trimmedLine.endsWith(':')) {
-        // New category
         if (currentCategory && (currentCategory.items.length > 0 || !skillCategories.find(sc => sc.category === currentCategory?.category))) {
           skillCategories.push(currentCategory);
         }
         currentCategory = { category: trimmedLine.slice(0, -1), items: [] };
-      } else if (trimmedLine) { // Could be a category title without a colon if it's the only thing
+      } else if (trimmedLine) {
          if (currentCategory && (currentCategory.items.length > 0 || !skillCategories.find(sc => sc.category === currentCategory?.category))) {
           skillCategories.push(currentCategory);
         }
         currentCategory = { category: trimmedLine, items: [] };
       }
     });
-    // Push the last category
     if (currentCategory && (currentCategory.items.length > 0 || (currentCategory.category && !skillCategories.find(sc => sc.category === currentCategory?.category)))) {
       skillCategories.push(currentCategory);
     }
-    return skillCategories.filter(cat => cat.category && cat.category.trim() !== ''); // Ensure category name is not empty
+    return skillCategories.filter(cat => cat.category && cat.category.trim() !== '');
   };
   const parsedSkills = processSkills(skillsContent);
 
@@ -139,36 +135,45 @@ export default function GuiPage() {
   };
 
   return (
-    <div className="min-h-screen bg-white text-black font-sans p-6 md:p-10 lg:p-12">
-      <header className="mb-12 pb-6 border-b border-gray-200 flex justify-between items-center">
-        <h1 className="text-3xl font-bold text-black">
-          ASR_Workspace
-        </h1>
-        <Link href="/" passHref legacyBehavior>
-          <Button 
-            variant="outline" 
-            size="icon" 
-            className="bg-white border-black text-black hover:bg-gray-100 shadow-md"
-            aria-label="Back to Terminal"
-          >
-            <TerminalSquare className="h-6 w-6" />
-          </Button>
-        </Link>
-      </header>
+    <div className="min-h-screen bg-white text-black font-sans">
+      {/* Hero Section */}
+      <section className="h-screen flex flex-col items-center justify-center relative p-4">
+        <div className="absolute top-6 right-6 z-10">
+          <Link href="/" passHref legacyBehavior>
+            <Button
+              variant="outline"
+              size="icon"
+              className="bg-white border-black text-black hover:bg-gray-100 shadow-md"
+              aria-label="Back to Terminal"
+            >
+              <TerminalSquare className="h-6 w-6" />
+            </Button>
+          </Link>
+        </div>
 
-      <main className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-10">
+        <div className="flex flex-col md:flex-row items-center justify-center gap-8 lg:gap-12 text-center md:text-left">
+          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-black">
+            Hello, I am Aditya Rekhe
+          </h1>
+          <div className="mt-6 md:mt-0">
+            <Image
+              src="/profile.png"
+              alt="Aditya Rekhe"
+              width={200}
+              height={200}
+              className="rounded-full shadow-lg object-cover"
+              data-ai-hint="profile photo"
+              priority
+            />
+          </div>
+        </div>
+      </section>
+
+      {/* Main Content Area */}
+      <main className="px-6 md:px-10 lg:px-12 py-16 grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-10">
         {aboutMe && (
           <SectionCard title="About Me" icon={<User size={28} />} className="md:col-span-2">
-            <div className="flex flex-col items-center text-center mb-6">
-              <Image
-                src="/profile.png" 
-                alt="Aditya Rekhe"
-                width={150}
-                height={150}
-                className="rounded-full mb-4 shadow-md"
-                data-ai-hint="profile photo"
-              />
-            </div>
+            {/* Image is now in hero, so only text here */}
             <p className="text-base leading-relaxed text-gray-700">{aboutMe}</p>
           </SectionCard>
         )}
@@ -208,7 +213,7 @@ export default function GuiPage() {
           <SectionCard title="Projects" icon={<FolderGit2 size={28} />} className="md:col-span-2">
             <div className="space-y-8">
               {projectsList.map(project => (
-                project.content && project.name !== 'project_details.pdf' && ( // Ensure content exists and isn't the generic PDF
+                project.content && project.name !== 'project_details.pdf' && (
                   <Card key={project.name} className="bg-white shadow-md border border-gray-200 rounded-md">
                     <CardHeader className="p-5">
                       <CardTitle className="text-xl text-black font-medium">{project.name.replace(/_/g, ' ').replace('.txt', '')}</CardTitle>
@@ -221,7 +226,6 @@ export default function GuiPage() {
                   </Card>
                 )
               ))}
-              {/* Manually add the portfolio website project card */}
               <Card className="bg-white shadow-md border border-gray-200 rounded-md">
                 <CardHeader className="p-5">
                   <CardTitle className="text-xl text-black font-medium">ASRWorkspace Portfolio (This Website)</CardTitle>
@@ -254,7 +258,7 @@ Tech: Next.js, React, TypeScript, ShadCN UI, Tailwind CSS.</p>
         )}
       </main>
 
-      <footer className="mt-20 pt-10 border-t border-gray-200 text-center text-sm text-gray-500">
+      <footer className="mt-20 pt-10 border-t border-gray-200 text-center text-sm text-gray-500 px-6 pb-6">
         <p>&copy; {new Date().getFullYear()} Aditya Rekhe. All rights reserved.</p>
         <p className="mt-1">Powered by ASR_Workspace</p>
       </footer>
