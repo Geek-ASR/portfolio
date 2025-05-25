@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { ArrowLeft, User, BookOpen, Wrench, Briefcase, Star, Mail, FolderGit2 } from 'lucide-react';
 import React from 'react';
+import { cn } from '@/lib/utils'; // Added import
 
 const GuiContactLinkParser: React.FC<{ line: string }> = ({ line }) => {
   const parts: React.ReactNode[] = [];
