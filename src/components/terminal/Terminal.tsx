@@ -1,3 +1,4 @@
+
 'use client';
 
 import React, { useState, useEffect, useRef, useCallback } from 'react';
@@ -24,7 +25,7 @@ const Terminal: React.FC = () => {
   const [history, setHistory] = useState<CommandHistoryItem[]>([]);
   const [inputValue, setInputValue] = useState('');
   const [currentPath, setCurrentPath] = useState('~');
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true); // Start as true for initial animation
   const [currentCommandId, setCurrentCommandId] = useState(0);
   const [terminalState, setTerminalState] = useState<TerminalState>(TerminalState.Idle);
   const [resumeContentForAI, setResumeContentForAI] = useState<string | null>(null);
@@ -47,7 +48,9 @@ const Terminal: React.FC = () => {
   useEffect(scrollToBottom, [history, scrollToBottom]);
 
   useEffect(() => {
-    inputRef.current?.focus();
+    if (!isLoading) { // Only focus if not loading (e.g. after initial animation)
+      inputRef.current?.focus();
+    }
   }, [isLoading]);
 
   const addHistory = useCallback((item: Omit<CommandHistoryItem, 'id'>) => {
@@ -56,16 +59,50 @@ const Terminal: React.FC = () => {
   }, []);
 
   useEffect(() => {
+    setIsLoading(true); // Ensure loading state is true for the boot sequence
+
+    const actualWelcomeMessage = `Welcome to ASRWorkspace\nThis is my portfolio website\nType 'help' for a list of commands.\nIf you are more comfortable with GUI, then switch to GUI by typing cmd : 'gui'`;
+
+    const displayActualWelcome = () => {
+      addHistory({
+        output: (
+          <TypingEffect
+            text={actualWelcomeMessage}
+            speed={20} // Regular speed for welcome
+            onFinished={() => {
+              setIsLoading(false); // Enable input after the final welcome message
+            }}
+          />
+        ),
+        isSpecial: true,
+      });
+    };
+
+    const installationMessages = 
+      "Initializing ASRWorkspace v1.0.0...\n" +
+      "Scanning for available modules...\n" +
+      "Loading core components... [OK]\n" +
+      "Establishing secure connection to ASRNet...\n" +
+      "Virtual environment setup... [DONE]\n" +
+      "Fetching latest package manifests...\n" +
+      "Resolving dependencies... found 324 packages.\n" +
+      "Installing packages: [coreutils, net-tools, ai-enhancer, ui-kit]... Done.\n" +
+      "Verifying system integrity... [PASS]\n" +
+      "Finalizing setup...\n" +
+      "Boot sequence complete.";
+
     addHistory({
       output: (
         <TypingEffect
-          text={`Welcome to ASRWorkspace\nThis is my portfolio website\nType 'help' for a list of commands.\nIf you are more comfortable with GUI, then switch to GUI by typing cmd : 'gui'`}
+          text={installationMessages}
+          speed={30} // Slightly faster for boot messages
+          onFinished={displayActualWelcome}
         />
       ),
       isSpecial: true,
     });
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, []); // Empty dependency array to run only once on mount
 
 
   const processCommand = useCallback(async (commandInput: string) => {
@@ -109,7 +146,7 @@ const Terminal: React.FC = () => {
   echo [text]   Display text
   export        Download resume.pdf
   enhance-resume Enhance your resume using AI
-  gui           Switch to GUI mode (placeholder)`; // Added gui to help
+  gui           Switch to GUI mode (placeholder)`;
           break;
         case 'ls':
           const node = findNode(currentPath);
@@ -189,16 +226,7 @@ const Terminal: React.FC = () => {
           break;
         case 'clear':
           setHistory([]);
-          output = '';
-          // Add welcome message again after clear for better UX
-           addHistory({
-            output: (
-              <TypingEffect
-                text={`Welcome to ASRWorkspace\nThis is my portfolio website\nType 'help' for a list of commands.\nIf you are more comfortable with GUI, then switch to GUI by typing cmd : 'gui'`}
-              />
-            ),
-            isSpecial: true,
-          });
+          output = ''; // Standard clear command just clears screen
           break;
         case 'whoami':
           output = username;
@@ -228,11 +256,8 @@ const Terminal: React.FC = () => {
             output = "Error: resume.txt not found in the root directory.";
           }
           break;
-        case 'gui': // Added 'gui' command handler (placeholder)
-          // For now, let's just acknowledge the command.
-          // You'll need to implement the actual GUI switching logic later.
+        case 'gui': 
           output = 'Switching to GUI mode... (Feature not yet implemented)';
-          // Example: router.push('/gui-page');
           break;
         default:
           // Handled by initial value
@@ -243,18 +268,19 @@ const Terminal: React.FC = () => {
     if (output !== '') {
       addHistory({ output: <TypingEffect text={output} onFinished={() => setIsLoading(false)} /> });
     } else {
-      setIsLoading(false);
+      setIsLoading(false); // If output is empty (e.g. 'cd', 'clear'), stop loading
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentPath, addHistory, terminalState, resumeContentForAI]);
+  }, [currentPath, addHistory, terminalState, resumeContentForAI]); // setIsLoading is stable, not needed here
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
     if (inputValue.trim() === '' && terminalState !== TerminalState.AwaitingJobDescription) {
+      // For an empty command, add the command to history and then an empty output line.
       addHistory({ command: '', path: currentPath, isInput: true });
-      addHistory({ output: '' }); // Empty line for empty command
-      setCurrentCommandId(prev => prev + 1); // Ensure prompt shows for next line
-      setIsLoading(false);
+      addHistory({ output: '' }); // This creates the empty line for an empty command
+      setCurrentCommandId(prev => prev + 1); 
+      setIsLoading(false); // Ensure prompt is ready for next input
     } else {
       processCommand(inputValue);
     }
@@ -262,7 +288,9 @@ const Terminal: React.FC = () => {
   };
 
   const handleTerminalClick = () => {
-    inputRef.current?.focus();
+    if (!isLoading || terminalState === TerminalState.AwaitingJobDescription) {
+       inputRef.current?.focus();
+    }
   };
 
   return (
@@ -272,7 +300,7 @@ const Terminal: React.FC = () => {
     >
       <ScrollArea className="flex-grow" ref={scrollAreaRef}>
         <div className="pr-2">
-        {history.map((item, index) => (
+        {history.map((item) => (
           <div key={item.id}>
             {item.isInput && (
               <div className="flex">
@@ -289,7 +317,7 @@ const Terminal: React.FC = () => {
         ))}
         </div>
       </ScrollArea>
-      {!isLoading || terminalState === TerminalState.AwaitingJobDescription ? (
+      {(!isLoading || terminalState === TerminalState.AwaitingJobDescription) ? (
          <form onSubmit={handleSubmit} className="mt-2 flex">
           {terminalState === TerminalState.Idle ? (
              <span className="text-[hsl(var(--accent))]">{username}@{hostname}:{currentPath}$</span>
@@ -303,10 +331,12 @@ const Terminal: React.FC = () => {
             onChange={(e) => setInputValue(e.target.value)}
             className="ml-2 flex-1 border-none bg-transparent text-[hsl(var(--foreground))] outline-none"
             autoFocus
-            disabled={isLoading && terminalState !== TerminalState.AwaitingJobDescription}
+            disabled={isLoading && terminalState !== TerminalState.AwaitingJobDescription} // Should be fine
           />
         </form>
       ) : (
+         // This part shows when isLoading is true AND not awaiting job description.
+         // During initial boot, this will show "Processing..." which is acceptable.
          <div className="mt-2 flex">
             <span className="text-[hsl(var(--accent))]">{username}@{hostname}:{currentPath}$</span>
             <span className="ml-2">Processing...</span>
@@ -317,3 +347,4 @@ const Terminal: React.FC = () => {
 };
 
 export default Terminal;
+    
