@@ -2,7 +2,7 @@
 'use client';
 
 import Link from 'next/link';
-import Image from 'next/image'; // Import next/image
+import Image from 'next/image';
 import { fileSystem, findNode, getRootFileContent, type Directory, type File as FileSystemFileType } from '@/lib/file-system';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -108,24 +108,28 @@ export default function GuiPage() {
         if (currentCategory) {
           currentCategory.items.push(trimmedLine.substring(2).trim());
         } else {
+           // This case should ideally not happen if format is Category: then - item
+           // But if it does, assign to a "General" category or handle as an error
            currentCategory = { category: "General", items: [trimmedLine.substring(2).trim()] };
         }
       } else if (trimmedLine.endsWith(':')) {
+        // New category
         if (currentCategory && (currentCategory.items.length > 0 || !skillCategories.find(sc => sc.category === currentCategory?.category))) {
           skillCategories.push(currentCategory);
         }
         currentCategory = { category: trimmedLine.slice(0, -1), items: [] };
-      } else if (trimmedLine) { 
+      } else if (trimmedLine) { // Could be a category title without a colon if it's the only thing
          if (currentCategory && (currentCategory.items.length > 0 || !skillCategories.find(sc => sc.category === currentCategory?.category))) {
           skillCategories.push(currentCategory);
         }
         currentCategory = { category: trimmedLine, items: [] };
       }
     });
+    // Push the last category
     if (currentCategory && (currentCategory.items.length > 0 || (currentCategory.category && !skillCategories.find(sc => sc.category === currentCategory?.category)))) {
       skillCategories.push(currentCategory);
     }
-    return skillCategories.filter(cat => cat.category && cat.category.trim() !== '');
+    return skillCategories.filter(cat => cat.category && cat.category.trim() !== ''); // Ensure category name is not empty
   };
   const parsedSkills = processSkills(skillsContent);
 
@@ -156,14 +160,9 @@ export default function GuiPage() {
         {aboutMe && (
           <SectionCard title="About Me" icon={<User size={28} />} className="md:col-span-2">
             <div className="flex flex-col items-center text-center mb-6">
-              {/* 
-                TODO: Replace the placeholder below with your actual image.
-                1. Add your photo to the `public` folder (e.g., `public/your-photo.jpg`).
-                2. Change the `src` attribute below to `/your-photo.jpg`.
-              */}
               <Image
-                src="https://placehold.co/150x150.png" // Replace with your image path, e.g., "/your-photo.jpg"
-                alt="Aditya Rekhe" // Or a more generic "User photo"
+                src="/profile.png" 
+                alt="Aditya Rekhe"
                 width={150}
                 height={150}
                 className="rounded-full mb-4 shadow-md"
@@ -209,7 +208,7 @@ export default function GuiPage() {
           <SectionCard title="Projects" icon={<FolderGit2 size={28} />} className="md:col-span-2">
             <div className="space-y-8">
               {projectsList.map(project => (
-                project.content && project.name !== 'project_details.pdf' && (
+                project.content && project.name !== 'project_details.pdf' && ( // Ensure content exists and isn't the generic PDF
                   <Card key={project.name} className="bg-white shadow-md border border-gray-200 rounded-md">
                     <CardHeader className="p-5">
                       <CardTitle className="text-xl text-black font-medium">{project.name.replace(/_/g, ' ').replace('.txt', '')}</CardTitle>
@@ -222,6 +221,7 @@ export default function GuiPage() {
                   </Card>
                 )
               ))}
+              {/* Manually add the portfolio website project card */}
               <Card className="bg-white shadow-md border border-gray-200 rounded-md">
                 <CardHeader className="p-5">
                   <CardTitle className="text-xl text-black font-medium">ASRWorkspace Portfolio (This Website)</CardTitle>
