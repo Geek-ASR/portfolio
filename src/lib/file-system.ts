@@ -61,7 +61,7 @@ export const fileSystem: Directory = {
     {
       type: 'file',
       name: 'achievements.txt',
-      content: `ACHIEVEMENTS
+      content: `Acchievements
   - Won 3rd price in blockchain hackathon held by All India Blockchain Alliance.
   - Got selected and participated in Unfold@2023 hackathon.
   - Conducted workshops on blockchain technology in multiple Universities over time.
@@ -125,7 +125,7 @@ PROJECTS
     - Designed and developed an interactive terminal-based portfolio.
     - Tech: Next.js, React, TypeScript.
 
-ACHIEVEMENTS
+Acchievements
   - Won 3rd price in blockchain hackathon held by All India Blockchain Alliance.
   - Got selected and participated in Unfold@2023 hackathon.
   - Conducted workshops on blockchain technology in multiple Universities over time.
