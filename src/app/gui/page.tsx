@@ -154,7 +154,7 @@ export default function GuiPage() {
         </div>
 
         <div className="flex flex-col md:flex-row items-center justify-center gap-8 lg:gap-12 text-center md:text-left">
-          <h1 className="font-knewave text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight text-neutral-900">
+          <h1 className="font-knewave text-5xl md:text-6xl lg:text-7xl tracking-tight text-neutral-900">
             Hello, I am Aditya Rekhe
           </h1>
           <div className="mt-6 md:mt-0">
