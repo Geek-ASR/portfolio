@@ -33,10 +33,10 @@ export const fileSystem: Directory = {
       type: 'file',
       name: 'education.txt',
       content: `EDUCATION
-  Dr.D.Y.Patil Institute of Technology, Pimpri, Pune
-    Bachelor of Engineering - BE, Computer Engineering
-    Dec, 2021 – Dec, 2025
-    CGPA: 8.7/10
+ Dr.D.Y.Patil Institute of Technology, Pimpri, Pune
+ Bachelor of Engineering - BE, Computer Engineering
+ Dec, 2021 – Dec, 2025
+ CGPA: 8.7/10
 `,
     },
     {
