@@ -22,24 +22,21 @@ export const fileSystem: Directory = {
     {
       type: 'file',
       name: 'README.md',
-      content: `Welcome to ASRWorkspace!
-This is the portfolio of a Computer Science student passionate about Blockchain technology.
-Type 'help' to see available commands.
-
-Navigate using 'ls', 'cd [directory]', 'cat [file.txt]', 'open [file.pdf]'.
-Use 'export' to download the resume.
-`,
+      content: `Welcome to ASRWorkspace!\nThis is my portfolio website\nType 'help' for a list of commands.\nIf you are more comfortable with GUI, then switch to GUI by typing cmd : 'gui'`,
     },
     {
       type: 'file',
-      name: 'about_me.txt', // Renamed from about.txt for consistency with command
+      name: 'about_me.txt',
       content: `Myself Aditya, I would define myself as a quick learner and a person who is eager to explore new technologies and environments, passionate for innovative solutions and programming. I embrace challenges as opportunities for growth, constantly seeking to expand my knowledge and skill set. I am ready to contribute with my adaptable nature and enthusiasm to any project or team.`,
     },
     {
       type: 'file',
       name: 'education.txt',
-      content: `Innovate University - B.S. Computer Science (Expected: May 2025)
-  - Relevant Coursework: Data Structures, Algorithms, Operating Systems, Database Management, Blockchain Fundamentals, Network Security.
+      content: `EDUCATION
+Dr.D.Y.Patil Institute of Technology, Pimpri, Pune
+  Bachelor of Engineering - BE, Computer Engineering
+  Dec, 2021 – Dec, 2025
+  CGPA: 8.7/10
 `,
     },
     {
@@ -68,7 +65,7 @@ Use 'export' to download the resume.
     },
     {
       type: 'file',
-      name: 'resume.txt', // For AI enhancement (though AI feature is removed, file content can remain)
+      name: 'resume.txt',
       content: `Alex Johnson
 alex.johnson@email.com | 555-123-4567 | linkedin.com/in/alexjohnson | github.com/alexjohnson
 
@@ -186,7 +183,7 @@ Soft Skills:
     },
     {
       type: 'file',
-      name: 'contacts.txt', // Renamed from contact.txt for consistency
+      name: 'contacts.txt',
       content: `Email: alex.johnson.portfolio@example.com (Placeholder)
 LinkedIn: linkedin.com/in/alexjohnsonportfolio (Placeholder)
 GitHub: github.com/alexjohnsonportfolio (Placeholder)
@@ -223,13 +220,12 @@ export function findNode(path: string, root: Directory = fileSystem): FileSystem
 
 // Helper function to get content of a file, typically from the root directory
 export function getRootFileContent(fileName: string): string | undefined {
-  const node = findNode(fileName); // findNode defaults to root if path doesn't start with traversal
+  const node = findNode(`~/${fileName}`); // Ensure we are looking in the root
   if (node && node.type === 'file' && node.content) {
     return node.content;
   }
   if (node && node.type === 'file' && !node.content) {
     return `Error: ${fileName} is not a text file or is empty.`;
   }
-  return `Error: File '${fileName}' not found in root directory.`;
+  return `Error: File '${fileName}' not found.`;
 }
-
