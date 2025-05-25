@@ -29,7 +29,7 @@ const GuiContactLinkParser: React.FC<{ line: string }> = ({ line }) => {
   emailRegex.lastIndex = 0;
   while ((match = emailRegex.exec(line)) !== null) {
     // Avoid matching email if it's part of a URL (e.g., mailto: in href)
-    if (!matches.some(m => m.index <= match.index && (m.index + m.length) >= (match.index + match[0].length) && m.type === 'url')) {
+    if (!matches.some(m => m.index <= match.index && (m.index + m.length) >= (match.index + m.length) && m.type === 'url')) {
        matches.push({ index: match.index, length: match[0].length, text: match[0], type: 'email' });
     }
   }
@@ -48,7 +48,7 @@ const GuiContactLinkParser: React.FC<{ line: string }> = ({ line }) => {
         href={href}
         target="_blank"
         rel="noopener noreferrer"
-        className="text-[hsl(var(--accent))] hover:underline" // Keeps existing accent color for links
+        className="text-[hsl(var(--accent))] hover:underline"
       >
         {linkText}
       </a>
@@ -108,15 +108,16 @@ export default function GuiPage() {
         if (currentCategory) {
           currentCategory.items.push(trimmedLine.substring(2).trim());
         } else {
+           // If a skill item appears before any category is defined, assign it to a "General" category
            currentCategory = { category: "General", items: [trimmedLine.substring(2).trim()] };
         }
       } else if (trimmedLine.endsWith(':')) {
-        if (currentCategory) {
+        if (currentCategory && (currentCategory.items.length > 0 || !skillCategories.find(sc => sc.category === currentCategory?.category))) {
           skillCategories.push(currentCategory);
         }
         currentCategory = { category: trimmedLine.slice(0, -1), items: [] };
-      } else if (trimmedLine) { 
-         if (currentCategory) {
+      } else if (trimmedLine) { // Handles category names that don't end with ':' and are not skill items
+         if (currentCategory && (currentCategory.items.length > 0 || !skillCategories.find(sc => sc.category === currentCategory?.category))) {
           skillCategories.push(currentCategory);
         }
         currentCategory = { category: trimmedLine, items: [] };
@@ -131,7 +132,6 @@ export default function GuiPage() {
 
   const formatPreText = (text: string | undefined) => {
     if (!text) return null;
-    // Using font-sans explicitly for GUI, text-gray-700 for content color
     return <pre className="whitespace-pre-wrap font-sans text-base leading-relaxed text-gray-700">{text}</pre>;
   };
 
@@ -142,8 +142,13 @@ export default function GuiPage() {
           ASR_Workspace - Portfolio
         </h1>
         <Link href="/" passHref legacyBehavior>
-          <Button variant="outline" size="lg" className="shadow-md text-sm border-gray-300 hover:bg-gray-100 text-black">
-            <ArrowLeft className="mr-2 h-5 w-5" /> Back to Terminal
+          <Button 
+            variant="outline" 
+            size="icon" 
+            className="shadow-md border-gray-300 hover:bg-gray-100 text-black"
+            aria-label="Back to Terminal"
+          >
+            <ArrowLeft className="h-6 w-6" />
           </Button>
         </Link>
       </header>
