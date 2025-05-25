@@ -220,7 +220,7 @@ export default function GuiPage() {
                 <TypingEffect
                   text={subtitleText}
                   speed={70}
-                  className="font-sans text-base md:text-lg lg:text-xl text-gray-700 tracking-wide block"
+                  className="font-sans text-sm md:text-base lg:text-lg text-[hsl(var(--accent))] tracking-wide block"
                 />
               </div>
             )}
@@ -336,3 +336,4 @@ Tech: Next.js, React, TypeScript, ShadCN UI, Tailwind CSS.</p>
     </div>
   );
 }
+
