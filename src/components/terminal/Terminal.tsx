@@ -230,20 +230,31 @@ const Terminal: React.FC = () => {
       case 'ls':
         let pathToLs = currentPath;
         if (args[0]) {
-            if (args[0] === 'projects') {
+            if (args[0] === 'projects' && currentPath === '~') { // specific 'ls projects' from root
                  pathToLs = '~/projects';
             } else if (args[0].startsWith('~/')) {
                 pathToLs = args[0];
-            } else if (args[0] === '..' && currentPath !== '~') {
-                const parts = currentPath.split('/');
-                parts.pop();
-                pathToLs = parts.join('/') || '~';
-            } else if (args[0] !== '..' && args[0] !== '~' && args[0] !== '/') {
-                 pathToLs = currentPath === '~' ? `~/${args[0]}` : `${currentPath}/${args[0]}`;
-            } else if (args[0] === '~' || args[0] === '/') {
+            } else if (args[0].startsWith('/')) {
+                pathToLs = `~${args[0]}`;
+            } else if (args[0] === '..' ) {
+                if (currentPath === '~') {
+                    pathToLs = '~';
+                } else {
+                    const parts = currentPath.split('/');
+                    parts.pop();
+                    pathToLs = parts.join('/') || '~';
+                }
+            } else if (args[0] === '~') {
                  pathToLs = '~';
+            } else { // relative path like "mydir" or "mydir/subdir"
+                 pathToLs = currentPath === '~' ? `~/${args[0]}` : `${currentPath}/${args[0]}`;
             }
         }
+        // Normalize path
+        pathToLs = pathToLs.replace(/~[/]+/g, '~/').replace(/\/\//g, '/');
+        if (pathToLs === '/') pathToLs = '~';
+
+
         const node = findNode(pathToLs);
         if (node && node.type === 'directory') {
           if (node.children.length === 0) {
@@ -279,12 +290,19 @@ const Terminal: React.FC = () => {
           }
         } else if (targetDir.startsWith('~/')) {
           newPath = targetDir;
-        } else if (targetDir === '~' || targetDir === '/') {
-          newPath = '~';
+        } else if (targetDir.startsWith('/')) {
+          newPath = `~${targetDir}`;
         }
-         else {
+        else if (targetDir === '~') {
+          newPath = '~';
+        } else {
           newPath = currentPath === '~' ? `~/${targetDir}` : `${currentPath}/${targetDir}`;
         }
+        // Normalize newPath
+        newPath = newPath.replace(/~[/]+/g, '~/').replace(/\/\//g, '/');
+        if (newPath === '/') newPath = '~';
+
+
         const targetNode = findNode(newPath);
         if (targetNode && targetNode.type === 'directory') {
           setCurrentPath(newPath);
@@ -299,15 +317,23 @@ const Terminal: React.FC = () => {
           output = 'Usage: cat [filename]';
           break;
         }
-        const pathForCat = fileToCat.startsWith('~/') ? fileToCat :
-                           fileToCat.includes('/') ? fileToCat :
-                           currentPath === '~' ? `~/${fileToCat}` : `${currentPath}/${fileToCat}`;
+        let resolvedPathForCat: string;
+        if (fileToCat.startsWith('~/')) {
+          resolvedPathForCat = fileToCat;
+        } else if (fileToCat.startsWith('/')) {
+          resolvedPathForCat = `~${fileToCat}`;
+        } else {
+          resolvedPathForCat = currentPath === '~' ? `~/${fileToCat}` : `${currentPath}/${fileToCat}`;
+        }
+        resolvedPathForCat = resolvedPathForCat.replace(/~[/]+/g, '~/').replace(/\/\//g, '/');
+         if (resolvedPathForCat === '/') resolvedPathForCat = '~';
 
-        const catNode = findNode(pathForCat);
+
+        const catNode = findNode(resolvedPathForCat);
         if (catNode && catNode.type === 'file' && catNode.content) {
           output = catNode.content;
         } else if (catNode && catNode.type === 'file' && !catNode.content) {
-          output = `cat: ${fileToCat} is not a text file or is empty. Try 'open ${fileToCat}'.`;
+          output = `cat: ${fileToCat}: File is not a text file, is empty, or cannot be displayed. Try 'open ${fileToCat}' if it's a special file type.`;
         } else {
           output = `cat: ${fileToCat}: No such file or directory`;
         }
@@ -318,17 +344,27 @@ const Terminal: React.FC = () => {
           output = 'Usage: open [filename]';
           break;
         }
-        const pathForOpen = fileToOpen.startsWith('~/') ? fileToOpen :
-                           fileToOpen.includes('/') ? fileToOpen :
-                           currentPath === '~' ? `~/${fileToOpen}` : `${currentPath}/${fileToOpen}`;
+        let resolvedPathForOpen: string;
+        if (fileToOpen.startsWith('~/')) {
+          resolvedPathForOpen = fileToOpen;
+        } else if (fileToOpen.startsWith('/')) {
+          resolvedPathForOpen = `~${fileToOpen}`;
+        } else {
+          resolvedPathForOpen = currentPath === '~' ? `~/${fileToOpen}` : `${currentPath}/${fileToOpen}`;
+        }
+        resolvedPathForOpen = resolvedPathForOpen.replace(/~[/]+/g, '~/').replace(/\/\//g, '/');
+        if (resolvedPathForOpen === '/') resolvedPathForOpen = '~';
 
-        const openNode = findNode(pathForOpen);
+        const openNode = findNode(resolvedPathForOpen);
         if (openNode && openNode.type === 'file' && openNode.url) {
           window.open(openNode.url, '_blank');
           output = `Opening ${fileToOpen}...`;
         } else if (openNode && openNode.type === 'directory') {
            output = `open: ${fileToOpen} is a directory. Use 'cd'.`;
-        } else {
+        } else if (openNode && openNode.type === 'file' && !openNode.url) {
+            output = `open: ${fileToOpen}: This file type cannot be opened directly. Try 'cat ${fileToOpen}' if it's a text file.`;
+        }
+        else {
           output = `open: ${fileToOpen}: No such file or cannot be opened.`;
         }
         break;
@@ -452,4 +488,3 @@ const Terminal: React.FC = () => {
 };
 
 export default Terminal;
-
