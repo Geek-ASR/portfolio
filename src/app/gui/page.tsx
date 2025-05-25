@@ -108,6 +108,7 @@ export default function GuiPage() {
         if (currentCategory) {
           currentCategory.items.push(trimmedLine.substring(2).trim());
         } else {
+           // If a skill item appears before any category, assign it to a "General" category
            currentCategory = { category: "General", items: [trimmedLine.substring(2).trim()] };
         }
       } else if (trimmedLine.endsWith(':')) {
@@ -115,17 +116,18 @@ export default function GuiPage() {
           skillCategories.push(currentCategory);
         }
         currentCategory = { category: trimmedLine.slice(0, -1), items: [] };
-      } else if (trimmedLine) {
+      } else if (trimmedLine) { // A line that is not an item and doesn't end with ':' is treated as a category
          if (currentCategory && (currentCategory.items.length > 0 || !skillCategories.find(sc => sc.category === currentCategory?.category))) {
           skillCategories.push(currentCategory);
         }
         currentCategory = { category: trimmedLine, items: [] };
       }
     });
+    // Push the last processed category
     if (currentCategory && (currentCategory.items.length > 0 || (currentCategory.category && !skillCategories.find(sc => sc.category === currentCategory?.category)))) {
       skillCategories.push(currentCategory);
     }
-    return skillCategories.filter(cat => cat.category && cat.category.trim() !== '');
+    return skillCategories.filter(cat => cat.category && cat.category.trim() !== ''); // Ensure no empty categories are pushed
   };
   const parsedSkills = processSkills(skillsContent);
 
@@ -152,7 +154,7 @@ export default function GuiPage() {
         </div>
 
         <div className="flex flex-col md:flex-row items-center justify-center gap-8 lg:gap-12 text-center md:text-left">
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-black">
+          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-black tracking-tight [text-shadow:0_2px_4px_rgba(0,0,0,0.1)]">
             Hello, I am Aditya Rekhe
           </h1>
           <div className="mt-6 md:mt-0">
@@ -163,7 +165,7 @@ export default function GuiPage() {
               height={200}
               className="rounded-full shadow-lg object-cover"
               data-ai-hint="profile photo"
-              priority
+              priority // Added priority for LCP
             />
           </div>
         </div>
@@ -213,6 +215,7 @@ export default function GuiPage() {
           <SectionCard title="Projects" icon={<FolderGit2 size={28} />} className="md:col-span-2">
             <div className="space-y-8">
               {projectsList.map(project => (
+                // Ensure project.content is not undefined and project name is not 'project_details.pdf'
                 project.content && project.name !== 'project_details.pdf' && (
                   <Card key={project.name} className="bg-white shadow-md border border-gray-200 rounded-md">
                     <CardHeader className="p-5">
@@ -226,6 +229,7 @@ export default function GuiPage() {
                   </Card>
                 )
               ))}
+              {/* Explicitly add ASRWorkspace Portfolio card */}
               <Card className="bg-white shadow-md border border-gray-200 rounded-md">
                 <CardHeader className="p-5">
                   <CardTitle className="text-xl text-black font-medium">ASRWorkspace Portfolio (This Website)</CardTitle>
