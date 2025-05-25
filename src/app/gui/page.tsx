@@ -108,28 +108,24 @@ export default function GuiPage() {
         if (currentCategory) {
           currentCategory.items.push(trimmedLine.substring(2).trim());
         } else {
-           // If a list item appears before a category, assign it to a default "General" category
            currentCategory = { category: "General", items: [trimmedLine.substring(2).trim()] };
         }
       } else if (trimmedLine.endsWith(':')) {
-        // If there was a previous category, push it before starting a new one
         if (currentCategory && (currentCategory.items.length > 0 || !skillCategories.find(sc => sc.category === currentCategory?.category))) {
           skillCategories.push(currentCategory);
         }
         currentCategory = { category: trimmedLine.slice(0, -1), items: [] };
-      } else if (trimmedLine) { // This line is a category title itself without a colon and not an item
-         // Push previous category if it exists and has items or is a new category
+      } else if (trimmedLine) { 
         if (currentCategory && (currentCategory.items.length > 0 || (currentCategory.category && !skillCategories.find(sc => sc.category === currentCategory?.category)))) {
           skillCategories.push(currentCategory);
         }
         currentCategory = { category: trimmedLine, items: [] };
       }
     });
-    // Push the last processed category
     if (currentCategory && (currentCategory.items.length > 0 || (currentCategory.category && !skillCategories.find(sc => sc.category === currentCategory?.category)))) {
       skillCategories.push(currentCategory);
     }
-    return skillCategories.filter(cat => cat.category && cat.category.trim() !== ''); // Ensure no empty category names
+    return skillCategories.filter(cat => cat.category && cat.category.trim() !== '');
   };
   const parsedSkills = processSkills(skillsContent);
 
@@ -156,18 +152,18 @@ export default function GuiPage() {
         </div>
 
         <div className="flex flex-col md:flex-row items-center justify-center gap-8 lg:gap-12 text-center md:text-left">
-          <h1 className="font-knewave text-5xl md:text-6xl lg:text-7xl text-neutral-900">
+          <h1 className="font-pacifico text-5xl md:text-6xl lg:text-7xl text-neutral-900">
             Hello, I am Aditya Rekhe
           </h1>
           <div className="mt-6 md:mt-0">
             <Image
-              src="/profile.png" // Ensure this image exists in public/profile.png
+              src="/profile.png" 
               alt="Aditya Rekhe"
               width={200}
               height={200}
               className="rounded-full shadow-lg object-cover"
               data-ai-hint="profile photo"
-              priority // Good for LCP
+              priority 
             />
           </div>
         </div>
