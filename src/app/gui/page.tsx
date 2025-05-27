@@ -7,7 +7,7 @@ import { fileSystem, findNode, getRootFileContent, type Directory, type File as 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { TerminalSquare, User, BookOpen, Wrench, Briefcase, Star, Mail, FolderGit2, Github, Linkedin, FileCode2, Instagram } from 'lucide-react';
+import { TerminalSquare, User, BookOpen, Wrench, Briefcase, Star, Mail, FolderGit2, Github, Linkedin, FileCode2, Instagram, ArrowLeft } from 'lucide-react';
 import React, { useState, useEffect, useRef } from 'react';
 import { cn } from '@/lib/utils';
 import TypingEffect from '@/components/terminal/TypingEffect';
@@ -310,7 +310,7 @@ export default function GuiPage() {
                     Passionate for <strong>innovative solutions</strong> and <strong>programming</strong>.
                   </li>
                   <li>
-                    Embraces <strong>challenges</strong> as opportunities for <strong>growth</strong>, constantly seeking to expand <strong>knowledge</strong> and <strong>skill set</strong>.
+                    Embraces <strong>challenges</strong> as opportunities for <strong>growth</strong>, constantly seeking to expand <strong>skill set</strong>.
                   </li>
                   <li>
                     Ready to contribute with an <strong>adaptable nature</strong> and <strong>enthusiasm</strong> to any project or team.
@@ -437,3 +437,4 @@ Tech: Next.js, React, TypeScript, ShadCN UI, Tailwind CSS.</p>
     
 
     
+
