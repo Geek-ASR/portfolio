@@ -97,26 +97,23 @@ export default function GuiPage() {
   const projectsNode = findNode('~/projects');
   const projectsList = projectsNode && projectsNode.type === 'directory' ? projectsNode.children.filter(c => c.type === 'file') as FileSystemFileType[] : [];
 
-  const [isWaveAnimationComplete, setIsWaveAnimationComplete] = useState(false);
+  const [startSubtitleAnimation, setStartSubtitleAnimation] = useState(false);
 
   const line1Text = "Hello, I am";
   const line2Text = "Aditya Rekhe";
-  const subtitleText = "Sooftware Engineer | Full-stack Developer | Blockchain Solutions ";
+  const subtitleText = "Software Engineer | Full-stack Developer | Blockchain Solutions";
 
   useEffect(() => {
-    const animationStaggerDelay = 0.07 * 1000; // 70ms
-    const nameAnimationDuration = 2500; // 2.5s from Tailwind config
-    // Time for the last character of the name to START its color wave
-    const timeForLastNameCharToStartWave = (line1Text.length + line2Text.length -1) * animationStaggerDelay;
-    // Total time until the color wave is visually complete on the last character
-    const totalWaveEffectDuration = timeForLastNameCharToStartWave + nameAnimationDuration;
+    const animationStaggerDelayMs = 0.07 * 1000; // 70ms
+    // Time for the 'A' of "Aditya" (first char of line2Text) to START its color wave
+    const timeForAdityaToStartWave = line1Text.length * animationStaggerDelayMs;
 
     const timer = setTimeout(() => {
-      setIsWaveAnimationComplete(true);
-    }, totalWaveEffectDuration);
+      setStartSubtitleAnimation(true);
+    }, timeForAdityaToStartWave);
 
     return () => clearTimeout(timer);
-  }, [line1Text, line2Text]);
+  }, [line1Text]);
 
 
   const processSkills = (skillsText: string | undefined) => {
@@ -215,12 +212,12 @@ export default function GuiPage() {
               </div>
               <span className="sr-only">{`${line1Text} ${line2Text}`}</span>
             </h1>
-            {isWaveAnimationComplete && (
+            {startSubtitleAnimation && (
               <div className="mt-2">
                 <TypingEffect
                   text={subtitleText}
                   speed={70}
-                  className="font-sans text-sm md:text-base lg:text-lg text-[hsl(var(--accent))] tracking-wide block"
+                  className="font-sans text-sm md:text-base lg:text-lg text-[#006400] tracking-wide block"
                 />
               </div>
             )}
