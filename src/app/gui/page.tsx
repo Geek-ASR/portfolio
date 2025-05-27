@@ -265,7 +265,7 @@ export default function GuiPage() {
               <span className="sr-only">{`${line1Text} ${line2Text}`}</span>
             </h1>
             {startSubtitleAnimation && (
-              <div className="mt-2">
+              <div className="mt-4">
                 <TypingEffect
                   text={subtitleText}
                   speed={50}
@@ -302,9 +302,20 @@ export default function GuiPage() {
                     About Me
                   </h2>
                 </div>
-                <p className="text-base sm:text-lg leading-relaxed text-gray-700">
-                  {aboutMeContent}
-                </p>
+                <ul className="list-disc list-inside space-y-3 text-base leading-relaxed text-gray-700">
+                  <li>
+                    A <strong>quick learner</strong>, eager to explore new <strong>technologies</strong> and <strong>environments</strong>.
+                  </li>
+                  <li>
+                    Passionate for <strong>innovative solutions</strong> and <strong>programming</strong>.
+                  </li>
+                  <li>
+                    Embraces <strong>challenges</strong> as opportunities for <strong>growth</strong>, constantly seeking to expand <strong>knowledge</strong> and <strong>skill set</strong>.
+                  </li>
+                  <li>
+                    Ready to contribute with an <strong>adaptable nature</strong> and <strong>enthusiasm</strong> to any project or team.
+                  </li>
+                </ul>
                 <div
                   className={cn(
                     "flex items-center justify-center gap-6 mt-8 transition-opacity duration-700 ease-in-out",
@@ -420,5 +431,7 @@ Tech: Next.js, React, TypeScript, ShadCN UI, Tailwind CSS.</p>
     </div>
   );
 }
+
+    
 
     
