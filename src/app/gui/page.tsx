@@ -180,7 +180,7 @@ export default function GuiPage() {
           </Link>
         </div>
 
-        <div className="flex flex-col md:flex-row items-center justify-center md:items-start md:justify-start gap-8 lg:gap-12 w-full max-w-4xl">
+        <div className="flex flex-col md:flex-row items-center justify-center md:items-start md:justify-between gap-8 lg:gap-12 w-full max-w-4xl">
           {/* Text content block */}
           <div className="text-center md:text-left">
             <h1 className="font-sans text-5xl md:text-6xl lg:text-7xl text-black">
