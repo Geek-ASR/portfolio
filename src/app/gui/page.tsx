@@ -7,8 +7,8 @@ import { fileSystem, findNode, getRootFileContent, type Directory, type File as 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { TerminalSquare, User, BookOpen, Wrench, Briefcase, Star, Mail, FolderGit2 } from 'lucide-react';
-import React, { useState, useEffect } from 'react';
+import { TerminalSquare, User, BookOpen, Wrench, Briefcase, Star, Mail, FolderGit2, Github, Linkedin, FileCode2, Instagram } from 'lucide-react';
+import React, { useState, useEffect, useRef } from 'react';
 import { cn } from '@/lib/utils';
 import TypingEffect from '@/components/terminal/TypingEffect';
 
@@ -69,10 +69,11 @@ interface SectionCardProps {
   icon?: React.ReactNode;
   children: React.ReactNode;
   className?: string;
+  cardRef?: React.RefObject<HTMLDivElement>;
 }
 
-const SectionCard: React.FC<SectionCardProps> = ({ title, icon, children, className }) => (
-  <Card className={cn("shadow-lg bg-white border border-gray-200 rounded-lg", className)}>
+const SectionCard: React.FC<SectionCardProps> = ({ title, icon, children, className, cardRef }) => (
+  <Card ref={cardRef} className={cn("shadow-lg bg-white rounded-lg", className)}>
     <CardHeader className="p-6">
       <CardTitle className="flex items-center text-2xl text-black font-semibold">
         {icon && <span className="mr-3 text-[hsl(var(--accent))]">{icon}</span>}
@@ -85,9 +86,32 @@ const SectionCard: React.FC<SectionCardProps> = ({ title, icon, children, classN
   </Card>
 );
 
+const socialLinks = [
+  {
+    name: 'GitHub',
+    icon: Github,
+    url: 'https://github.com/Geek-ASR',
+  },
+  {
+    name: 'LinkedIn',
+    icon: Linkedin,
+    url: 'https://www.linkedin.com/in/aditya-rekhe-94b27122a/',
+  },
+  {
+    name: 'GeeksforGeeks',
+    icon: FileCode2,
+    url: 'https://www.geeksforgeeks.org/user/adityare545t/',
+  },
+  {
+    name: 'Instagram',
+    icon: Instagram,
+    url: '#', // Replace with your Instagram URL
+  },
+];
+
 
 export default function GuiPage() {
-  const aboutMe = getRootFileContent('about_me.txt');
+  const aboutMeContent = getRootFileContent('about_me.txt');
   const education = getRootFileContent('education.txt');
   const skillsContent = getRootFileContent('skills.txt');
   const experience = getRootFileContent('experience.txt');
@@ -98,13 +122,16 @@ export default function GuiPage() {
   const projectsList = projectsNode && projectsNode.type === 'directory' ? projectsNode.children.filter(c => c.type === 'file') as FileSystemFileType[] : [];
 
   const [startSubtitleAnimation, setStartSubtitleAnimation] = useState(false);
+  const [showSocialIcons, setShowSocialIcons] = useState(false);
+  const aboutMeRef = useRef<HTMLDivElement>(null);
+
 
   const line1Text = "Hello, I am";
   const line2Text = "Aditya Rekhe";
   const subtitleText = "Software Engineer | Full-stack Developer | Blockchain Solutions";
 
   useEffect(() => {
-    const animationStaggerDelayMs = 0.07 * 1000; 
+    const animationStaggerDelayMs = 0.07 * 1000;
     const timeForAdityaToStartWave = line1Text.length * animationStaggerDelayMs;
 
     const timer = setTimeout(() => {
@@ -112,7 +139,33 @@ export default function GuiPage() {
     }, timeForAdityaToStartWave);
 
     return () => clearTimeout(timer);
-  }, [line1Text]);
+  }, [line1Text.length]);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setShowSocialIcons(true);
+          observer.unobserve(entry.target); // Stop observing once visible
+        }
+      },
+      {
+        threshold: 0.1, // Trigger when 10% of the element is visible
+      }
+    );
+
+    const currentRef = aboutMeRef.current;
+    if (currentRef) {
+      observer.observe(currentRef);
+    }
+
+    return () => {
+      if (currentRef) {
+        observer.unobserve(currentRef);
+      }
+      observer.disconnect();
+    };
+  }, []);
 
 
   const processSkills = (skillsText: string | undefined) => {
@@ -137,7 +190,7 @@ export default function GuiPage() {
           if(!skillCategories.find(sc => sc.category === currentCategory?.category)) skillCategories.push(currentCategory);
         }
         currentCategory = { category: trimmedLine.slice(0, -1), items: [] };
-      } else if (trimmedLine) { 
+      } else if (trimmedLine) {
         if (currentCategory && (currentCategory.items.length > 0 || (currentCategory.category && !skillCategories.find(sc => sc.category === currentCategory?.category)))) {
            if(!skillCategories.find(sc => sc.category === currentCategory?.category)) skillCategories.push(currentCategory);
         }
@@ -238,10 +291,10 @@ export default function GuiPage() {
       </section>
 
       {/* New About Me Section */}
-      {aboutMe && !aboutMe.startsWith('Error:') && (
+      {aboutMeContent && !aboutMeContent.startsWith('Error:') && (
         <section className="py-16 md:py-24 bg-gray-50">
           <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-            <Card className="bg-white shadow-2xl rounded-2xl overflow-hidden">
+            <Card ref={aboutMeRef} className="bg-white shadow-2xl rounded-2xl overflow-hidden">
               <div className="p-8 sm:p-10 md:p-12">
                 <div className="flex items-center mb-6">
                   <User size={36} className="mr-4 text-[hsl(var(--accent))]" />
@@ -250,8 +303,27 @@ export default function GuiPage() {
                   </h2>
                 </div>
                 <p className="text-base sm:text-lg leading-relaxed text-gray-700">
-                  {aboutMe}
+                  {aboutMeContent}
                 </p>
+                <div
+                  className={cn(
+                    "flex items-center justify-center gap-6 mt-8 transition-opacity duration-700 ease-in-out",
+                    showSocialIcons ? "opacity-100" : "opacity-0"
+                  )}
+                >
+                  {socialLinks.map((link) => (
+                    <a
+                      key={link.name}
+                      href={link.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label={`Connect with Aditya Rekhe on ${link.name}`}
+                      className="text-gray-500 hover:text-black transition-colors"
+                    >
+                      <link.icon size={28} />
+                    </a>
+                  ))}
+                </div>
               </div>
             </Card>
           </div>
@@ -348,3 +420,5 @@ Tech: Next.js, React, TypeScript, ShadCN UI, Tailwind CSS.</p>
     </div>
   );
 }
+
+    
