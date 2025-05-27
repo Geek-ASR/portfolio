@@ -104,8 +104,7 @@ export default function GuiPage() {
   const subtitleText = "Software Engineer | Full-stack Developer | Blockchain Solutions";
 
   useEffect(() => {
-    const animationStaggerDelayMs = 0.07 * 1000; // 70ms
-    // Time for the 'A' of "Aditya" (first char of line2Text) to START its color wave
+    const animationStaggerDelayMs = 0.07 * 1000; 
     const timeForAdityaToStartWave = line1Text.length * animationStaggerDelayMs;
 
     const timer = setTimeout(() => {
@@ -180,7 +179,7 @@ export default function GuiPage() {
           </Link>
         </div>
 
-        <div className="flex flex-col md:flex-row items-center justify-center md:items-start md:justify-between gap-8 lg:gap-12 w-full max-w-4xl">
+        <div className="flex flex-col md:flex-row items-center justify-center md:justify-between gap-8 lg:gap-12 w-full max-w-4xl">
           {/* Text content block */}
           <div className="text-center md:text-left">
             <h1 className="font-sans text-5xl md:text-6xl lg:text-7xl text-black">
@@ -238,14 +237,30 @@ export default function GuiPage() {
         </div>
       </section>
 
-      {/* Main Content Area */}
-      <main className="px-6 md:px-10 lg:px-16 py-16 grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-10">
-        {aboutMe && (
-          <SectionCard title="About Me" icon={<User size={28} />}>
-             <p className="text-base leading-relaxed text-gray-700">{aboutMe}</p>
-          </SectionCard>
-        )}
+      {/* New About Me Section */}
+      {aboutMe && !aboutMe.startsWith('Error:') && (
+        <section className="py-16 md:py-24 bg-gray-50">
+          <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+            <Card className="bg-white shadow-2xl rounded-2xl overflow-hidden">
+              <div className="p-8 sm:p-10 md:p-12">
+                <div className="flex items-center mb-6">
+                  <User size={36} className="mr-4 text-[hsl(var(--accent))]" />
+                  <h2 className="text-3xl sm:text-4xl font-bold text-black">
+                    About Me
+                  </h2>
+                </div>
+                <p className="text-base sm:text-lg leading-relaxed text-gray-700">
+                  {aboutMe}
+                </p>
+              </div>
+            </Card>
+          </div>
+        </section>
+      )}
 
+
+      {/* Main Content Area for other sections */}
+      <main className="px-6 md:px-10 lg:px-16 py-16 grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-10">
         {education && (
           <SectionCard title="Education" icon={<BookOpen size={28} />}>
             {formatPreText(education)}
@@ -333,4 +348,3 @@ Tech: Next.js, React, TypeScript, ShadCN UI, Tailwind CSS.</p>
     </div>
   );
 }
-
