@@ -310,7 +310,7 @@ export default function GuiPage() {
                     Passionate for <strong>innovative solutions</strong> and <strong>programming</strong>.
                   </li>
                   <li>
-                    Embraces <strong>challenges</strong> as opportunities for <strong>growth</strong>, constantly seeking to expand <strong>knowledge</strong> and <strong>skill set</strong>.
+                    Embraces <strong>challenges</strong> as opportunities for <strong>growth</strong>, constantly seeking to expand <strong>knowledge</strong> and <strong>skills</strong>.
                   </li>
                   <li>
                     Ready to contribute with an <strong>adaptable nature</strong> and <strong>enthusiasm</strong> to any project or team.
@@ -431,6 +431,8 @@ Tech: Next.js, React, TypeScript, ShadCN UI, Tailwind CSS.</p>
     </div>
   );
 }
+
+    
 
     
 
