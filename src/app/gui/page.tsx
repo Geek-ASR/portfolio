@@ -216,7 +216,7 @@ export default function GuiPage() {
               <div className="mt-2">
                 <TypingEffect
                   text={subtitleText}
-                  speed={70}
+                  speed={50}
                   className="font-sans text-sm md:text-base lg:text-lg text-[#006400] tracking-wide block"
                 />
               </div>
