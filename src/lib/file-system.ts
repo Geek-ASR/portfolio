@@ -27,7 +27,7 @@ export const fileSystem: Directory = {
     {
       type: 'file',
       name: 'about_me.txt',
-      content: `Myself Aditya, I would define myself as a quick learner and a person who is eager to explore new technologies and environments, passionate for innovative solutions and programming. I embrace challenges as opportunities for growth, constantly seeking to expand my knowledge and skill set. I am ready to contribute with my adaptable nature and enthusiasm to any project or team.`,
+      content: `Myself Aditya, I would define myself as a quick learner and a person who is eager to explore new technologies and environments, passionate for innovative solutions and programming. I embrace challenges as opportunities for growth, constantly seeking to expand skill set. I am ready to contribute with my adaptable nature and enthusiasm to any project or team.`,
     },
     {
       type: 'file',
@@ -90,12 +90,56 @@ Edducation
     CGPA: 8.7/10
 
 SKILLS
-  Programming Languages: Python (Advanced), JavaScript (Node.js, React, Next.js - Advanced), Java (Intermediate), C++ (Intermediate), Solidity (Advanced), Rust (Beginner)
-  Blockchain Technologies: Ethereum, Polygon, Bitcoin (Conceptual Understanding), Smart Contracts (Solidity, OpenZeppelin, ERC20, ERC721, ERC1155), Development Tools (Hardhat, Truffle, Ganache, Remix IDE), Libraries (Web3.js, Ethers.js), Concepts (DLT, Consensus Algorithms (PoW, PoS), Cryptography, Oracles (Chainlink), Layer 2 Scaling, DAOs, DeFi, NFTs, IPFS)
-  Web Development: Frontend (React, Next.js, HTML5, CSS3, TailwindCSS), Backend (Node.js, Express.js), APIs (RESTful APIs, GraphQL (Basic))
-  Databases: SQL (PostgreSQL, MySQL), NoSQL (MongoDB)
-  DevOps & Tools: Git, GitHub, GitLab, Docker, Kubernetes (Basic understanding), CI/CD (GitHub Actions - Basic), Cloud (AWS (EC2, S3, Lambda - Basic), Firebase), Operating Systems (Linux (Ubuntu), macOS, Windows)
-  Soft Skills: Problem Solving, Analytical Thinking, Team Collaboration, Communication, Agile/Scrum methodologies
+  Programming Languages:
+    - Python (Advanced)
+    - JavaScript (Advanced)
+    - Node.js (Advanced)
+    - React (Advanced)
+    - Next.js (Advanced)
+    - Java (Intermediate)
+    - C++ (Intermediate)
+    - Solidity (Advanced)
+    - Rust (Beginner)
+  Blockchain Technologies:
+    - Ethereum
+    - Polygon
+    - Bitcoin (Conceptual Understanding)
+    - Smart Contracts (Solidity)
+    - OpenZeppelin
+    - ERC20
+    - ERC721
+    - ERC1155
+    - Development Tools (Hardhat, Truffle, Ganache, Remix IDE)
+    - Libraries (Web3.js, Ethers.js)
+    - Concepts (DLT, Consensus Algorithms (PoW, PoS), Cryptography)
+    - Oracles (Chainlink)
+    - Layer 2 Scaling
+    - DAOs
+    - DeFi
+    - NFTs
+    - IPFS
+  Web Development:
+    - Frontend (React, Next.js, HTML5, CSS3, TailwindCSS)
+    - Backend (Node.js, Express.js)
+    - APIs (RESTful APIs, GraphQL (Basic))
+  Databases:
+    - SQL (PostgreSQL, MySQL)
+    - NoSQL (MongoDB)
+  DevOps & Tools:
+    - Git
+    - GitHub
+    - GitLab
+    - Docker
+    - Kubernetes (Basic understanding)
+    - CI/CD (GitHub Actions - Basic)
+    - Cloud (AWS (EC2, S3, Lambda - Basic), Firebase)
+    - Operating Systems (Linux (Ubuntu), macOS, Windows)
+  Soft Skills:
+    - Problem Solving
+    - Analytical Thinking
+    - Team Collaboration
+    - Communication
+    - Agile/Scrum methodologies
 
 Exxperience
   Association of Computer Engineering Students, DIT
@@ -166,34 +210,69 @@ Description: ConnectWell is designed to foster supportive online communities for
       name: 'skills.txt',
       content: `SKILLS
 Programming Languages:
-  - Python (Advanced), JavaScript (Node.js, React, Next.js - Advanced)
-  - Java (Intermediate), C++ (Intermediate), Solidity (Advanced), Rust (Beginner)
+  - Python (Advanced)
+  - JavaScript (Advanced)
+  - Node.js (Advanced)
+  - React (Advanced)
+  - Next.js (Advanced)
+  - Java (Intermediate)
+  - C++ (Intermediate)
+  - Solidity (Advanced)
+  - Rust (Beginner)
 
 Blockchain Technologies:
-  - Ethereum, Polygon, Bitcoin (Conceptual Understanding)
-  - Smart Contracts: Solidity, OpenZeppelin, ERC20, ERC721, ERC1155
-  - Development Tools: Hardhat, Truffle, Ganache, Remix IDE
-  - Libraries: Web3.js, Ethers.js
-  - Concepts: DLT, Consensus Algorithms (PoW, PoS), Cryptography, Oracles (Chainlink), Layer 2 Scaling, DAOs, DeFi, NFTs, IPFS
+  - Ethereum
+  - Polygon
+  - Bitcoin (Conceptual Understanding)
+  - Smart Contracts (Solidity)
+  - OpenZeppelin
+  - ERC20
+  - ERC721
+  - ERC1155
+  - Development Tools (Hardhat, Truffle, Ganache, Remix IDE)
+  - Libraries (Web3.js, Ethers.js)
+  - Concepts (DLT, Consensus Algorithms (PoW, PoS), Cryptography)
+  - Oracles (Chainlink)
+  - Layer 2 Scaling
+  - DAOs
+  - DeFi
+  - NFTs
+  - IPFS
 
 Web Development:
-  - Frontend: React, Next.js, HTML5, CSS3, TailwindCSS
-  - Backend: Node.js, Express.js
-  - APIs: RESTful APIs, GraphQL (Basic)
+  - React (Frontend)
+  - Next.js (Frontend)
+  - HTML5 (Frontend)
+  - CSS3 (Frontend)
+  - TailwindCSS (Frontend)
+  - Node.js (Backend)
+  - Express.js (Backend)
+  - RESTful APIs
+  - GraphQL (Basic)
 
 Databases:
-  - SQL: PostgreSQL, MySQL
-  - NoSQL: MongoDB
+  - PostgreSQL (SQL)
+  - MySQL (SQL)
+  - MongoDB (NoSQL)
 
 DevOps & Tools:
-  - Git, GitHub, GitLab
-  - Docker, Kubernetes (Basic understanding)
+  - Git
+  - GitHub
+  - GitLab
+  - Docker
+  - Kubernetes (Basic understanding)
   - CI/CD (GitHub Actions - Basic)
-  - Cloud: AWS (EC2, S3, Lambda - Basic), Firebase
-  - Operating Systems: Linux (Ubuntu), macOS, Windows
+  - AWS (EC2, S3, Lambda - Basic)
+  - Firebase
+  - Linux (Ubuntu)
+  - macOS
+  - Windows
 
 Soft Skills:
-  - Problem Solving, Analytical Thinking, Team Collaboration, Communication
+  - Problem Solving
+  - Analytical Thinking
+  - Team Collaboration
+  - Communication
   - Agile/Scrum methodologies
 `,
     },
@@ -248,4 +327,3 @@ export function getRootFileContent(fileName: string): string | undefined {
   }
   return `Error: File '${fileName}' not found.`;
 }
-

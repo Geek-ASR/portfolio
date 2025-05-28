@@ -6,8 +6,7 @@ import Image from 'next/image';
 import { fileSystem, findNode, getRootFileContent, type Directory, type File as FileSystemFileType } from '@/lib/file-system';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge'; // Keep for fallback or if user prefers for some items
-import { TerminalSquare, User, BookOpen, Wrench, Briefcase, Star, Mail, FolderGit2, Github, Linkedin, FileCode2, Instagram } from 'lucide-react';
+import { TerminalSquare, User, BookOpen, Wrench, Briefcase, Star, Mail, FolderGit2, Github, Linkedin, FileCode2, Instagram, ArrowLeft } from 'lucide-react';
 import React, { useState, useEffect, useRef } from 'react';
 import { cn } from '@/lib/utils';
 import TypingEffect from '@/components/terminal/TypingEffect';
@@ -121,27 +120,21 @@ function getSkillInfo(skillText: string): SkillInfo {
   const originalText = skillText.trim();
   let coreSkill = originalText;
 
-  // Attempt to extract core skill name (e.g., "Python" from "Python (Advanced)")
-  // This regex tries to capture the part before an optional parenthesis.
-  const mainSkillMatch = originalText.match(/^([\w\s.-]+?)(?:\s*\(.*\)|:\s*.*)?$/);
+  const mainSkillMatch = originalText.match(/^([\w\s\.\-\+]+?)(?:\s*\(.*\)|:\s*.*)?$/);
   if (mainSkillMatch && mainSkillMatch[1]) {
     coreSkill = mainSkillMatch[1].trim();
   } else {
-    // If no parenthesis, try to take the part before a colon for category-like items
     const colonParts = originalText.split(':');
     if (colonParts.length > 0) {
       coreSkill = colonParts[0].trim();
     }
   }
 
-
-  // Normalize the core skill name for map lookup
   const normalizedCoreSkill = coreSkill.toLowerCase()
-    .replace(/\s+/g, '')      // remove spaces: "visual studio" -> "visualstudio"
-    .replace(/\./g, '')       // remove dots: "node.js" -> "nodejs"
-    .replace(/\+/g, 'plus')   // "c++" -> "cplusplus"
-    .replace(/&/g, 'and');    // "devops & tools" -> "devopsandtools"
-
+    .replace(/\s+/g, '')
+    .replace(/\./g, '')
+    .replace(/\+/g, 'plus')
+    .replace(/&/g, 'and');
 
   const logoMap: Record<string, string> = {
     'python': 'python.svg',
@@ -170,8 +163,24 @@ function getSkillInfo(skillText: string): SkillInfo {
     'aws': 'aws.svg',
     'firebase': 'firebase.svg',
     'linux': 'linux.svg',
-    'ubuntu': 'ubuntu.svg', // Assuming you have ubuntu.svg
-    // Add more mappings as needed
+    'ubuntu': 'ubuntu.svg',
+    'openzeppelin': 'openzeppelin.png',
+    'erc20': 'ethereum.svg',
+    'erc721': 'ethereum.svg',
+    'erc1155': 'ethereum.svg',
+    'hardhat': 'hardhat.svg',
+    'truffle': 'truffle.png',
+    'ganache': 'ganache.png',
+    'remixide': 'remix.svg',
+    'web3js': 'web3js.svg',
+    'ethersjs': 'ethers.svg',
+    'chainlink': 'chainlink.svg',
+    'ipfs': 'ipfs.svg',
+    'ec2': 'aws-ec2.svg',
+    's3': 'aws-s3.svg',
+    'lambda': 'aws-lambda.svg',
+    'macos': 'apple.svg',
+    'windows': 'windows.svg',
   };
 
   const logoFileName = logoMap[normalizedCoreSkill];
@@ -205,7 +214,7 @@ export default function GuiPage() {
 
   useEffect(() => {
     const animationStaggerDelayMs = 0.07 * 1000;
-    const timeForAdityaToStartWave = (line1Text.length + 1 + "A".length - "".length) * animationStaggerDelayMs; // +1 for space, assuming "A" is first letter of Aditya
+    const timeForAdityaToStartWave = (line1Text.length + 1 + "A".length - "".length) * animationStaggerDelayMs;
 
     const timer = setTimeout(() => {
       setStartSubtitleAnimation(true);
@@ -263,7 +272,7 @@ export default function GuiPage() {
           if(!skillCategories.find(sc => sc.category === currentCategory?.category)) skillCategories.push(currentCategory);
         }
         currentCategory = { category: categoryName, items: [] };
-        skillCategories.push(currentCategory); // Add category as soon as it's defined
+        skillCategories.push(currentCategory);
       } else if (trimmedLine && currentCategory && !trimmedLine.endsWith(':')) {
          currentCategory.items.push(trimmedLine);
       } else if (trimmedLine && !currentCategory) {
@@ -271,14 +280,12 @@ export default function GuiPage() {
          skillCategories.push(currentCategory);
       }
     });
-    // Add the last processed category only if it's new and has items or is a standalone category
     if (currentCategory && currentCategory.items.length === 0 && skillCategories.find(sc => sc.category === currentCategory?.category && sc.items.length > 0)) {
       // If category exists with items, don't add an empty one
     } else if (currentCategory && (currentCategory.items.length > 0 || (currentCategory.category && !skillCategories.find(sc => sc.category === currentCategory?.category)))) {
         if(!skillCategories.find(sc => sc.category === currentCategory?.category)) {
            skillCategories.push(currentCategory);
         } else if (skillCategories.find(sc => sc.category === currentCategory?.category && sc.items.length === 0) && currentCategory.items.length > 0){
-            // Update existing empty category with items
             const existingCat = skillCategories.find(sc => sc.category === currentCategory?.category);
             if(existingCat) existingCat.items = currentCategory.items;
         }
@@ -286,6 +293,8 @@ export default function GuiPage() {
     return skillCategories.filter(cat => cat.category && cat.category.trim() !== '');
   };
   const parsedSkills = processSkills(skillsContent);
+  const filteredSkills = parsedSkills.filter(cat => cat.category.toLowerCase() !== 'soft skills');
+
 
   const formatPreText = (text: string | undefined) => {
     if (!text) return null;
@@ -356,7 +365,7 @@ export default function GuiPage() {
 
         <div className="flex flex-col md:flex-row items-center justify-center md:justify-between gap-8 lg:gap-12 w-full max-w-4xl">
           <div className="text-center md:text-left">
-            <h1 className="font-sans text-5xl md:text-6xl lg:text-7xl text-black text-center md:text-left">
+            <h1 className="font-sans text-5xl md:text-6xl lg:text-7xl text-black">
               <div>
                 {line1Text.split("").map((char, index) => (
                   <span
@@ -398,7 +407,7 @@ export default function GuiPage() {
 
           <div className="mt-6 md:mt-0 flex-shrink-0">
             <Image
-              src="/profile.png"
+              src="/profile.png" // Ensure profile.png is in the public folder
               alt="Aditya Rekhe"
               width={200}
               height={200}
@@ -460,10 +469,10 @@ export default function GuiPage() {
           </SectionCard>
         )}
 
-        {skillsContent && parsedSkills.length > 0 && (
+        {skillsContent && filteredSkills.length > 0 && (
           <SectionCard title="Skills" icon={<Wrench size={28} />} className="md:col-span-2">
             <div className="space-y-8">
-              {parsedSkills.map((cat, idx) => (
+              {filteredSkills.map((cat, idx) => (
                 <div key={idx} className="bg-gray-100 rounded-xl p-6 shadow-sm">
                   <h3 className="font-semibold text-black mb-4 text-xl">{cat.category}</h3>
                   {cat.items.length > 0 ? (
