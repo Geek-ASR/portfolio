@@ -7,7 +7,7 @@ import { fileSystem, findNode, getRootFileContent, type Directory, type File as 
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { TerminalSquare, User, BookOpen, Wrench, Briefcase, Star, Mail, FolderGit2, Github, Linkedin, FileCode2, Instagram, ArrowLeft, ExternalLink, Image as ImageIcon } from 'lucide-react';
+import { TerminalSquare, User, BookOpen, Wrench, Briefcase, Star, Mail, FolderGit2, Github, Linkedin, FileCode2, Instagram, ArrowLeft, ExternalLink, Image as ImageIcon, Phone } from 'lucide-react';
 import React, { useState, useEffect, useRef } from 'react';
 import { cn } from '@/lib/utils';
 import TypingEffect from '@/components/terminal/TypingEffect';
@@ -183,7 +183,7 @@ function getSkillInfo(skillText: string): SkillInfo {
     'lambda': 'aws-lambda.svg',
     'macos': 'apple.svg',
     'windows': 'windows.svg',
-    'algorithms': 'brain.svg', // Assuming you'll add brain.svg to public/logos/
+    'algorithms': 'brain.svg',
   };
 
   const logoFileName = logoMap[normalizedCoreSkill];
@@ -248,11 +248,51 @@ export function parseProjectContent(content: string | undefined, projectId: stri
     } else if (galleryItemMatch && currentKey === 'galleryPaths') {
       project.galleryPaths.push(galleryItemMatch[1].trim());
     } else if (currentKey === 'description' && line.trim() !== '') {
-      project.description += `\n${line.trim()}`;
+      // Append to description if it's a multi-line description
+      if (project.description === 'No description available.') {
+        project.description = line.trim();
+      } else {
+        project.description += `\n${line.trim()}`;
+      }
     }
   }
   project.description = project.description.trim();
   return project;
+}
+
+interface FooterContactInfo {
+  phone?: string;
+  email?: string;
+  location?: string;
+}
+
+function parseFooterContacts(content: string | undefined): FooterContactInfo {
+  if (!content) return {};
+
+  const lines = content.split('\n');
+  let phone: string | undefined;
+  let email: string | undefined;
+  let location: string | undefined;
+
+  const contactDetailLine = lines.find(line => line.includes('@') && /\d{10}/.test(line.replace(/\s|·/g, '')));
+  if (contactDetailLine) {
+    const emailMatch = contactDetailLine.match(/([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6})/);
+    if (emailMatch) {
+      email = emailMatch[0];
+    }
+    // Extract phone number more robustly by finding a 10-digit sequence
+    const phoneMatch = contactDetailLine.match(/\b\d{10}\b/);
+    if (phoneMatch) {
+      phone = phoneMatch[0];
+    }
+  }
+
+  const locationLine = lines.find(line => line.toLowerCase().startsWith('loc:'));
+  if (locationLine) {
+    location = locationLine.substring(4).trim();
+  }
+
+  return { phone, email, location };
 }
 
 
@@ -421,10 +461,10 @@ export default function GuiPage() {
 
     for (const line of lines) {
       const trimmedLine = line.trim();
-      if (line.startsWith('  ') && !line.startsWith('    ')) {
+      if (line.startsWith('  ') && !line.startsWith('    ')) { // Organization
         if (currentExperience) experiences.push(currentExperience as any);
         currentExperience = { org: trimmedLine, description: [] };
-      } else if (line.startsWith('    ') && currentExperience) {
+      } else if (line.startsWith('    ') && currentExperience) { // Details for current org
         if (!currentExperience.timeline) {
           currentExperience.timeline = trimmedLine;
         } else if (!currentExperience.role) {
@@ -434,7 +474,7 @@ export default function GuiPage() {
         }
       }
     }
-    if (currentExperience) experiences.push(currentExperience as any);
+    if (currentExperience) experiences.push(currentExperience as any); // Push the last one
 
     if (experiences.length === 0) {
       return <p className="text-gray-500">Experience details are not formatted correctly or are incomplete in experience.txt.</p>;
@@ -469,7 +509,7 @@ export default function GuiPage() {
     }
     const lines = achievementsContent.split('\n')
       .map(line => line.trim())
-      .filter(line => line && !line.toLowerCase().startsWith('acchievements'));
+      .filter(line => line && !line.toLowerCase().startsWith('acchievements')); // Filter out the title
 
     if (lines.length === 0) {
       return <p className="text-gray-500">No achievements listed or content is improperly formatted in achievements.txt.</p>;
@@ -496,6 +536,8 @@ export default function GuiPage() {
     galleryPaths: ["/screenshots/portfolio/ss1.png", "/screenshots/portfolio/ss2.png"],
   };
 
+  const footerContactDetails = parseFooterContacts(contactsContent);
+
 
   return (
     <div className="min-h-screen bg-white text-black font-sans">
@@ -514,7 +556,7 @@ export default function GuiPage() {
           </Link>
         </div>
 
-        <div className="flex flex-col md:flex-row items-center justify-center md:justify-between gap-8 lg:gap-12 w-full max-w-4xl">
+        <div className="flex flex-col md:flex-row items-center justify-between gap-8 lg:gap-12 w-full max-w-4xl">
           <div className="text-center md:text-left">
             <h1 className="font-sans text-5xl md:text-6xl lg:text-7xl text-black">
               <div>
@@ -750,23 +792,36 @@ export default function GuiPage() {
           </SectionCard>
         )}
 
-        {contactsContent && (
-          <SectionCard title="Contact" icon={<Mail size={28} />}>
-            <div className="space-y-2 text-gray-700">
-              {contactsContent?.split('\n').map((line, index) => (
-                <div key={index} className="text-base leading-relaxed">
-                  <GuiContactLinkParser line={line} />
-                </div>
-              ))}
-            </div>
-          </SectionCard>
-        )}
       </main>
 
       <footer className="mt-20 pt-10 border-t border-gray-200 text-center text-sm text-gray-500 px-6 pb-6">
+        {(footerContactDetails.phone || footerContactDetails.email || footerContactDetails.location) && (
+          <div className="flex flex-col sm:flex-row justify-center items-center gap-x-6 gap-y-2 mb-6 text-gray-600">
+            {footerContactDetails.phone && (
+              <a href={`tel:${footerContactDetails.phone}`} className="inline-flex items-center hover:text-black hover:underline">
+                <Phone size={16} className="mr-2" />
+                {footerContactDetails.phone}
+              </a>
+            )}
+            {footerContactDetails.email && (
+              <a href={`mailto:${footerContactDetails.email}`} className="inline-flex items-center hover:text-black hover:underline">
+                <Mail size={16} className="mr-2" />
+                {footerContactDetails.email}
+              </a>
+            )}
+            {footerContactDetails.location && (
+              <p className="inline-flex items-center">
+                {/* Could add a MapPin icon here if desired */}
+                {footerContactDetails.location}
+              </p>
+            )}
+          </div>
+        )}
         <p>&copy; {new Date().getFullYear()} Aditya Rekhe. All rights reserved.</p>
         <p className="mt-1">Powered by ASR_Workspace</p>
       </footer>
     </div>
   );
 }
+
+    
