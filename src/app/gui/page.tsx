@@ -346,6 +346,59 @@ export default function GuiPage() {
     );
   };
 
+  const renderExperience = () => {
+    if (!experienceContent || experienceContent.startsWith('Error:')) {
+      return formatPreText(experienceContent);
+    }
+    const lines = experienceContent.split('\n').filter(line => line && !line.toLowerCase().startsWith('exxperience'));
+    const experiences: Array<{ org: string; timeline: string; role: string; description: string[] }> = [];
+    let currentExperience: { org?: string; timeline?: string; role?: string; description: string[] } | null = null;
+
+    for (const line of lines) {
+      const trimmedLine = line.trim();
+      if (line.startsWith('  ') && !line.startsWith('    ')) { // Organization
+        if (currentExperience) experiences.push(currentExperience as any);
+        currentExperience = { org: trimmedLine, description: [] };
+      } else if (line.startsWith('    ') && currentExperience) {
+        if (!currentExperience.timeline) {
+          currentExperience.timeline = trimmedLine;
+        } else if (!currentExperience.role) {
+          currentExperience.role = trimmedLine;
+        } else {
+          currentExperience.description.push(trimmedLine);
+        }
+      }
+    }
+    if (currentExperience) experiences.push(currentExperience as any);
+
+    if (experiences.length === 0) {
+      return <p className="text-gray-500">Experience details are not formatted correctly or are incomplete in experience.txt.</p>;
+    }
+
+    return (
+      <div className="space-y-8">
+        {experiences.map((exp, index) => (
+          <div key={index} className="pb-6 border-b border-gray-200 last:border-b-0">
+            <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start mb-1">
+              <div className="flex items-center mb-1 sm:mb-0">
+                <Briefcase size={20} className="mr-2 text-gray-600" />
+                <h3 className="text-lg font-semibold text-black">{exp.org}</h3>
+              </div>
+              <p className="text-sm text-gray-500 sm:text-right">{exp.timeline}</p>
+            </div>
+            <h4 className="text-md font-medium text-gray-800 mb-2 ml-0 sm:ml-7">{exp.role}</h4>
+            <ul className="list-disc list-inside space-y-1 ml-0 sm:ml-7">
+              {exp.description.map((desc, i) => (
+                <li key={i} className="text-gray-700 text-sm leading-relaxed">{desc}</li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
+    );
+  };
+
+
   return (
     <div className="min-h-screen bg-white text-black font-sans">
       {/* Hero Section */}
@@ -407,7 +460,7 @@ export default function GuiPage() {
 
           <div className="mt-6 md:mt-0 flex-shrink-0">
             <Image
-              src="/profile.png" // Ensure profile.png is in the public folder
+              src="/profile.png" 
               alt="Aditya Rekhe"
               width={200}
               height={200}
@@ -423,7 +476,7 @@ export default function GuiPage() {
       {aboutMeContent && !aboutMeContent.startsWith('Error:') && (
         <section className="py-16 md:py-24 bg-gray-50">
           <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-            <Card ref={aboutMeRef} className="bg-white shadow-2xl rounded-2xl overflow-hidden"> {/* Removed border */}
+            <Card ref={aboutMeRef} className="bg-white shadow-2xl rounded-2xl overflow-hidden">
               <div className="p-8 sm:p-10 md:p-12">
                 <div className="flex items-center mb-6">
                   <User size={36} className="mr-4 text-[hsl(var(--accent))]" />
@@ -521,7 +574,7 @@ export default function GuiPage() {
 
         {experienceContent && (
           <SectionCard title="Experience" icon={<Briefcase size={28} />} className="md:col-span-2">
-            {formatPreText(experienceContent)}
+            {renderExperience()}
           </SectionCard>
         )}
 
@@ -581,3 +634,5 @@ Tech: Next.js, React, TypeScript, ShadCN UI, Tailwind CSS.</p>
     </div>
   );
 }
+
+    
