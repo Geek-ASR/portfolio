@@ -52,8 +52,8 @@ export const fileSystem: Directory = {
     fostering team collaboration and ensuring seamless coordination.
 
   Google Developer Groups, DIT
-    Blockchain Co-lead
     Sept, 2023 - current
+    Blockchain Co-lead
     Conducted multiple blockchain workshops and sessions, driving hands-on learning 
     and developer engagement.
 `,
@@ -151,8 +151,8 @@ Exxperience
     fostering team collaboration and ensuring seamless coordination.
 
   Google Developer Groups, DIT
-    Blockchain Co-lead
     Sept, 2023 - current
+    Blockchain Co-lead
     Conducted multiple blockchain workshops and sessions, driving hands-on learning 
     and developer engagement.
 
@@ -212,14 +212,20 @@ Description: ConnectWell is designed to foster supportive online communities for
 Programming Languages:
   - Python (Advanced)
   - JavaScript (Advanced)
-  - Node.js (Advanced)
-  - React (Advanced)
-  - Next.js (Advanced)
+  - TypeScript (Advanced)
   - Java (Intermediate)
   - C++ (Intermediate)
   - Solidity (Advanced)
   - Rust (Beginner)
-
+Web Development:
+  - React (Advanced)
+  - Next.js (Advanced)
+  - HTML5 (Advanced)
+  - CSS3 (Advanced)
+  - TailwindCSS (Advanced)
+  - Node.js (Advanced)
+  - Express.js (Advanced)
+  - GraphQL (Basic)
 Blockchain Technologies:
   - Ethereum
   - Polygon
@@ -238,23 +244,10 @@ Blockchain Technologies:
   - DeFi
   - NFTs
   - IPFS
-
-Web Development:
-  - React (Frontend)
-  - Next.js (Frontend)
-  - HTML5 (Frontend)
-  - CSS3 (Frontend)
-  - TailwindCSS (Frontend)
-  - Node.js (Backend)
-  - Express.js (Backend)
-  - RESTful APIs
-  - GraphQL (Basic)
-
 Databases:
   - PostgreSQL (SQL)
   - MySQL (SQL)
   - MongoDB (NoSQL)
-
 DevOps & Tools:
   - Git
   - GitHub
@@ -264,10 +257,7 @@ DevOps & Tools:
   - CI/CD (GitHub Actions - Basic)
   - AWS (EC2, S3, Lambda - Basic)
   - Firebase
-  - Linux (Ubuntu)
-  - macOS
-  - Windows
-
+  - Operating Systems (Linux (Ubuntu), macOS, Windows)
 Soft Skills:
   - Problem Solving
   - Analytical Thinking
@@ -327,3 +317,4 @@ export function getRootFileContent(fileName: string): string | undefined {
   }
   return `Error: File '${fileName}' not found.`;
 }
+
