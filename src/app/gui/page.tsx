@@ -131,7 +131,9 @@ export default function GuiPage() {
 
   useEffect(() => {
     const animationStaggerDelayMs = 0.07 * 1000; // 70ms
-    const timeForAdityaToStartWave = (line1Text.length + " ".length + "Aditya".length) * animationStaggerDelayMs;
+    // Timing for when the wave hits "A" in "Aditya"
+    // Length of "Hello, I am " is 12 characters (including trailing space)
+    const timeForAdityaToStartWave = (line1Text.length + " ".length + "Aditya".length - "ditya".length) * animationStaggerDelayMs;
 
 
     const timer = setTimeout(() => {
@@ -180,25 +182,34 @@ export default function GuiPage() {
         if (currentCategory) {
           currentCategory.items.push(trimmedLine.substring(2).trim());
         } else {
-           currentCategory = { category: "General", items: [trimmedLine.substring(2).trim()] };
+           // This case should ideally not happen if format is Category: then - Item
+           // but as a fallback, treat as general if no category active
+           currentCategory = { category: "General Skills", items: [trimmedLine.substring(2).trim()] };
            if (!skillCategories.find(sc => sc.category === currentCategory?.category)) {
-            skillCategories.push(currentCategory);
+             skillCategories.push(currentCategory);
            }
         }
       } else if (trimmedLine.endsWith(':')) {
+        // New category starts
+        const categoryName = trimmedLine.slice(0, -1);
         if (currentCategory && (currentCategory.items.length > 0 || !skillCategories.find(sc => sc.category === currentCategory?.category))) {
           if(!skillCategories.find(sc => sc.category === currentCategory?.category)) skillCategories.push(currentCategory);
         }
-        currentCategory = { category: trimmedLine.slice(0, -1), items: [] };
-      } else if (trimmedLine) {
-        if (currentCategory && (currentCategory.items.length > 0 || (currentCategory.category && !skillCategories.find(sc => sc.category === currentCategory?.category)))) {
-           if(!skillCategories.find(sc => sc.category === currentCategory?.category)) skillCategories.push(currentCategory);
-        }
-        currentCategory = { category: trimmedLine, items: [] };
+        currentCategory = { category: categoryName, items: [] };
+      } else if (trimmedLine && currentCategory && !trimmedLine.endsWith(':')) {
+         // Handles items that are not directly preceded by '- ' but are under a category
+         // This might need refinement based on exact skills.txt format variance
+         currentCategory.items.push(trimmedLine);
+      } else if (trimmedLine && !currentCategory) {
+        // Line is a category itself without a colon, or a general skill not under a heading
+         currentCategory = { category: trimmedLine, items: [] };
       }
     });
+    // Add the last processed category
     if (currentCategory && (currentCategory.items.length > 0 || (currentCategory.category && !skillCategories.find(sc => sc.category === currentCategory?.category)))) {
-       if(!skillCategories.find(sc => sc.category === currentCategory?.category)) skillCategories.push(currentCategory);
+       if(!skillCategories.find(sc => sc.category === currentCategory?.category)) {
+           skillCategories.push(currentCategory);
+       }
     }
     return skillCategories.filter(cat => cat.category && cat.category.trim() !== '');
   };
@@ -219,16 +230,19 @@ export default function GuiPage() {
     if (!educationContent || educationContent.startsWith('Error:')) {
       return formatPreText(educationContent); 
     }
-    const lines = educationContent.split('\n').map(line => line.trim()).filter(line => line && line.toLowerCase() !== 'edducation');
+    // Skip the first line if it's "Edducation" (case-insensitive)
+    const lines = educationContent.split('\n').map(line => line.trim()).filter(line => line);
+    const contentLines = lines[0].toLowerCase() === 'edducation' ? lines.slice(1) : lines;
     
-    const collegeName = lines[0];
-    const degree = lines[1];
-    const timeline = lines[2];
-    const cgpa = lines[3];
-
-    if (!collegeName || !degree || !timeline || !cgpa) {
-      return <p className="text-gray-500">Education details are not formatted correctly in education.txt.</p>;
+    if (contentLines.length < 4) {
+      return <p className="text-gray-500">Education details are not formatted correctly or are incomplete in education.txt.</p>;
     }
+
+    const collegeName = contentLines[0];
+    const degree = contentLines[1];
+    const timeline = contentLines[2];
+    const cgpa = contentLines[3];
+
 
     return (
       <div className="space-y-3 text-base">
@@ -238,7 +252,7 @@ export default function GuiPage() {
               href="https://engg.dypvp.edu.in/" 
               target="_blank" 
               rel="noopener noreferrer"
-              className="hover:underline" // Removed text-[hsl(var(--accent))]
+              className="hover:underline"
             >
               {collegeName}
             </a>
@@ -273,7 +287,7 @@ export default function GuiPage() {
 
         <div className="flex flex-col md:flex-row items-center justify-center md:justify-between gap-8 lg:gap-12 w-full max-w-4xl">
           <div className="text-center md:text-left">
-            <h1 className="font-sans text-5xl md:text-6xl lg:text-7xl text-black">
+            <h1 className="font-sans text-5xl md:text-6xl lg:text-7xl text-black text-center md:text-left">
               <div>
                 {line1Text.split("").map((char, index) => (
                   <span
@@ -292,7 +306,7 @@ export default function GuiPage() {
                     key={`line2-${index}`}
                     className="inline-block animate-color-text-wave font-extrabold"
                     style={{
-                      animationDelay: `${(line1Text.length + index) * 0.07}s`,
+                      animationDelay: `${(line1Text.length + index + 1) * 0.07}s`, // +1 for space
                     }}
                     aria-hidden="true"
                   >
@@ -327,6 +341,7 @@ export default function GuiPage() {
         </div>
       </section>
 
+      {/* About Me Section */}
       {aboutMeContent && !aboutMeContent.startsWith('Error:') && (
         <section className="py-16 md:py-24 bg-gray-50">
           <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -387,13 +402,21 @@ export default function GuiPage() {
 
         {skillsContent && parsedSkills.length > 0 && (
           <SectionCard title="Skills" icon={<Wrench size={28} />} className="md:col-span-2">
-            <div className="space-y-6">
+            <div className="space-y-8">
               {parsedSkills.map((cat, idx) => (
-                <div key={idx}>
-                  <h3 className="font-semibold text-black mb-3 text-xl">{cat.category}</h3>
+                <div key={idx} className="bg-gray-100 rounded-xl p-6 shadow-sm">
+                  <h3 className="font-semibold text-black mb-4 text-xl">{cat.category}</h3>
                   {cat.items.length > 0 ? (
-                    <div className="flex flex-wrap gap-2">
-                      {cat.items.map(item => <Badge key={item} variant="outline" className="text-sm px-3 py-1 border-gray-300 text-gray-700 bg-gray-50 hover:bg-gray-100">{item}</Badge>)}
+                    <div className="flex flex-wrap gap-3">
+                      {cat.items.map(item => (
+                        <Badge 
+                          key={item} 
+                          variant="outline" 
+                          className="text-sm px-4 py-2 border-gray-300 text-gray-700 bg-white hover:bg-gray-50 shadow-sm"
+                        >
+                          {item}
+                        </Badge>
+                      ))}
                     </div>
                   ) : (
                     <p className="text-sm italic text-gray-500">Details for this category are general or not itemized.</p>
@@ -466,4 +489,3 @@ Tech: Next.js, React, TypeScript, ShadCN UI, Tailwind CSS.</p>
     </div>
   );
 }
-
