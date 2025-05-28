@@ -75,7 +75,7 @@ interface SectionCardProps {
 }
 
 const SectionCard: React.FC<SectionCardProps> = React.memo(({ title, icon, children, className, cardRef }) => (
-  <Card ref={cardRef} className={cn("bg-white shadow-lg", className)}>
+  <Card ref={cardRef} className={cn("bg-white shadow-lg border border-gray-200", className)}>
     <CardHeader className="p-6">
       <CardTitle className="flex items-center text-2xl text-black font-semibold">
         {icon && <span className="mr-3 text-[hsl(var(--accent))]">{icon}</span>}
@@ -183,7 +183,7 @@ function getSkillInfo(skillText: string): SkillInfo {
     'lambda': 'aws-lambda.svg',
     'macos': 'apple.svg',
     'windows': 'windows.svg',
-    'algorithms': 'brain.svg',
+    'algorithms': 'brain.svg', // Added brain.svg for Algorithms
   };
 
   const logoFileName = logoMap[normalizedCoreSkill];
@@ -248,7 +248,6 @@ export function parseProjectContent(content: string | undefined, projectId: stri
     } else if (galleryItemMatch && currentKey === 'galleryPaths') {
       project.galleryPaths.push(galleryItemMatch[1].trim());
     } else if (currentKey === 'description' && line.trim() !== '') {
-      // Append to description if it's a multi-line description
       if (project.description === 'No description available.') {
         project.description = line.trim();
       } else {
@@ -280,7 +279,6 @@ function parseFooterContacts(content: string | undefined): FooterContactInfo {
     if (emailMatch) {
       email = emailMatch[0];
     }
-    // Extract phone number more robustly by finding a 10-digit sequence
     const phoneMatch = contactDetailLine.match(/\b\d{10}\b/);
     if (phoneMatch) {
       phone = phoneMatch[0];
@@ -318,8 +316,8 @@ export default function GuiPage() {
 
   useEffect(() => {
     const nameAnimationStaggerDelayMs = 0.07 * 1000;
-    const firstLetterOfAdityaIndex = line1Text.length + 1; // Accounts for the space or new line start
-    const timeForSubtitleToStart = (firstLetterOfAdityaIndex * nameAnimationStaggerDelayMs);
+    const firstLetterOfAdityaIndex = line1Text.length + 1 + "Aditya".length;
+    const timeForSubtitleToStart = (firstLetterOfAdityaIndex * nameAnimationStaggerDelayMs) + (2.5 * 1000 * 0.3); // Adjusted start based on "Aditya"
 
     const timer = setTimeout(() => {
       setStartSubtitleAnimation(true);
@@ -389,7 +387,6 @@ export default function GuiPage() {
     if (currentCategory && currentCategory.items.length === 0 && skillCategories.find(sc => sc.category === currentCategory?.category && sc.items.length > 0)) {
       // Category already added with items, likely an empty category header was processed later
     } else if (currentCategory && (currentCategory.items.length > 0 || (currentCategory.category && !skillCategories.find(sc => sc.category === currentCategory?.category)))) {
-        // Add if it's a new category or an existing one that was empty before
         if(!skillCategories.find(sc => sc.category === currentCategory?.category)) {
            skillCategories.push(currentCategory);
         } else if (skillCategories.find(sc => sc.category === currentCategory?.category && sc.items.length === 0) && currentCategory.items.length > 0){
@@ -509,7 +506,7 @@ export default function GuiPage() {
     }
     const lines = achievementsContent.split('\n')
       .map(line => line.trim())
-      .filter(line => line && !line.toLowerCase().startsWith('acchievements')); // Filter out the title
+      .filter(line => line && !line.toLowerCase().startsWith('acchievements')); 
 
     if (lines.length === 0) {
       return <p className="text-gray-500">No achievements listed or content is improperly formatted in achievements.txt.</p>;
@@ -556,7 +553,7 @@ export default function GuiPage() {
           </Link>
         </div>
 
-        <div className="flex flex-col md:flex-row items-center justify-between gap-8 lg:gap-12 w-full max-w-4xl">
+        <div className="flex flex-col md:flex-row items-center md:justify-between gap-8 lg:gap-12 w-full max-w-4xl">
           <div className="text-center md:text-left">
             <h1 className="font-sans text-5xl md:text-6xl lg:text-7xl text-black">
               <div>
@@ -588,7 +585,7 @@ export default function GuiPage() {
               <span className="sr-only">{`${line1Text} ${line2Text}`}</span>
             </h1>
             {startSubtitleAnimation && (
-              <div className="mt-4">
+              <div className="mt-4 min-h-[2.5rem] md:min-h-[3rem]">
                 <TypingEffect
                   text={subtitleText}
                   speed={50}
@@ -772,7 +769,7 @@ export default function GuiPage() {
                       <div>
                         <h4 className="text-md font-semibold text-black mb-2">Gallery:</h4>
                         <Link href={`/gui/gallery/${encodeURIComponent(project.id)}`} passHref legacyBehavior>
-                          <Button variant="outline" className="text-sm">
+                          <Button variant="outline" className="text-sm text-gray-600 border-gray-300 hover:bg-gray-100 hover:text-gray-800">
                             <ImageIcon size={18} className="mr-2" /> View Gallery
                           </Button>
                         </Link>
