@@ -315,9 +315,8 @@ export default function GuiPage() {
 
 
   useEffect(() => {
-    const nameAnimationStaggerDelayMs = 0.07 * 1000;
-    const firstLetterOfAdityaIndex = line1Text.length + 1 + "Aditya".length;
-    const timeForSubtitleToStart = (firstLetterOfAdityaIndex * nameAnimationStaggerDelayMs) + (2.5 * 1000 * 0.3);
+    const firstLetterOfAdityaIndex = line1Text.length;
+    const timeForSubtitleToStart = (firstLetterOfAdityaIndex * 0.07 * 1000);
 
     const timer = setTimeout(() => {
       setStartSubtitleAnimation(true);
@@ -584,15 +583,16 @@ export default function GuiPage() {
               </div>
               <span className="sr-only">{`${line1Text} ${line2Text}`}</span>
             </h1>
-            {startSubtitleAnimation && (
-              <div className="mt-4 min-h-[2.5rem] md:min-h-[3rem]">
+            {/* Subtitle container - ALWAYS RENDERED to reserve space */}
+            <div className="mt-4 min-h-[2.5rem] md:min-h-[3rem]">
+              {startSubtitleAnimation && (
                 <TypingEffect
                   text={subtitleText}
                   speed={50}
                   className="font-sans text-sm md:text-base lg:text-lg text-[#006400] tracking-wide block"
                 />
-              </div>
-            )}
+              )}
+            </div>
           </div>
 
           <div className="mt-6 md:mt-0 flex-shrink-0">
