@@ -131,7 +131,7 @@ export default function GuiPage() {
 
   useEffect(() => {
     const animationStaggerDelayMs = 0.07 * 1000; // 70ms
-    const timeForAdityaToStartWave = (line1Text.length + "Aditya".length - "Aditya".length) * animationStaggerDelayMs;
+    const timeForAdityaToStartWave = (line1Text.length + " ".length + "Aditya".length) * animationStaggerDelayMs;
 
 
     const timer = setTimeout(() => {
@@ -217,10 +217,10 @@ export default function GuiPage() {
   
   const renderEducation = () => {
     if (!educationContent || educationContent.startsWith('Error:')) {
-      return formatPreText(educationContent); // Show error or placeholder
+      return formatPreText(educationContent); 
     }
     const lines = educationContent.split('\n').map(line => line.trim()).filter(line => line && line.toLowerCase() !== 'edducation');
-    // Expected order: College, Degree, Timeline, CGPA
+    
     const collegeName = lines[0];
     const degree = lines[1];
     const timeline = lines[2];
@@ -233,7 +233,16 @@ export default function GuiPage() {
     return (
       <div className="space-y-3 text-base">
         <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start">
-          <p className="font-semibold text-black text-left">{collegeName}</p>
+          <p className="font-semibold text-black text-left">
+            <a 
+              href="https://engg.dypvp.edu.in/" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="text-[hsl(var(--accent))] hover:underline"
+            >
+              {collegeName}
+            </a>
+          </p>
           <p className="text-sm text-gray-600 sm:text-right mt-1 sm:mt-0">{timeline}</p>
         </div>
         <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start">
@@ -457,3 +466,4 @@ Tech: Next.js, React, TypeScript, ShadCN UI, Tailwind CSS.</p>
     </div>
   );
 }
+
