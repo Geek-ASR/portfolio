@@ -112,11 +112,11 @@ const socialLinks = [
 
 export default function GuiPage() {
   const aboutMeContent = getRootFileContent('about_me.txt');
-  const education = getRootFileContent('education.txt');
+  const educationContent = getRootFileContent('education.txt');
   const skillsContent = getRootFileContent('skills.txt');
-  const experience = getRootFileContent('experience.txt');
-  const achievements = getRootFileContent('achievements.txt');
-  const contacts = getRootFileContent('contacts.txt');
+  const experienceContent = getRootFileContent('experience.txt');
+  const achievementsContent = getRootFileContent('achievements.txt');
+  const contactsContent = getRootFileContent('contacts.txt');
 
   const projectsNode = findNode('~/projects');
   const projectsList = projectsNode && projectsNode.type === 'directory' ? projectsNode.children.filter(c => c.type === 'file') as FileSystemFileType[] : [];
@@ -125,14 +125,14 @@ export default function GuiPage() {
   const [showSocialIcons, setShowSocialIcons] = useState(false);
   const aboutMeRef = useRef<HTMLDivElement>(null);
 
-
   const line1Text = "Hello, I am";
   const line2Text = "Aditya Rekhe";
   const subtitleText = "Software Engineer | Full-stack Developer | Blockchain Solutions";
 
   useEffect(() => {
-    const animationStaggerDelayMs = 0.07 * 1000;
-    const timeForAdityaToStartWave = line1Text.length * animationStaggerDelayMs;
+    const animationStaggerDelayMs = 0.07 * 1000; // 70ms
+    const timeForAdityaToStartWave = (line1Text.length + "Aditya".length - "Aditya".length) * animationStaggerDelayMs;
+
 
     const timer = setTimeout(() => {
       setStartSubtitleAnimation(true);
@@ -146,11 +146,11 @@ export default function GuiPage() {
       ([entry]) => {
         if (entry.isIntersecting) {
           setShowSocialIcons(true);
-          observer.unobserve(entry.target); // Stop observing once visible
+          observer.unobserve(entry.target); 
         }
       },
       {
-        threshold: 0.1, // Trigger when 10% of the element is visible
+        threshold: 0.1, 
       }
     );
 
@@ -214,6 +214,36 @@ export default function GuiPage() {
     }
     return <pre className="whitespace-pre-wrap font-sans text-base leading-relaxed text-gray-700">{text}</pre>;
   };
+  
+  const renderEducation = () => {
+    if (!educationContent || educationContent.startsWith('Error:')) {
+      return formatPreText(educationContent); // Show error or placeholder
+    }
+    const lines = educationContent.split('\n').map(line => line.trim()).filter(line => line && line.toLowerCase() !== 'edducation');
+    // Expected order: College, Degree, Timeline, CGPA
+    const collegeName = lines[0];
+    const degree = lines[1];
+    const timeline = lines[2];
+    const cgpa = lines[3];
+
+    if (!collegeName || !degree || !timeline || !cgpa) {
+      return <p className="text-gray-500">Education details are not formatted correctly in education.txt.</p>;
+    }
+
+    return (
+      <div className="space-y-3 text-base">
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start">
+          <p className="font-semibold text-black text-left">{collegeName}</p>
+          <p className="text-sm text-gray-600 sm:text-right mt-1 sm:mt-0">{timeline}</p>
+        </div>
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start">
+          <p className="text-gray-800 text-left">{degree}</p>
+          <p className="text-sm text-gray-600 sm:text-right mt-1 sm:mt-0">{cgpa}</p>
+        </div>
+      </div>
+    );
+  };
+
 
   return (
     <div className="min-h-screen bg-white text-black font-sans">
@@ -233,7 +263,6 @@ export default function GuiPage() {
         </div>
 
         <div className="flex flex-col md:flex-row items-center justify-center md:justify-between gap-8 lg:gap-12 w-full max-w-4xl">
-          {/* Text content block */}
           <div className="text-center md:text-left">
             <h1 className="font-sans text-5xl md:text-6xl lg:text-7xl text-black">
               <div>
@@ -275,7 +304,6 @@ export default function GuiPage() {
             )}
           </div>
 
-          {/* Image block */}
           <div className="mt-6 md:mt-0 flex-shrink-0">
             <Image
               src="/profile.png"
@@ -290,7 +318,6 @@ export default function GuiPage() {
         </div>
       </section>
 
-      {/* New About Me Section */}
       {aboutMeContent && !aboutMeContent.startsWith('Error:') && (
         <section className="py-16 md:py-24 bg-gray-50">
           <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -342,11 +369,10 @@ export default function GuiPage() {
       )}
 
 
-      {/* Main Content Area for other sections */}
       <main className="px-6 md:px-10 lg:px-16 py-16 grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-10">
-        {education && (
-          <SectionCard title="Education" icon={<BookOpen size={28} />}>
-            {formatPreText(education)}
+        {educationContent && (
+          <SectionCard title="Education" icon={<BookOpen size={28} />} className="md:col-span-2">
+            {renderEducation()}
           </SectionCard>
         )}
 
@@ -369,9 +395,9 @@ export default function GuiPage() {
           </SectionCard>
         )}
 
-        {experience && (
+        {experienceContent && (
           <SectionCard title="Experience" icon={<Briefcase size={28} />} className="md:col-span-2">
-            {formatPreText(experience)}
+            {formatPreText(experienceContent)}
           </SectionCard>
         )}
         
@@ -405,16 +431,16 @@ Tech: Next.js, React, TypeScript, ShadCN UI, Tailwind CSS.</p>
           </SectionCard>
         )}
 
-        {achievements && (
+        {achievementsContent && (
           <SectionCard title="Achievements" icon={<Star size={28} />}>
-             {formatPreText(achievements)}
+             {formatPreText(achievementsContent)}
           </SectionCard>
         )}
 
-        {contacts && (
+        {contactsContent && (
           <SectionCard title="Contact" icon={<Mail size={28} />}>
             <div className="space-y-2 text-gray-700">
-              {contacts?.split('\n').map((line, index) => (
+              {contactsContent?.split('\n').map((line, index) => (
                 <div key={index} className="text-base leading-relaxed">
                   <GuiContactLinkParser line={line} />
                 </div>
@@ -431,10 +457,3 @@ Tech: Next.js, React, TypeScript, ShadCN UI, Tailwind CSS.</p>
     </div>
   );
 }
-
-    
-
-    
-
-    
-
