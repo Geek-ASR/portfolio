@@ -74,7 +74,7 @@ interface SectionCardProps {
   cardRef?: React.RefObject<HTMLDivElement>;
 }
 
-const SectionCard: React.FC<SectionCardProps> = ({ title, icon, children, className, cardRef }) => (
+const SectionCard: React.FC<SectionCardProps> = React.memo(({ title, icon, children, className, cardRef }) => (
   <Card ref={cardRef} className={cn("shadow-lg bg-white rounded-lg", className)}>
     <CardHeader className="p-6">
       <CardTitle className="flex items-center text-2xl text-black font-semibold">
@@ -86,7 +86,8 @@ const SectionCard: React.FC<SectionCardProps> = ({ title, icon, children, classN
       {children}
     </CardContent>
   </Card>
-);
+));
+SectionCard.displayName = 'SectionCard';
 
 const socialLinks = [
   {
@@ -142,7 +143,7 @@ function getSkillInfo(skillText: string): SkillInfo {
     'javascript': 'javascript.svg',
     'typescript': 'typescript.svg',
     'java': 'java.svg',
-    'cplusplus': 'cplusplus.svg',
+    'c++': 'cplusplus.svg',
     'solidity': 'solidity.svg',
     'rust': 'rust.svg',
     'react': 'react.svg',
@@ -182,7 +183,7 @@ function getSkillInfo(skillText: string): SkillInfo {
     'lambda': 'aws-lambda.svg',
     'macos': 'apple.svg',
     'windows': 'windows.svg',
-    'algorithms': 'brain.svg', // Example for a conceptual skill
+    'algorithms': 'brain.svg', 
   };
 
   const logoFileName = logoMap[normalizedCoreSkill];
@@ -229,7 +230,7 @@ function parseProjectContent(content: string | undefined): ParsedProject {
       currentKey = null;
     } else if (descMatch) {
       project.description = descMatch[1].trim();
-      currentKey = 'description'; // Allow multi-line description
+      currentKey = 'description'; 
     } else if (techMatch) {
       project.techStack = techMatch[1].split(',').map(tech => tech.trim()).filter(tech => tech);
       currentKey = null;
@@ -244,7 +245,6 @@ function parseProjectContent(content: string | undefined): ParsedProject {
     } else if (galleryItemMatch && currentKey === 'galleryPaths') {
       project.galleryPaths.push(galleryItemMatch[1].trim());
     } else if (currentKey === 'description') {
-      // Append to multi-line description
       project.description += `\n${line.trim()}`;
     }
   }
@@ -341,7 +341,9 @@ export default function GuiPage() {
       }
     });
     if (currentCategory && currentCategory.items.length === 0 && skillCategories.find(sc => sc.category === currentCategory?.category && sc.items.length > 0)) {
+      // Category already added with items, likely an empty category header was processed later
     } else if (currentCategory && (currentCategory.items.length > 0 || (currentCategory.category && !skillCategories.find(sc => sc.category === currentCategory?.category)))) {
+        // Add if it's a new category or an existing one that was empty before
         if(!skillCategories.find(sc => sc.category === currentCategory?.category)) {
            skillCategories.push(currentCategory);
         } else if (skillCategories.find(sc => sc.category === currentCategory?.category && sc.items.length === 0) && currentCategory.items.length > 0){
@@ -349,6 +351,7 @@ export default function GuiPage() {
             if(existingCat) existingCat.items = currentCategory.items;
         }
     }
+    // Filter out "Soft Skills"
     return skillCategories.filter(cat => cat.category && cat.category.trim() !== '' && cat.category.toLowerCase() !== 'soft skills');
   };
   const parsedSkills = processSkills(skillsContent);
@@ -459,8 +462,8 @@ export default function GuiPage() {
     domain: "ASRWorkspace Portfolio (This Website)",
     description: "Designed and developed an interactive terminal-based portfolio with a GUI mode.",
     techStack: ["Next.js", "React", "TypeScript", "ShadCN UI", "Tailwind CSS"],
-    githubLink: "https://github.com/Geek-ASR/ASRWorkspace-Portfolio", // Replace with actual if available
-    websiteLink: "/", // Links to the current site
+    githubLink: "https://github.com/Geek-ASR/ASRWorkspace-Portfolio", 
+    websiteLink: "/", 
     galleryPaths: ["/screenshots/portfolio/ss1.png", "/screenshots/portfolio/ss2.png"],
   };
 
@@ -702,7 +705,7 @@ export default function GuiPage() {
                           {project.galleryPaths.map((path, imgIdx) => (
                             <div key={imgIdx} className="aspect-video bg-gray-100 rounded-md overflow-hidden shadow-sm">
                               <Image
-                                src={`https://placehold.co/400x225.png`} // Placeholder until actual images are available
+                                src={`https://placehold.co/400x225.png`} 
                                 alt={`${project.domain} screenshot ${imgIdx + 1}`}
                                 width={400}
                                 height={225}
@@ -749,3 +752,4 @@ export default function GuiPage() {
     </div>
   );
 }
+
