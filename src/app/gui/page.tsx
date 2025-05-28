@@ -183,7 +183,7 @@ function getSkillInfo(skillText: string): SkillInfo {
     'lambda': 'aws-lambda.svg',
     'macos': 'apple.svg',
     'windows': 'windows.svg',
-    'algorithms': 'brain.svg', // Added brain.svg for Algorithms
+    'algorithms': 'brain.svg',
   };
 
   const logoFileName = logoMap[normalizedCoreSkill];
@@ -317,7 +317,7 @@ export default function GuiPage() {
   useEffect(() => {
     const nameAnimationStaggerDelayMs = 0.07 * 1000;
     const firstLetterOfAdityaIndex = line1Text.length + 1 + "Aditya".length;
-    const timeForSubtitleToStart = (firstLetterOfAdityaIndex * nameAnimationStaggerDelayMs) + (2.5 * 1000 * 0.3); // Adjusted start based on "Aditya"
+    const timeForSubtitleToStart = (firstLetterOfAdityaIndex * nameAnimationStaggerDelayMs) + (2.5 * 1000 * 0.3);
 
     const timer = setTimeout(() => {
       setStartSubtitleAnimation(true);
@@ -506,7 +506,7 @@ export default function GuiPage() {
     }
     const lines = achievementsContent.split('\n')
       .map(line => line.trim())
-      .filter(line => line && !line.toLowerCase().startsWith('acchievements')); 
+      .filter(line => line && !line.toLowerCase().startsWith('acchievements'));
 
     if (lines.length === 0) {
       return <p className="text-gray-500">No achievements listed or content is improperly formatted in achievements.txt.</p>;
@@ -769,7 +769,7 @@ export default function GuiPage() {
                       <div>
                         <h4 className="text-md font-semibold text-black mb-2">Gallery:</h4>
                         <Link href={`/gui/gallery/${encodeURIComponent(project.id)}`} passHref legacyBehavior>
-                          <Button variant="outline" className="text-sm text-gray-600 border-gray-300 hover:bg-gray-100 hover:text-gray-800">
+                          <Button className="text-sm bg-gray-100 text-gray-700 border border-gray-300 hover:bg-gray-200 hover:text-gray-800 rounded-md shadow-sm">
                             <ImageIcon size={18} className="mr-2" /> View Gallery
                           </Button>
                         </Link>
@@ -820,5 +820,3 @@ export default function GuiPage() {
     </div>
   );
 }
-
-    
