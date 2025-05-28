@@ -7,7 +7,7 @@ import { fileSystem, findNode, getRootFileContent, type Directory, type File as 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { TerminalSquare, User, BookOpen, Wrench, Briefcase, Star, Mail, FolderGit2, Github, Linkedin, FileCode2, Instagram, ArrowLeft } from 'lucide-react';
+import { TerminalSquare, User, BookOpen, Wrench, Briefcase, Star, Mail, FolderGit2, Github, Linkedin, FileCode2, Instagram } from 'lucide-react';
 import React, { useState, useEffect, useRef } from 'react';
 import { cn } from '@/lib/utils';
 import TypingEffect from '@/components/terminal/TypingEffect';
@@ -238,7 +238,7 @@ export default function GuiPage() {
               href="https://engg.dypvp.edu.in/" 
               target="_blank" 
               rel="noopener noreferrer"
-              className="text-[hsl(var(--accent))] hover:underline"
+              className="hover:underline" // Removed text-[hsl(var(--accent))]
             >
               {collegeName}
             </a>
