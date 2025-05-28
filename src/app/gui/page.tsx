@@ -75,7 +75,7 @@ interface SectionCardProps {
 }
 
 const SectionCard: React.FC<SectionCardProps> = React.memo(({ title, icon, children, className, cardRef }) => (
-  <Card ref={cardRef} className={cn("shadow-lg bg-white rounded-lg", className)}>
+  <Card ref={cardRef} className={cn("bg-white shadow-lg", className)}>
     <CardHeader className="p-6">
       <CardTitle className="flex items-center text-2xl text-black font-semibold">
         {icon && <span className="mr-3 text-[hsl(var(--accent))]">{icon}</span>}
@@ -108,14 +108,14 @@ const socialLinks = [
   {
     name: 'Instagram',
     icon: Instagram,
-    url: '#', 
+    url: '#',
   },
 ];
 
 interface SkillInfo {
-  name: string; 
+  name: string;
   logoPath?: string;
-  displayName: string; 
+  displayName: string;
 }
 
 function getSkillInfo(skillText: string): SkillInfo {
@@ -183,7 +183,7 @@ function getSkillInfo(skillText: string): SkillInfo {
     'lambda': 'aws-lambda.svg',
     'macos': 'apple.svg',
     'windows': 'windows.svg',
-    'algorithms': 'brain.svg', 
+    'algorithms': 'brain.svg',
   };
 
   const logoFileName = logoMap[normalizedCoreSkill];
@@ -195,7 +195,8 @@ function getSkillInfo(skillText: string): SkillInfo {
   };
 }
 
-interface ParsedProject {
+export interface ParsedProject {
+  id: string;
   domain: string;
   description: string;
   techStack: string[];
@@ -204,8 +205,9 @@ interface ParsedProject {
   galleryPaths: string[];
 }
 
-function parseProjectContent(content: string | undefined): ParsedProject {
+export function parseProjectContent(content: string | undefined, projectId: string): ParsedProject {
   const project: ParsedProject = {
+    id: projectId,
     domain: 'Untitled Project',
     description: 'No description available.',
     techStack: [],
@@ -214,7 +216,7 @@ function parseProjectContent(content: string | undefined): ParsedProject {
   if (!content) return project;
 
   const lines = content.split('\n');
-  let currentKey: keyof ParsedProject | null = null;
+  let currentKey: keyof Omit<ParsedProject, 'id'> | null = null;
 
   for (const line of lines) {
     const domainMatch = line.match(/^Domain:\s*(.*)/i);
@@ -230,7 +232,7 @@ function parseProjectContent(content: string | undefined): ParsedProject {
       currentKey = null;
     } else if (descMatch) {
       project.description = descMatch[1].trim();
-      currentKey = 'description'; 
+      currentKey = 'description';
     } else if (techMatch) {
       project.techStack = techMatch[1].split(',').map(tech => tech.trim()).filter(tech => tech);
       currentKey = null;
@@ -272,16 +274,19 @@ export default function GuiPage() {
   const line2Text = "Aditya Rekhe";
   const subtitleText = "Software Engineer | Full-stack Developer | Blockchain Solutions";
 
+
   useEffect(() => {
-    const animationStaggerDelayMs = 0.07 * 1000; 
-    const timeForAdityaToStartWave = (line1Text.length + 1) * animationStaggerDelayMs;
+    const nameAnimationStaggerDelayMs = 0.07 * 1000;
+    const firstLetterOfAdityaIndex = line1Text.length + 1;
+    const timeForSubtitleToStart = firstLetterOfAdityaIndex * nameAnimationStaggerDelayMs;
 
     const timer = setTimeout(() => {
       setStartSubtitleAnimation(true);
-    }, timeForAdityaToStartWave);
+    }, timeForSubtitleToStart);
 
     return () => clearTimeout(timer);
   }, [line1Text.length]);
+
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -292,22 +297,22 @@ export default function GuiPage() {
         }
       },
       {
-        threshold: 0.1, 
+        threshold: 0.1,
       }
     );
 
-    const currentRef = aboutMeRef.current; 
+    const currentRef = aboutMeRef.current;
     if (currentRef) {
       observer.observe(currentRef);
     }
 
     return () => {
       if (currentRef) {
-        observer.unobserve(currentRef); 
+        observer.unobserve(currentRef);
       }
-      observer.disconnect(); 
+      observer.disconnect();
     };
-  }, []); 
+  }, []);
 
   const processSkills = (skillsText: string | undefined) => {
     if (!skillsText) return [];
@@ -351,7 +356,6 @@ export default function GuiPage() {
             if(existingCat) existingCat.items = currentCategory.items;
         }
     }
-    // Filter out "Soft Skills"
     return skillCategories.filter(cat => cat.category && cat.category.trim() !== '' && cat.category.toLowerCase() !== 'soft skills');
   };
   const parsedSkills = processSkills(skillsContent);
@@ -410,16 +414,16 @@ export default function GuiPage() {
     if (!experienceContent || experienceContent.startsWith('Error:')) {
       return formatPreText(experienceContent);
     }
-    const lines = experienceContent.split('\n').filter(line => line && !line.toLowerCase().startsWith('exxperience')); 
+    const lines = experienceContent.split('\n').filter(line => line && !line.toLowerCase().startsWith('exxperience'));
     const experiences: Array<{ org: string; timeline: string; role: string; description: string[] }> = [];
     let currentExperience: { org?: string; timeline?: string; role?: string; description: string[] } | null = null;
 
     for (const line of lines) {
       const trimmedLine = line.trim();
-      if (line.startsWith('  ') && !line.startsWith('    ')) { 
-        if (currentExperience) experiences.push(currentExperience as any); 
+      if (line.startsWith('  ') && !line.startsWith('    ')) {
+        if (currentExperience) experiences.push(currentExperience as any);
         currentExperience = { org: trimmedLine, description: [] };
-      } else if (line.startsWith('    ') && currentExperience) { 
+      } else if (line.startsWith('    ') && currentExperience) {
         if (!currentExperience.timeline) {
           currentExperience.timeline = trimmedLine;
         } else if (!currentExperience.role) {
@@ -429,7 +433,7 @@ export default function GuiPage() {
         }
       }
     }
-    if (currentExperience) experiences.push(currentExperience as any); 
+    if (currentExperience) experiences.push(currentExperience as any);
 
     if (experiences.length === 0) {
       return <p className="text-gray-500">Experience details are not formatted correctly or are incomplete in experience.txt.</p>;
@@ -459,11 +463,12 @@ export default function GuiPage() {
   };
 
   const asrPortfolioProject: ParsedProject = {
+    id: "asr-portfolio-website",
     domain: "ASRWorkspace Portfolio (This Website)",
     description: "Designed and developed an interactive terminal-based portfolio with a GUI mode.",
     techStack: ["Next.js", "React", "TypeScript", "ShadCN UI", "Tailwind CSS"],
-    githubLink: "https://github.com/Geek-ASR/ASRWorkspace-Portfolio", 
-    websiteLink: "/", 
+    githubLink: "https://github.com/Geek-ASR/ASRWorkspace-Portfolio",
+    websiteLink: "/",
     galleryPaths: ["/screenshots/portfolio/ss1.png", "/screenshots/portfolio/ss2.png"],
   };
 
@@ -533,9 +538,9 @@ export default function GuiPage() {
               alt="Aditya Rekhe"
               width={200}
               height={200}
-              className="shadow-lg object-cover" 
+              className="shadow-lg object-cover"
               data-ai-hint="profile photo"
-              priority 
+              priority
             />
           </div>
         </div>
@@ -651,14 +656,13 @@ export default function GuiPage() {
           <SectionCard title="Projects" icon={<FolderGit2 size={28} />} className="md:col-span-2">
             <div className="space-y-10">
               {[
-                ...projectsList.filter(p => p.name !== 'project_details.pdf').map(projectFile => ({
-                  ...parseProjectContent(projectFile.content),
-                  id: projectFile.name,
-                })),
-                { ...asrPortfolioProject, id: "asr-portfolio-website" }
+                ...projectsList.filter(p => p.name !== 'project_details.pdf').map(projectFile => (
+                  parseProjectContent(projectFile.content, projectFile.name)
+                )),
+                asrPortfolioProject
               ].map((project, idx) => (
-                <Card 
-                  key={project.id || idx} 
+                <Card
+                  key={project.id || idx}
                   className="bg-white shadow-lg border border-gray-200 rounded-xl overflow-hidden transition-all duration-300 ease-in-out hover:shadow-2xl hover:border-gray-300"
                 >
                   <CardHeader className="p-6 bg-gray-50 border-b border-gray-200">
@@ -668,7 +672,7 @@ export default function GuiPage() {
                     <p className="text-base leading-relaxed text-gray-700">
                       {project.description}
                     </p>
-                    
+
                     {project.techStack.length > 0 && (
                       <div>
                         <h4 className="text-md font-semibold text-black mb-2">Tech Stack:</h4>
@@ -697,25 +701,15 @@ export default function GuiPage() {
                             </div>
                         </div>
                     )}
-                    
+
                     {project.galleryPaths.length > 0 && (
                       <div>
                         <h4 className="text-md font-semibold text-black mb-2">Gallery:</h4>
-                        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-                          {project.galleryPaths.map((path, imgIdx) => (
-                            <div key={imgIdx} className="aspect-video bg-gray-100 rounded-md overflow-hidden shadow-sm">
-                              <Image
-                                src={`https://placehold.co/400x225.png`} 
-                                alt={`${project.domain} screenshot ${imgIdx + 1}`}
-                                width={400}
-                                height={225}
-                                className="w-full h-full object-cover"
-                                data-ai-hint={`${project.domain.toLowerCase().replace(/\s+/g, '-')} screenshot`}
-                              />
-                            </div>
-                          ))}
-                        </div>
-                         <p className="text-xs text-gray-500 mt-2">Note: Screenshots are placeholders. Replace with actual images in <code>public{project.galleryPaths[0].substring(0, project.galleryPaths[0].lastIndexOf('/'))}</code></p>
+                        <Link href={`/gui/gallery/${encodeURIComponent(project.id)}`} passHref legacyBehavior>
+                          <Button variant="outline" className="text-sm">
+                            <ImageIcon size={18} className="mr-2" /> View Gallery
+                          </Button>
+                        </Link>
                       </div>
                     )}
                   </CardContent>
@@ -753,3 +747,4 @@ export default function GuiPage() {
   );
 }
 
+    
