@@ -108,7 +108,7 @@ const socialLinks = [
   {
     name: 'Instagram',
     icon: Instagram,
-    url: '#',
+    url: '#', // Placeholder - update this
   },
 ];
 
@@ -183,7 +183,7 @@ function getSkillInfo(skillText: string): SkillInfo {
     'lambda': 'aws-lambda.svg',
     'macos': 'apple.svg',
     'windows': 'windows.svg',
-    'algorithms': 'brain.svg',
+    'algorithms': 'brain.svg', // Assuming you'll add brain.svg to public/logos/
   };
 
   const logoFileName = logoMap[normalizedCoreSkill];
@@ -216,7 +216,8 @@ export function parseProjectContent(content: string | undefined, projectId: stri
   if (!content) return project;
 
   const lines = content.split('\n');
-  let currentKey: keyof Omit<ParsedProject, 'id'> | null = null;
+  let currentKey: keyof Omit<ParsedProject, 'id' | 'galleryPaths'> | 'galleryPaths' | null = null;
+
 
   for (const line of lines) {
     const domainMatch = line.match(/^Domain:\s*(.*)/i);
@@ -246,7 +247,7 @@ export function parseProjectContent(content: string | undefined, projectId: stri
       currentKey = 'galleryPaths';
     } else if (galleryItemMatch && currentKey === 'galleryPaths') {
       project.galleryPaths.push(galleryItemMatch[1].trim());
-    } else if (currentKey === 'description') {
+    } else if (currentKey === 'description' && line.trim() !== '') {
       project.description += `\n${line.trim()}`;
     }
   }
@@ -277,8 +278,8 @@ export default function GuiPage() {
 
   useEffect(() => {
     const nameAnimationStaggerDelayMs = 0.07 * 1000;
-    const firstLetterOfAdityaIndex = line1Text.length + 1;
-    const timeForSubtitleToStart = firstLetterOfAdityaIndex * nameAnimationStaggerDelayMs;
+    const firstLetterOfAdityaIndex = line1Text.length + 1; // Accounts for the space or new line start
+    const timeForSubtitleToStart = (firstLetterOfAdityaIndex * nameAnimationStaggerDelayMs);
 
     const timer = setTimeout(() => {
       setStartSubtitleAnimation(true);
@@ -462,6 +463,29 @@ export default function GuiPage() {
     );
   };
 
+  const renderAchievements = () => {
+    if (!achievementsContent || achievementsContent.startsWith('Error:')) {
+      return formatPreText(achievementsContent);
+    }
+    const lines = achievementsContent.split('\n')
+      .map(line => line.trim())
+      .filter(line => line && !line.toLowerCase().startsWith('acchievements'));
+
+    if (lines.length === 0) {
+      return <p className="text-gray-500">No achievements listed or content is improperly formatted in achievements.txt.</p>;
+    }
+
+    return (
+      <ul className="list-disc list-inside space-y-2 text-base text-gray-700 leading-relaxed">
+        {lines.map((line, index) => (
+          <li key={index}>
+            {line.startsWith('- ') ? line.substring(2) : line}
+          </li>
+        ))}
+      </ul>
+    );
+  };
+
   const asrPortfolioProject: ParsedProject = {
     id: "asr-portfolio-website",
     domain: "ASRWorkspace Portfolio (This Website)",
@@ -492,7 +516,7 @@ export default function GuiPage() {
 
         <div className="flex flex-col md:flex-row items-center justify-center md:justify-between gap-8 lg:gap-12 w-full max-w-4xl">
           <div className="text-center md:text-left">
-            <h1 className="font-sans text-5xl md:text-6xl lg:text-7xl text-black text-center md:text-left">
+            <h1 className="font-sans text-5xl md:text-6xl lg:text-7xl text-black">
               <div>
                 {line1Text.split("").map((char, index) => (
                   <span
@@ -721,8 +745,8 @@ export default function GuiPage() {
 
 
         {achievementsContent && (
-          <SectionCard title="Achievements" icon={<Star size={28} />}>
-             {formatPreText(achievementsContent)}
+          <SectionCard title="Achievements" icon={<Star size={28} />} className="md:col-span-2">
+             {renderAchievements()}
           </SectionCard>
         )}
 
@@ -746,5 +770,3 @@ export default function GuiPage() {
     </div>
   );
 }
-
-    
