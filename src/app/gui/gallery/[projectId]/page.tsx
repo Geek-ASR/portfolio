@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ArrowLeft } from 'lucide-react';
 import { useEffect, useState } from 'react';
+import { useParams } from 'next/navigation'; // Import useParams
 
 // Simplified parser for this page, or ideally import from gui/page.tsx
 function parseProjectContentForGallery(content: string | undefined, projectId: string): ParsedProject {
@@ -41,18 +42,23 @@ function parseProjectContentForGallery(content: string | undefined, projectId: s
   return project;
 }
 
-export default function ProjectGalleryPage({ params }: { params: { projectId: string } }) {
+export default function ProjectGalleryPage() {
+  const routeParams = useParams<{ projectId: string }>();
   const [project, setProject] = useState<ParsedProject | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  const decodedProjectId = decodeURIComponent(params.projectId);
+  // Access projectId from the hook's return value.
+  // It might be a string or string[] depending on catch-all routes, but here it's string.
+  const currentProjectId = Array.isArray(routeParams.projectId) ? routeParams.projectId[0] : routeParams.projectId;
 
   useEffect(() => {
-    if (!decodedProjectId) {
+    if (!currentProjectId) {
       setError("Project ID is missing.");
+      setProject(null); // Ensure project state is cleared if ID is missing
       return;
     }
 
+    const decodedProjectId = decodeURIComponent(currentProjectId);
     let projectNode: FileSystemNode | undefined;
     let projectContent: string | undefined;
     let parsed: ParsedProject;
@@ -70,18 +76,20 @@ export default function ProjectGalleryPage({ params }: { params: { projectId: st
       projectNode = findNode(`~/projects/${decodedProjectId}`);
       if (!projectNode || projectNode.type !== 'file') {
         setError(`Project not found: ${decodedProjectId}`);
+        setProject(null);
         return;
       }
       projectContent = projectNode.content;
       if (!projectContent) {
         setError(`No content found for project: ${decodedProjectId}`);
+        setProject(null);
         return;
       }
       parsed = parseProjectContentForGallery(projectContent, decodedProjectId);
     }
-
+    setError(null); // Clear any previous error
     setProject(parsed);
-  }, [decodedProjectId]);
+  }, [currentProjectId]); // Use currentProjectId from useParams in dependency array
 
   if (error) {
     return (
@@ -146,5 +154,3 @@ export default function ProjectGalleryPage({ params }: { params: { projectId: st
     </div>
   );
 }
-
-    
