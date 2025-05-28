@@ -213,7 +213,8 @@ export default function GuiPage() {
   const subtitleText = "Software Engineer | Full-stack Developer | Blockchain Solutions";
 
   useEffect(() => {
-    const animationStaggerDelayMs = 0.07 * 1000;
+    const animationStaggerDelayMs = 0.07 * 1000; // 70ms
+    // Trigger when the color wave starts on the first letter of "Aditya"
     const timeForAdityaToStartWave = (line1Text.length + 1 + "A".length - "".length) * animationStaggerDelayMs;
 
     const timer = setTimeout(() => {
@@ -232,22 +233,22 @@ export default function GuiPage() {
         }
       },
       {
-        threshold: 0.1,
+        threshold: 0.1, // Trigger when 10% of the element is visible
       }
     );
 
-    const currentRef = aboutMeRef.current;
+    const currentRef = aboutMeRef.current; // Capture ref value
     if (currentRef) {
       observer.observe(currentRef);
     }
 
     return () => {
       if (currentRef) {
-        observer.unobserve(currentRef);
+        observer.unobserve(currentRef); // Clean up using captured value
       }
-      observer.disconnect();
+      observer.disconnect(); // Disconnect observer
     };
-  }, []);
+  }, []); // Empty dependency array, runs once
 
   const processSkills = (skillsText: string | undefined) => {
     if (!skillsText) return [];
@@ -261,6 +262,7 @@ export default function GuiPage() {
         if (currentCategory) {
           currentCategory.items.push(trimmedLine.substring(2).trim());
         } else {
+           // This case handles skills listed without a category first
            currentCategory = { category: "General Skills", items: [trimmedLine.substring(2).trim()] };
            if (!skillCategories.find(sc => sc.category === currentCategory?.category)) {
              skillCategories.push(currentCategory);
@@ -268,29 +270,34 @@ export default function GuiPage() {
         }
       } else if (trimmedLine.endsWith(':')) {
         const categoryName = trimmedLine.slice(0, -1);
+        // If previous category had items or was a new "General Skills" category, ensure it's pushed
         if (currentCategory && (currentCategory.items.length > 0 || !skillCategories.find(sc => sc.category === currentCategory?.category))) {
           if(!skillCategories.find(sc => sc.category === currentCategory?.category)) skillCategories.push(currentCategory);
         }
         currentCategory = { category: categoryName, items: [] };
         skillCategories.push(currentCategory);
       } else if (trimmedLine && currentCategory && !trimmedLine.endsWith(':')) {
+         // This is a skill item belonging to the current category
          currentCategory.items.push(trimmedLine);
       } else if (trimmedLine && !currentCategory) {
+         // This is likely a category name without a colon, or a single skill if no categories defined yet
          currentCategory = { category: trimmedLine, items: [] };
          skillCategories.push(currentCategory);
       }
     });
+    // After loop, push the last category if it has items or is a new category name
     if (currentCategory && currentCategory.items.length === 0 && skillCategories.find(sc => sc.category === currentCategory?.category && sc.items.length > 0)) {
       // If category exists with items, don't add an empty one
     } else if (currentCategory && (currentCategory.items.length > 0 || (currentCategory.category && !skillCategories.find(sc => sc.category === currentCategory?.category)))) {
         if(!skillCategories.find(sc => sc.category === currentCategory?.category)) {
            skillCategories.push(currentCategory);
         } else if (skillCategories.find(sc => sc.category === currentCategory?.category && sc.items.length === 0) && currentCategory.items.length > 0){
+            // Update existing empty category with items
             const existingCat = skillCategories.find(sc => sc.category === currentCategory?.category);
             if(existingCat) existingCat.items = currentCategory.items;
         }
     }
-    return skillCategories.filter(cat => cat.category && cat.category.trim() !== '');
+    return skillCategories.filter(cat => cat.category && cat.category.trim() !== ''); // Filter out categories with no name
   };
   const parsedSkills = processSkills(skillsContent);
   const filteredSkills = parsedSkills.filter(cat => cat.category.toLowerCase() !== 'soft skills');
@@ -301,9 +308,11 @@ export default function GuiPage() {
     const lines = text.split('\n');
     const firstLine = lines[0];
 
+    // Check if the first line indicates an error (from getRootFileContent)
     if (firstLine.startsWith('Error:')) {
         return <p className="text-red-500">{firstLine}</p>;
     }
+    // Otherwise, render the full text respecting its original formatting
     return <pre className="whitespace-pre-wrap font-sans text-base leading-relaxed text-gray-700">{text}</pre>;
   };
 
@@ -311,7 +320,9 @@ export default function GuiPage() {
     if (!educationContent || educationContent.startsWith('Error:')) {
       return formatPreText(educationContent);
     }
+    // Split by newline, trim, and filter out empty lines
     const lines = educationContent.split('\n').map(line => line.trim()).filter(line => line);
+    // Remove the "Edducation" heading if present (case-insensitive)
     const contentLines = lines[0].toLowerCase() === 'edducation' ? lines.slice(1) : lines;
 
     if (contentLines.length < 4) {
@@ -350,16 +361,16 @@ export default function GuiPage() {
     if (!experienceContent || experienceContent.startsWith('Error:')) {
       return formatPreText(experienceContent);
     }
-    const lines = experienceContent.split('\n').filter(line => line && !line.toLowerCase().startsWith('exxperience'));
+    const lines = experienceContent.split('\n').filter(line => line && !line.toLowerCase().startsWith('exxperience')); // Remove empty lines and header
     const experiences: Array<{ org: string; timeline: string; role: string; description: string[] }> = [];
     let currentExperience: { org?: string; timeline?: string; role?: string; description: string[] } | null = null;
 
     for (const line of lines) {
       const trimmedLine = line.trim();
-      if (line.startsWith('  ') && !line.startsWith('    ')) { // Organization
-        if (currentExperience) experiences.push(currentExperience as any);
+      if (line.startsWith('  ') && !line.startsWith('    ')) { // Organization (indented by 2 spaces)
+        if (currentExperience) experiences.push(currentExperience as any); // Push previous if exists
         currentExperience = { org: trimmedLine, description: [] };
-      } else if (line.startsWith('    ') && currentExperience) {
+      } else if (line.startsWith('    ') && currentExperience) { // Timeline, Role, or Description (indented by 4 spaces)
         if (!currentExperience.timeline) {
           currentExperience.timeline = trimmedLine;
         } else if (!currentExperience.role) {
@@ -369,7 +380,7 @@ export default function GuiPage() {
         }
       }
     }
-    if (currentExperience) experiences.push(currentExperience as any);
+    if (currentExperience) experiences.push(currentExperience as any); // Push the last one
 
     if (experiences.length === 0) {
       return <p className="text-gray-500">Experience details are not formatted correctly or are incomplete in experience.txt.</p>;
@@ -460,13 +471,13 @@ export default function GuiPage() {
 
           <div className="mt-6 md:mt-0 flex-shrink-0">
             <Image
-              src="/profile.png" 
+              src="/profile.png" // Assumes profile.png is in /public
               alt="Aditya Rekhe"
               width={200}
               height={200}
-              className="shadow-lg object-cover"
+              className="shadow-lg object-cover" // removed rounded-full
               data-ai-hint="profile photo"
-              priority
+              priority // Good for LCP in hero
             />
           </div>
         </div>
@@ -583,9 +594,12 @@ export default function GuiPage() {
             <div className="space-y-8">
               {projectsList.map(project => (
                 project.content && project.name !== 'project_details.pdf' && (
-                  <Card key={project.name} className="bg-white shadow-md border border-gray-200 rounded-md">
+                  <Card 
+                    key={project.name} 
+                    className="bg-white shadow-md border border-gray-200 rounded-lg transition-all duration-300 ease-in-out hover:shadow-xl hover:border-gray-300"
+                  >
                     <CardHeader className="p-5">
-                      <CardTitle className="text-xl text-black font-medium">{project.name.replace(/_/g, ' ').replace('.txt', '')}</CardTitle>
+                      <CardTitle className="text-xl text-black font-semibold">{project.name.replace(/_/g, ' ').replace('.txt', '')}</CardTitle>
                     </CardHeader>
                     <CardContent className="p-5 pt-0">
                       <p className="whitespace-pre-wrap text-sm leading-relaxed text-gray-600">
@@ -595,9 +609,9 @@ export default function GuiPage() {
                   </Card>
                 )
               ))}
-              <Card className="bg-white shadow-md border border-gray-200 rounded-md">
+              <Card className="bg-white shadow-md border border-gray-200 rounded-lg transition-all duration-300 ease-in-out hover:shadow-xl hover:border-gray-300">
                 <CardHeader className="p-5">
-                  <CardTitle className="text-xl text-black font-medium">ASRWorkspace Portfolio (This Website)</CardTitle>
+                  <CardTitle className="text-xl text-black font-semibold">ASRWorkspace Portfolio (This Website)</CardTitle>
                 </CardHeader>
                 <CardContent className="p-5 pt-0">
                   <p className="whitespace-pre-wrap text-sm leading-relaxed text-gray-600">Designed and developed an interactive terminal-based portfolio with a GUI mode.
@@ -634,5 +648,7 @@ Tech: Next.js, React, TypeScript, ShadCN UI, Tailwind CSS.</p>
     </div>
   );
 }
+
+    
 
     
