@@ -70,7 +70,7 @@ export const fileSystem: Directory = {
     {
       type: 'file',
       name: 'resume.pdf',
-      url: '/resume.pdf', // Assumes resume.pdf is in public folder
+      url: '/resume.pdf', 
       mimeType: 'application/pdf',
     },
     {
@@ -93,13 +93,20 @@ SKILLS
   Programming Languages:
     - Python (Advanced)
     - JavaScript (Advanced)
-    - Node.js (Advanced)
-    - React (Advanced)
-    - Next.js (Advanced)
+    - TypeScript (Advanced)
     - Java (Intermediate)
     - C++ (Intermediate)
     - Solidity (Advanced)
     - Rust (Beginner)
+  Web Development:
+    - React (Advanced)
+    - Next.js (Advanced)
+    - HTML5 (Advanced)
+    - CSS3 (Advanced)
+    - TailwindCSS (Advanced)
+    - Node.js (Advanced)
+    - Express.js (Advanced)
+    - GraphQL (Basic)
   Blockchain Technologies:
     - Ethereum
     - Polygon
@@ -118,13 +125,10 @@ SKILLS
     - DeFi
     - NFTs
     - IPFS
-  Web Development:
-    - Frontend (React, Next.js, HTML5, CSS3, TailwindCSS)
-    - Backend (Node.js, Express.js)
-    - APIs (RESTful APIs, GraphQL (Basic))
   Databases:
-    - SQL (PostgreSQL, MySQL)
-    - NoSQL (MongoDB)
+    - PostgreSQL (SQL)
+    - MySQL (SQL)
+    - MongoDB (NoSQL)
   DevOps & Tools:
     - Git
     - GitHub
@@ -132,14 +136,9 @@ SKILLS
     - Docker
     - Kubernetes (Basic understanding)
     - CI/CD (GitHub Actions - Basic)
-    - Cloud (AWS (EC2, S3, Lambda - Basic), Firebase)
+    - AWS (EC2, S3, Lambda - Basic)
+    - Firebase
     - Operating Systems (Linux (Ubuntu), macOS, Windows)
-  Soft Skills:
-    - Problem Solving
-    - Analytical Thinking
-    - Team Collaboration
-    - Communication
-    - Agile/Scrum methodologies
 
 Exxperience
   Association of Computer Engineering Students, DIT
@@ -162,8 +161,10 @@ PROJECTS
     - Tech: Next.js, React, TypeScript, ShadCN UI, Tailwind CSS.
   VisART - DSA Visualisation platform
     - Website for teaching DSA with visualisations, theory, videos, quizzes, and an in-built compiler.
+    - Tech: React, JavaScript, HTML, CSS.
   ConnectWell - Health Community Platform
     - Platform for supportive online communities based on medical conditions, with profiles, posts, and comments.
+    - Tech: Next.js, React, Firebase, Tailwind CSS.
   ASRWorkspace Portfolio (This Website)
     - Designed and developed an interactive terminal-based portfolio.
     - Tech: Next.js, React, TypeScript.
@@ -181,26 +182,41 @@ Acchievements
         {
           type: 'file',
           name: 'vedkarn_mentorship.txt',
-          content: `Project Name: VedKarn - Mentorship Platform
-Description: VedKarn is a responsive, full-stack web application developed to connect individuals seeking guidance (mentees) with experienced professionals and alumni (mentors) for both career development and university admissions support. The platform is built using Next.js, React, TypeScript, ShadCN UI for components, and Tailwind CSS for styling.
-Technologies: Next.js, React, TypeScript, ShadCN UI, Tailwind CSS`,
+          content: `Domain: Mentorship Platform
+Description: VedKarn is a responsive, full-stack web application developed to connect individuals seeking guidance (mentees) with experienced professionals and alumni (mentors) for both career development and university admissions support.
+Tech Stack: Next.js, React, TypeScript, ShadCN UI, Tailwind CSS, Firebase
+GitHub: https://github.com/Geek-ASR/VedKarn-Mentorship-Platform
+Website: https://vedkarn.vercel.app/
+Gallery:
+- /screenshots/vedkarn/ss1.png
+- /screenshots/vedkarn/ss2.png`,
         },
         {
           type: 'file',
           name: 'visart_dsa.txt',
-          content: `Project Name: VisART - DSA Visualisation platform
-Description: It is a website designed to teach DSA in a simpler and more engaging way by using visualisation of data structures on random or manual inputs. It also consists of theory, applications, YouTube videos and quizzes for each data structure. VisART has an in-built compiler which can be used to practice the questions.`,
+          content: `Domain: DSA Visualisation Platform
+Description: It is a website designed to teach DSA in a simpler and more engaging way by using visualisation of data structures on random or manual inputs. It also consists of theory, applications, YouTube videos and quizzes for each data structure. VisART has an in-built compiler which can be used to practice the questions.
+Tech Stack: React, JavaScript, HTML, CSS, Algorithms
+GitHub: https://github.com/Geek-ASR/VisART-DSA-Visualisation
+Website: #
+Gallery:
+- /screenshots/visart/ss1.png`,
         },
         {
           type: 'file',
           name: 'connectwell_health.txt',
-          content: `Project Name: ConnectWell - Health Community Platform
-Description: ConnectWell is designed to foster supportive online communities for individuals sharing similar medical conditions. The platform enables users to create personalised profiles, discover, join, and create interest-based communities, and engage in discussions through posts and comments.`,
+          content: `Domain: Health Community Platform
+Description: ConnectWell is designed to foster supportive online communities for individuals sharing similar medical conditions. The platform enables users to create personalised profiles, discover, join, and create interest-based communities, and engage in discussions through posts and comments.
+Tech Stack: Next.js, React, Firebase, Tailwind CSS, ShadCN UI
+GitHub: https://github.com/Geek-ASR/ConnectWell
+Website: #
+Gallery:
+- /screenshots/connectwell/ss1.png`,
         },
         {
             type: 'file',
             name: 'project_details.pdf',
-            url: '/blockchain_project_details.pdf', // Placeholder URL, ensure this file exists in /public
+            url: '/blockchain_project_details.pdf', 
             mimeType: 'application/pdf',
         }
       ],
@@ -258,12 +274,6 @@ DevOps & Tools:
   - AWS (EC2, S3, Lambda - Basic)
   - Firebase
   - Operating Systems (Linux (Ubuntu), macOS, Windows)
-Soft Skills:
-  - Problem Solving
-  - Analytical Thinking
-  - Team Collaboration
-  - Communication
-  - Agile/Scrum methodologies
 `,
     },
     {
@@ -285,7 +295,6 @@ export function findNode(path: string, root: Directory = fileSystem): FileSystem
     return root;
   }
 
-  // Normalize path: remove leading/trailing slashes, handle '~'
   const normalizedPath = path.startsWith('~/') ? path.substring(2) : path.startsWith('/') ? path.substring(1) : path.startsWith('./') ? path.substring(2) : path;
   const parts = normalizedPath.split('/').filter(p => p !== '');
 
@@ -297,18 +306,17 @@ export function findNode(path: string, root: Directory = fileSystem): FileSystem
       if (found) {
         currentNode = found;
       } else {
-        return undefined; // Part not found
+        return undefined; 
       }
     } else {
-      return undefined; // Trying to navigate into a file
+      return undefined; 
     }
   }
   return currentNode;
 }
 
-// Helper function to get content of a file, typically from the root directory
 export function getRootFileContent(fileName: string): string | undefined {
-  const node = findNode(`~/${fileName}`); // Ensure we are looking in the root
+  const node = findNode(`~/${fileName}`); 
   if (node && node.type === 'file' && node.content) {
     return node.content;
   }
@@ -317,4 +325,3 @@ export function getRootFileContent(fileName: string): string | undefined {
   }
   return `Error: File '${fileName}' not found.`;
 }
-

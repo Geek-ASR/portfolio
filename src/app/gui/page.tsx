@@ -4,9 +4,10 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { fileSystem, findNode, getRootFileContent, type Directory, type File as FileSystemFileType } from '@/lib/file-system';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { TerminalSquare, User, BookOpen, Wrench, Briefcase, Star, Mail, FolderGit2, Github, Linkedin, FileCode2, Instagram, ArrowLeft } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { TerminalSquare, User, BookOpen, Wrench, Briefcase, Star, Mail, FolderGit2, Github, Linkedin, FileCode2, Instagram, ArrowLeft, ExternalLink, Image as ImageIcon } from 'lucide-react';
 import React, { useState, useEffect, useRef } from 'react';
 import { cn } from '@/lib/utils';
 import TypingEffect from '@/components/terminal/TypingEffect';
@@ -106,14 +107,14 @@ const socialLinks = [
   {
     name: 'Instagram',
     icon: Instagram,
-    url: '#', // Replace with your Instagram URL
+    url: '#', 
   },
 ];
 
 interface SkillInfo {
-  name: string; // Core skill name for display below logo
+  name: string; 
   logoPath?: string;
-  displayName: string; // Full original skill text for tooltip
+  displayName: string; 
 }
 
 function getSkillInfo(skillText: string): SkillInfo {
@@ -181,6 +182,7 @@ function getSkillInfo(skillText: string): SkillInfo {
     'lambda': 'aws-lambda.svg',
     'macos': 'apple.svg',
     'windows': 'windows.svg',
+    'algorithms': 'brain.svg', // Example for a conceptual skill
   };
 
   const logoFileName = logoMap[normalizedCoreSkill];
@@ -190,6 +192,64 @@ function getSkillInfo(skillText: string): SkillInfo {
     logoPath: logoFileName ? `/logos/${logoFileName}` : undefined,
     displayName: originalText,
   };
+}
+
+interface ParsedProject {
+  domain: string;
+  description: string;
+  techStack: string[];
+  githubLink?: string;
+  websiteLink?: string;
+  galleryPaths: string[];
+}
+
+function parseProjectContent(content: string | undefined): ParsedProject {
+  const project: ParsedProject = {
+    domain: 'Untitled Project',
+    description: 'No description available.',
+    techStack: [],
+    galleryPaths: [],
+  };
+  if (!content) return project;
+
+  const lines = content.split('\n');
+  let currentKey: keyof ParsedProject | null = null;
+
+  for (const line of lines) {
+    const domainMatch = line.match(/^Domain:\s*(.*)/i);
+    const descMatch = line.match(/^Description:\s*(.*)/i);
+    const techMatch = line.match(/^Tech Stack:\s*(.*)/i);
+    const githubMatch = line.match(/^GitHub:\s*(.*)/i);
+    const websiteMatch = line.match(/^Website:\s*(.*)/i);
+    const galleryHeaderMatch = line.match(/^Gallery:/i);
+    const galleryItemMatch = line.match(/^\s*-\s*(.*)/);
+
+    if (domainMatch) {
+      project.domain = domainMatch[1].trim();
+      currentKey = null;
+    } else if (descMatch) {
+      project.description = descMatch[1].trim();
+      currentKey = 'description'; // Allow multi-line description
+    } else if (techMatch) {
+      project.techStack = techMatch[1].split(',').map(tech => tech.trim()).filter(tech => tech);
+      currentKey = null;
+    } else if (githubMatch) {
+      project.githubLink = githubMatch[1].trim();
+      currentKey = null;
+    } else if (websiteMatch) {
+      project.websiteLink = websiteMatch[1].trim();
+      currentKey = null;
+    } else if (galleryHeaderMatch) {
+      currentKey = 'galleryPaths';
+    } else if (galleryItemMatch && currentKey === 'galleryPaths') {
+      project.galleryPaths.push(galleryItemMatch[1].trim());
+    } else if (currentKey === 'description') {
+      // Append to multi-line description
+      project.description += `\n${line.trim()}`;
+    }
+  }
+  project.description = project.description.trim();
+  return project;
 }
 
 
@@ -213,9 +273,8 @@ export default function GuiPage() {
   const subtitleText = "Software Engineer | Full-stack Developer | Blockchain Solutions";
 
   useEffect(() => {
-    const animationStaggerDelayMs = 0.07 * 1000; // 70ms
-    // Trigger when the color wave starts on the first letter of "Aditya"
-    const timeForAdityaToStartWave = (line1Text.length + 1 + "A".length - "".length) * animationStaggerDelayMs;
+    const animationStaggerDelayMs = 0.07 * 1000; 
+    const timeForAdityaToStartWave = (line1Text.length + 1) * animationStaggerDelayMs;
 
     const timer = setTimeout(() => {
       setStartSubtitleAnimation(true);
@@ -233,22 +292,22 @@ export default function GuiPage() {
         }
       },
       {
-        threshold: 0.1, // Trigger when 10% of the element is visible
+        threshold: 0.1, 
       }
     );
 
-    const currentRef = aboutMeRef.current; // Capture ref value
+    const currentRef = aboutMeRef.current; 
     if (currentRef) {
       observer.observe(currentRef);
     }
 
     return () => {
       if (currentRef) {
-        observer.unobserve(currentRef); // Clean up using captured value
+        observer.unobserve(currentRef); 
       }
-      observer.disconnect(); // Disconnect observer
+      observer.disconnect(); 
     };
-  }, []); // Empty dependency array, runs once
+  }, []); 
 
   const processSkills = (skillsText: string | undefined) => {
     if (!skillsText) return [];
@@ -262,7 +321,6 @@ export default function GuiPage() {
         if (currentCategory) {
           currentCategory.items.push(trimmedLine.substring(2).trim());
         } else {
-           // This case handles skills listed without a category first
            currentCategory = { category: "General Skills", items: [trimmedLine.substring(2).trim()] };
            if (!skillCategories.find(sc => sc.category === currentCategory?.category)) {
              skillCategories.push(currentCategory);
@@ -270,49 +328,39 @@ export default function GuiPage() {
         }
       } else if (trimmedLine.endsWith(':')) {
         const categoryName = trimmedLine.slice(0, -1);
-        // If previous category had items or was a new "General Skills" category, ensure it's pushed
         if (currentCategory && (currentCategory.items.length > 0 || !skillCategories.find(sc => sc.category === currentCategory?.category))) {
           if(!skillCategories.find(sc => sc.category === currentCategory?.category)) skillCategories.push(currentCategory);
         }
         currentCategory = { category: categoryName, items: [] };
         skillCategories.push(currentCategory);
       } else if (trimmedLine && currentCategory && !trimmedLine.endsWith(':')) {
-         // This is a skill item belonging to the current category
          currentCategory.items.push(trimmedLine);
       } else if (trimmedLine && !currentCategory) {
-         // This is likely a category name without a colon, or a single skill if no categories defined yet
          currentCategory = { category: trimmedLine, items: [] };
          skillCategories.push(currentCategory);
       }
     });
-    // After loop, push the last category if it has items or is a new category name
     if (currentCategory && currentCategory.items.length === 0 && skillCategories.find(sc => sc.category === currentCategory?.category && sc.items.length > 0)) {
-      // If category exists with items, don't add an empty one
     } else if (currentCategory && (currentCategory.items.length > 0 || (currentCategory.category && !skillCategories.find(sc => sc.category === currentCategory?.category)))) {
         if(!skillCategories.find(sc => sc.category === currentCategory?.category)) {
            skillCategories.push(currentCategory);
         } else if (skillCategories.find(sc => sc.category === currentCategory?.category && sc.items.length === 0) && currentCategory.items.length > 0){
-            // Update existing empty category with items
             const existingCat = skillCategories.find(sc => sc.category === currentCategory?.category);
             if(existingCat) existingCat.items = currentCategory.items;
         }
     }
-    return skillCategories.filter(cat => cat.category && cat.category.trim() !== ''); // Filter out categories with no name
+    return skillCategories.filter(cat => cat.category && cat.category.trim() !== '' && cat.category.toLowerCase() !== 'soft skills');
   };
   const parsedSkills = processSkills(skillsContent);
-  const filteredSkills = parsedSkills.filter(cat => cat.category.toLowerCase() !== 'soft skills');
-
 
   const formatPreText = (text: string | undefined) => {
     if (!text) return null;
     const lines = text.split('\n');
     const firstLine = lines[0];
 
-    // Check if the first line indicates an error (from getRootFileContent)
     if (firstLine.startsWith('Error:')) {
         return <p className="text-red-500">{firstLine}</p>;
     }
-    // Otherwise, render the full text respecting its original formatting
     return <pre className="whitespace-pre-wrap font-sans text-base leading-relaxed text-gray-700">{text}</pre>;
   };
 
@@ -320,9 +368,7 @@ export default function GuiPage() {
     if (!educationContent || educationContent.startsWith('Error:')) {
       return formatPreText(educationContent);
     }
-    // Split by newline, trim, and filter out empty lines
     const lines = educationContent.split('\n').map(line => line.trim()).filter(line => line);
-    // Remove the "Edducation" heading if present (case-insensitive)
     const contentLines = lines[0].toLowerCase() === 'edducation' ? lines.slice(1) : lines;
 
     if (contentLines.length < 4) {
@@ -361,16 +407,16 @@ export default function GuiPage() {
     if (!experienceContent || experienceContent.startsWith('Error:')) {
       return formatPreText(experienceContent);
     }
-    const lines = experienceContent.split('\n').filter(line => line && !line.toLowerCase().startsWith('exxperience')); // Remove empty lines and header
+    const lines = experienceContent.split('\n').filter(line => line && !line.toLowerCase().startsWith('exxperience')); 
     const experiences: Array<{ org: string; timeline: string; role: string; description: string[] }> = [];
     let currentExperience: { org?: string; timeline?: string; role?: string; description: string[] } | null = null;
 
     for (const line of lines) {
       const trimmedLine = line.trim();
-      if (line.startsWith('  ') && !line.startsWith('    ')) { // Organization (indented by 2 spaces)
-        if (currentExperience) experiences.push(currentExperience as any); // Push previous if exists
+      if (line.startsWith('  ') && !line.startsWith('    ')) { 
+        if (currentExperience) experiences.push(currentExperience as any); 
         currentExperience = { org: trimmedLine, description: [] };
-      } else if (line.startsWith('    ') && currentExperience) { // Timeline, Role, or Description (indented by 4 spaces)
+      } else if (line.startsWith('    ') && currentExperience) { 
         if (!currentExperience.timeline) {
           currentExperience.timeline = trimmedLine;
         } else if (!currentExperience.role) {
@@ -380,7 +426,7 @@ export default function GuiPage() {
         }
       }
     }
-    if (currentExperience) experiences.push(currentExperience as any); // Push the last one
+    if (currentExperience) experiences.push(currentExperience as any); 
 
     if (experiences.length === 0) {
       return <p className="text-gray-500">Experience details are not formatted correctly or are incomplete in experience.txt.</p>;
@@ -409,6 +455,15 @@ export default function GuiPage() {
     );
   };
 
+  const asrPortfolioProject: ParsedProject = {
+    domain: "ASRWorkspace Portfolio (This Website)",
+    description: "Designed and developed an interactive terminal-based portfolio with a GUI mode.",
+    techStack: ["Next.js", "React", "TypeScript", "ShadCN UI", "Tailwind CSS"],
+    githubLink: "https://github.com/Geek-ASR/ASRWorkspace-Portfolio", // Replace with actual if available
+    websiteLink: "/", // Links to the current site
+    galleryPaths: ["/screenshots/portfolio/ss1.png", "/screenshots/portfolio/ss2.png"],
+  };
+
 
   return (
     <div className="min-h-screen bg-white text-black font-sans">
@@ -429,7 +484,7 @@ export default function GuiPage() {
 
         <div className="flex flex-col md:flex-row items-center justify-center md:justify-between gap-8 lg:gap-12 w-full max-w-4xl">
           <div className="text-center md:text-left">
-            <h1 className="font-sans text-5xl md:text-6xl lg:text-7xl text-black">
+            <h1 className="font-sans text-5xl md:text-6xl lg:text-7xl text-black text-center md:text-left">
               <div>
                 {line1Text.split("").map((char, index) => (
                   <span
@@ -471,13 +526,13 @@ export default function GuiPage() {
 
           <div className="mt-6 md:mt-0 flex-shrink-0">
             <Image
-              src="/profile.png" // Assumes profile.png is in /public
+              src="/profile.png"
               alt="Aditya Rekhe"
               width={200}
               height={200}
-              className="shadow-lg object-cover" // removed rounded-full
+              className="shadow-lg object-cover" 
               data-ai-hint="profile photo"
-              priority // Good for LCP in hero
+              priority 
             />
           </div>
         </div>
@@ -533,10 +588,10 @@ export default function GuiPage() {
           </SectionCard>
         )}
 
-        {skillsContent && filteredSkills.length > 0 && (
+        {skillsContent && parsedSkills.length > 0 && (
           <SectionCard title="Skills" icon={<Wrench size={28} />} className="md:col-span-2">
             <div className="space-y-8">
-              {filteredSkills.map((cat, idx) => (
+              {parsedSkills.map((cat, idx) => (
                 <div key={idx} className="bg-gray-100 rounded-xl p-6 shadow-sm">
                   <h3 className="font-semibold text-black mb-4 text-xl">{cat.category}</h3>
                   {cat.items.length > 0 ? (
@@ -591,36 +646,82 @@ export default function GuiPage() {
 
         {projectsList.length > 0 && (
           <SectionCard title="Projects" icon={<FolderGit2 size={28} />} className="md:col-span-2">
-            <div className="space-y-8">
-              {projectsList.map(project => (
-                project.content && project.name !== 'project_details.pdf' && (
-                  <Card 
-                    key={project.name} 
-                    className="bg-white shadow-md border border-gray-200 rounded-lg transition-all duration-300 ease-in-out hover:shadow-xl hover:border-gray-300"
-                  >
-                    <CardHeader className="p-5">
-                      <CardTitle className="text-xl text-black font-semibold">{project.name.replace(/_/g, ' ').replace('.txt', '')}</CardTitle>
-                    </CardHeader>
-                    <CardContent className="p-5 pt-0">
-                      <p className="whitespace-pre-wrap text-sm leading-relaxed text-gray-600">
-                        {project.content}
-                      </p>
-                    </CardContent>
-                  </Card>
-                )
+            <div className="space-y-10">
+              {[
+                ...projectsList.filter(p => p.name !== 'project_details.pdf').map(projectFile => ({
+                  ...parseProjectContent(projectFile.content),
+                  id: projectFile.name,
+                })),
+                { ...asrPortfolioProject, id: "asr-portfolio-website" }
+              ].map((project, idx) => (
+                <Card 
+                  key={project.id || idx} 
+                  className="bg-white shadow-lg border border-gray-200 rounded-xl overflow-hidden transition-all duration-300 ease-in-out hover:shadow-2xl hover:border-gray-300"
+                >
+                  <CardHeader className="p-6 bg-gray-50 border-b border-gray-200">
+                    <CardTitle className="text-2xl text-black font-bold">{project.domain}</CardTitle>
+                  </CardHeader>
+                  <CardContent className="p-6 space-y-6">
+                    <p className="text-base leading-relaxed text-gray-700">
+                      {project.description}
+                    </p>
+                    
+                    {project.techStack.length > 0 && (
+                      <div>
+                        <h4 className="text-md font-semibold text-black mb-2">Tech Stack:</h4>
+                        <div className="flex flex-wrap gap-2">
+                          {project.techStack.map(tech => (
+                            <Badge key={tech} variant="secondary" className="px-3 py-1 text-sm">{tech}</Badge>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {(project.githubLink || (project.websiteLink && project.websiteLink !== '#')) && (
+                        <div>
+                            <h4 className="text-md font-semibold text-black mb-2">Links:</h4>
+                            <div className="flex flex-wrap gap-4 items-center">
+                                {project.githubLink && (
+                                <a href={project.githubLink} target="_blank" rel="noopener noreferrer" className="inline-flex items-center text-sm text-[hsl(var(--accent))] hover:underline">
+                                    <Github size={18} className="mr-2" /> GitHub Repository
+                                </a>
+                                )}
+                                {project.websiteLink && project.websiteLink !== '#' && (
+                                <a href={project.websiteLink} target="_blank" rel="noopener noreferrer" className="inline-flex items-center text-sm text-[hsl(var(--accent))] hover:underline">
+                                    <ExternalLink size={18} className="mr-2" /> Live Website
+                                </a>
+                                )}
+                            </div>
+                        </div>
+                    )}
+                    
+                    {project.galleryPaths.length > 0 && (
+                      <div>
+                        <h4 className="text-md font-semibold text-black mb-2">Gallery:</h4>
+                        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+                          {project.galleryPaths.map((path, imgIdx) => (
+                            <div key={imgIdx} className="aspect-video bg-gray-100 rounded-md overflow-hidden shadow-sm">
+                              <Image
+                                src={`https://placehold.co/400x225.png`} // Placeholder until actual images are available
+                                alt={`${project.domain} screenshot ${imgIdx + 1}`}
+                                width={400}
+                                height={225}
+                                className="w-full h-full object-cover"
+                                data-ai-hint={`${project.domain.toLowerCase().replace(/\s+/g, '-')} screenshot`}
+                              />
+                            </div>
+                          ))}
+                        </div>
+                         <p className="text-xs text-gray-500 mt-2">Note: Screenshots are placeholders. Replace with actual images in <code>public{project.galleryPaths[0].substring(0, project.galleryPaths[0].lastIndexOf('/'))}</code></p>
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
               ))}
-              <Card className="bg-white shadow-md border border-gray-200 rounded-lg transition-all duration-300 ease-in-out hover:shadow-xl hover:border-gray-300">
-                <CardHeader className="p-5">
-                  <CardTitle className="text-xl text-black font-semibold">ASRWorkspace Portfolio (This Website)</CardTitle>
-                </CardHeader>
-                <CardContent className="p-5 pt-0">
-                  <p className="whitespace-pre-wrap text-sm leading-relaxed text-gray-600">Designed and developed an interactive terminal-based portfolio with a GUI mode.
-Tech: Next.js, React, TypeScript, ShadCN UI, Tailwind CSS.</p>
-                </CardContent>
-              </Card>
             </div>
           </SectionCard>
         )}
+
 
         {achievementsContent && (
           <SectionCard title="Achievements" icon={<Star size={28} />}>
@@ -648,7 +749,3 @@ Tech: Next.js, React, TypeScript, ShadCN UI, Tailwind CSS.</p>
     </div>
   );
 }
-
-    
-
-    
