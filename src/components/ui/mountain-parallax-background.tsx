@@ -6,7 +6,7 @@ import type { FC } from 'react';
 
 interface MountainLayerProps {
   d: string;
-  fillColor: string; // Changed from fillClass to fillColor
+  fillColor: string;
   opacityClass?: string;
   yOffsetRange: [number, number];
   heightClass: string;
@@ -15,7 +15,7 @@ interface MountainLayerProps {
 
 const MountainLayer: FC<MountainLayerProps> = ({
   d,
-  fillColor, // Use fillColor
+  fillColor,
   opacityClass = 'opacity-100',
   yOffsetRange,
   heightClass,
@@ -29,11 +29,9 @@ const MountainLayer: FC<MountainLayerProps> = ({
       style={{ y }}
       viewBox={viewBox}
       preserveAspectRatio="xMidYMid slice"
-      // Removed fillClass from here, it's now applied to the path
       className={`absolute inset-x-0 top-0 w-full ${heightClass} ${opacityClass}`}
       aria-hidden="true"
     >
-      {/* Apply fillColor directly to the path */}
       <path d={d} style={{ fill: fillColor }} />
     </motion.svg>
   );
@@ -43,34 +41,52 @@ const MountainParallaxBackground: FC = () => {
   return (
     <div
       className="fixed inset-0 -z-10 overflow-hidden"
-      style={{ backgroundColor: '#eed1b5' }}
+      style={{ backgroundColor: '#eed1b5' }} // Existing sky color
       aria-hidden="true"
     >
-      {/* Layer 3: Distant Mountains */}
+      {/* Layer 5: Furthest mountains (uppermost in prompt) */}
       <MountainLayer
-        d="M0,280 Q180,220 360,250 T720,230 Q900,210 1080,240 T1440,220 L1440,400 L0,400 Z"
-        fillColor="#735446" // Updated color
+        d="M0,250 Q150,200 300,230 T600,210 Q750,190 900,220 T1200,200 L1440,240 L1440,400 L0,400 Z"
+        fillColor="#242328"
+        opacityClass="opacity-75"
+        yOffsetRange={[0, -40]}
+        heightClass="h-[calc(100vh+40px)]"
+        viewBox="0 0 1440 400"
+      />
+      {/* Layer 4: Next layer */}
+      <MountainLayer
+        d="M0,280 Q180,220 360,260 T720,240 Q900,210 1080,250 T1440,230 L1440,400 L0,400 Z"
+        fillColor="#5c5964"
+        opacityClass="opacity-80"
+        yOffsetRange={[0, -70]}
+        heightClass="h-[calc(100vh+70px)]"
+        viewBox="0 0 1440 400"
+      />
+      {/* Layer 3: Next layer */}
+      <MountainLayer
+        d="M0,310 Q160,240 320,280 T640,260 Q800,230 960,270 T1280,250 L1440,280 L1440,400 L0,400 Z"
+        fillColor="#807d8b"
         opacityClass="opacity-85"
-        yOffsetRange={[0, -80]}
-        heightClass="h-[calc(100vh+80px)]"
+        yOffsetRange={[0, -110]}
+        heightClass="h-[calc(100vh+110px)]"
         viewBox="0 0 1440 400"
       />
-      {/* Layer 2: Mid-Ground Mountains */}
+      {/* Layer 2: Next layer */}
       <MountainLayer
-        d="M0,320 Q150,250 300,280 Q450,220 600,270 Q750,200 900,260 Q1050,230 1200,280 L1440,250 L1440,400 L0,400 Z"
-        fillColor="#735446" // Updated color
-        opacityClass="opacity-95"
-        yOffsetRange={[0, -130]}
-        heightClass="h-[calc(100vh+130px)]"
+        d="M0,340 Q140,270 280,310 T560,290 Q700,260 840,300 T1120,280 L1440,320 L1440,400 L0,400 Z"
+        fillColor="#acaab3"
+        opacityClass="opacity-90"
+        yOffsetRange={[0, -160]}
+        heightClass="h-[calc(100vh+160px)]"
         viewBox="0 0 1440 400"
       />
-      {/* Layer 1: Foreground Mountains */}
+      {/* Layer 1: Closest mountains (last layer in prompt) */}
       <MountainLayer
-        d="M0,400 L0,350 Q120,280 240,310 Q360,240 480,300 Q600,220 720,290 Q840,250 960,320 Q1080,260 1200,310 L1320,280 L1440,340 L1440,400 Z"
-        fillColor="#735446" // Updated color
+        d="M0,370 Q120,300 240,340 T480,320 Q600,290 720,330 T960,310 L1200,350 L1440,330 L1440,400 L0,400 Z"
+        fillColor="#c3c2c8"
         opacityClass="opacity-100"
-        yOffsetRange={[0, -200]}
-        heightClass="h-[calc(100vh+200px)]"
+        yOffsetRange={[0, -220]}
+        heightClass="h-[calc(100vh+220px)]"
         viewBox="0 0 1440 400"
       />
     </div>
