@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -20,18 +21,18 @@ body {
     --secondary-foreground: 0 0% 85%;
     --muted: 0 0% 25%;
     --muted-foreground: 0 0% 55%; /* Muted text */
-    --accent: 35 100% 65%; /* #FFAF4F - Warm Orange-Yellow for sunset theme */
-    --accent-foreground: 0 0% 10%; /* Dark text for accent elements */
+    --accent: 220 70% 55%; /* Dark Blue */
+    --accent-foreground: 0 0% 100%; /* White */
     --destructive: 0 70% 50%;
     --destructive-foreground: 0 0% 98%;
     --border: 0 0% 30%; /* Slightly lighter border for transparent cards on dark bg */
     --input: 0 0% 22%;
-    --ring: 35 100% 70%; /* Lighter orange-yellow for focus rings */
-    --chart-1: 35 80% 60%; /* Warm chart colors */
-    --chart-2: 25 90% 65%;
-    --chart-3: 15 85% 60%;
-    --chart-4: 40 75% 55%;
-    --chart-5: 50 70% 50%;
+    --ring: 220 70% 60%; /* Lighter Blue for focus rings */
+    --chart-1: 220 70% 60%; /* Cool chart colors */
+    --chart-2: 220 60% 65%;
+    --chart-3: 220 50% 70%;
+    --chart-4: 220 40% 75%;
+    --chart-5: 220 30% 80%;
     --radius: 0.5rem;
     --sidebar-background: 0 0% 98%;
     --sidebar-foreground: 240 5.3% 26.1%;
@@ -44,7 +45,6 @@ body {
   }
 
   .dark {
-    /* For dark theme, we'll use the same terminal theme defined in :root, adjusted for sunset */
     --background: 0 0% 8%; /* Even darker base if needed */
     --foreground: 0 0% 90%;
     --card: 0 0% 12%;
@@ -57,26 +57,26 @@ body {
     --secondary-foreground: 0 0% 85%;
     --muted: 0 0% 20%;
     --muted-foreground: 0 0% 55%;
-    --accent: 35 100% 65%; 
-    --accent-foreground: 0 0% 10%;
+    --accent: 220 70% 55%; /* Dark Blue */
+    --accent-foreground: 0 0% 100%; /* White */
     --destructive: 0 70% 50%;
     --destructive-foreground: 0 0% 98%;
     --border: 0 0% 25%;
     --input: 0 0% 18%;
-    --ring: 35 100% 70%;
-    --chart-1: 35 80% 60%;
-    --chart-2: 25 90% 65%;
-    --chart-3: 15 85% 60%;
-    --chart-4: 40 75% 55%;
-    --chart-5: 50 70% 50%;
+    --ring: 220 70% 60%; /* Lighter Blue for focus rings */
+    --chart-1: 220 70% 60%;
+    --chart-2: 220 60% 65%;
+    --chart-3: 220 50% 70%;
+    --chart-4: 220 40% 75%;
+    --chart-5: 220 30% 80%;
     --sidebar-background: 0 0% 10%; 
     --sidebar-foreground: 0 0% 80%;
-    --sidebar-primary: 35 100% 65%; /* Sidebar primary matches new accent */
-    --sidebar-primary-foreground: 0 0% 10%;
+    --sidebar-primary: 220 70% 55%; /* Sidebar primary matches new accent */
+    --sidebar-primary-foreground: 0 0% 100%; /* Sidebar primary foreground matches new accent foreground */
     --sidebar-accent: 0 0% 15%;
     --sidebar-accent-foreground: 0 0% 80%;
     --sidebar-border: 0 0% 15%;
-    --sidebar-ring: 35 100% 70%; /* Sidebar ring matches new accent */
+    --sidebar-ring: 220 70% 60%; /* Sidebar ring matches new accent ring */
   }
 }
 
@@ -88,3 +88,4 @@ body {
     @apply bg-background text-foreground;
   }
 }
+

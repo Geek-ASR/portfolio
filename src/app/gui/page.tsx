@@ -69,7 +69,7 @@ const GuiContactLinkParser: React.FC<{ line: string }> = ({ line }) => {
 
 interface SectionCardProps {
   title: string;
-  icon?: React.ReactNode;
+  icon?: React.ReactNode; // Icon prop is kept in interface, but not rendered
   children: React.ReactNode;
   className?: string;
   cardRef?: React.RefObject<HTMLDivElement>;
@@ -79,7 +79,7 @@ const SectionCard: React.FC<SectionCardProps> = React.memo(({ title, icon, child
   <Card ref={cardRef} className={cn("shadow-lg border border-white/20 backdrop-blur-sm bg-card/75", className)}>
     <CardHeader className="p-6">
       <CardTitle className="flex items-center text-2xl text-white font-semibold">
-        {icon && <span className="mr-3 text-[hsl(var(--accent))]">{icon}</span>}
+        {/* Icon rendering removed here */}
         {title}
       </CardTitle>
     </CardHeader>
@@ -483,7 +483,7 @@ export default function GuiPage() {
           <div key={index} className="pb-6 border-b border-white/20 last:border-b-0">
             <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start mb-1">
               <div className="flex items-center mb-1 sm:mb-0">
-                <Briefcase size={20} className="mr-2 text-gray-200" />
+                {/* Icon removed from here */}
                 <h3 className="text-lg font-semibold text-white">{exp.org}</h3>
               </div>
               <p className="text-sm text-gray-300 sm:text-right">{exp.timeline}</p>
@@ -617,7 +617,7 @@ export default function GuiPage() {
             <Card ref={aboutMeRef} className="shadow-2xl rounded-2xl overflow-hidden border border-white/20 backdrop-blur-sm bg-card/75">
               <div className="p-8 sm:p-10 md:p-12">
                 <div className="flex items-center mb-6">
-                  <User size={36} className="mr-4 text-[hsl(var(--accent))]" />
+                  {/* User Icon Removed from title, kept standalone if needed, but request was to remove from section titles */}
                   <h2 className="text-3xl sm:text-4xl font-bold text-white">
                     About Me
                   </h2>
@@ -630,7 +630,7 @@ export default function GuiPage() {
                 </ul>
                 <div
                   className={cn(
-                    "flex items-center justify-center gap-6 mt-8 transition-opacity duration-700 ease-in-out",
+                    "flex items-center justify-center gap-6 mt-8 transition-opacity duration-700 ease-in-out text-white",
                     showSocialIcons ? "opacity-100" : "opacity-0"
                   )}
                 >
@@ -641,7 +641,7 @@ export default function GuiPage() {
                       target="_blank"
                       rel="noopener noreferrer"
                       aria-label={`Connect with Aditya Rekhe on ${link.name}`}
-                      className="text-white hover:text-gray-300 transition-colors"
+                      className="hover:text-gray-300 transition-colors"
                     >
                       <link.icon size={28} />
                     </a>
