@@ -12,6 +12,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { cn } from '@/lib/utils';
 import TypingEffect from '@/components/terminal/TypingEffect';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import MountainParallaxBackground from '@/components/ui/mountain-parallax-background';
 
 
 const GuiContactLinkParser: React.FC<{ line: string }> = ({ line }) => {
@@ -536,7 +537,8 @@ export default function GuiPage() {
 
 
   return (
-    <div className="min-h-screen bg-white text-black font-sans">
+    <div className="min-h-screen text-black font-sans relative">
+      <MountainParallaxBackground />
       {/* Hero Section */}
       <section className="h-screen flex flex-col items-center justify-center relative p-4">
         <div className="absolute top-6 right-6 z-10">
@@ -554,7 +556,7 @@ export default function GuiPage() {
 
         <div className="relative z-[5] flex flex-col md:flex-row items-center md:justify-between gap-8 lg:gap-12 w-full max-w-4xl">
           <div className="text-center md:text-left">
-            <h1 className="font-sans text-5xl md:text-6xl lg:text-7xl text-black">
+            <h1 className="font-sans text-5xl md:text-6xl lg:text-7xl text-white">
               <div>
                 {line1Text.split("").map((char, index) => (
                   <span
@@ -588,7 +590,7 @@ export default function GuiPage() {
                 <TypingEffect
                   text={subtitleText}
                   speed={50}
-                  className="font-sans text-sm md:text-base lg:text-lg text-[#006400] tracking-wide block"
+                  className="font-sans text-sm md:text-base lg:text-lg text-gray-200 tracking-wide block"
                 />
               )}
             </div>
@@ -610,7 +612,7 @@ export default function GuiPage() {
 
       {/* About Me Section */}
       {aboutMeContent && !aboutMeContent.startsWith('Error:') && (
-        <section className="py-16 md:py-24 bg-gray-50">
+        <section className="py-16 md:py-24 bg-gray-50/90 relative z-[1]"> {/* Ensure cards are above background but below fixed elements if any */}
           <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
             <Card ref={aboutMeRef} className="bg-white shadow-2xl rounded-2xl overflow-hidden">
               <div className="p-8 sm:p-10 md:p-12">
@@ -651,7 +653,7 @@ export default function GuiPage() {
         </section>
       )}
 
-      <main className="px-6 md:px-10 lg:px-16 py-16 grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-10">
+      <main className="px-6 md:px-10 lg:px-16 py-16 grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-10 relative z-[1]">
         {educationContent && (
           <SectionCard title="Education" icon={<BookOpen size={28} />} className="md:col-span-2">
             {renderEducation()}
@@ -790,7 +792,7 @@ export default function GuiPage() {
 
       </main>
 
-      <footer className="mt-20 pt-10 border-t border-gray-200 text-center text-sm text-gray-500 px-6 pb-6">
+      <footer className="mt-20 pt-10 border-t border-gray-200 text-center text-sm text-gray-500 px-6 pb-6 bg-white/80 relative z-[1]">
         {(footerContactDetails.phone || footerContactDetails.email || footerContactDetails.location) && (
           <div className="flex flex-col sm:flex-row justify-center items-center gap-x-6 gap-y-2 mb-6 text-gray-600">
             {footerContactDetails.phone && (
