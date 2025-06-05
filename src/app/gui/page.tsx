@@ -76,14 +76,14 @@ interface SectionCardProps {
 }
 
 const SectionCard: React.FC<SectionCardProps> = React.memo(({ title, icon, children, className, cardRef }) => (
-  <Card ref={cardRef} className={cn("bg-white shadow-lg border border-gray-200", className)}>
+  <Card ref={cardRef} className={cn("shadow-lg border border-gray-700/50 backdrop-blur-sm bg-black/10", className)}>
     <CardHeader className="p-6">
-      <CardTitle className="flex items-center text-2xl text-black font-semibold">
+      <CardTitle className="flex items-center text-2xl text-white font-semibold">
         {icon && <span className="mr-3 text-[hsl(var(--accent))]">{icon}</span>}
         {title}
       </CardTitle>
     </CardHeader>
-    <CardContent className="text-gray-700 text-base leading-relaxed p-6 pt-0">
+    <CardContent className="text-gray-200 text-base leading-relaxed p-6 pt-0">
       {children}
     </CardContent>
   </Card>
@@ -406,7 +406,7 @@ export default function GuiPage() {
     if (firstLine.startsWith('Error:')) {
         return <p className="text-red-500">{firstLine}</p>;
     }
-    return <pre className="whitespace-pre-wrap font-sans text-base leading-relaxed text-gray-700">{text}</pre>;
+    return <pre className="whitespace-pre-wrap font-sans text-base leading-relaxed text-gray-200">{text}</pre>;
   };
 
   const renderEducation = () => {
@@ -417,7 +417,7 @@ export default function GuiPage() {
     const contentLines = lines[0].toLowerCase() === 'edducation' ? lines.slice(1) : lines;
 
     if (contentLines.length < 4) {
-      return <p className="text-gray-500">Education details are not formatted correctly or are incomplete in education.txt.</p>;
+      return <p className="text-gray-400">Education details are not formatted correctly or are incomplete in education.txt.</p>;
     }
 
     const collegeName = contentLines[0];
@@ -428,7 +428,7 @@ export default function GuiPage() {
     return (
       <div className="space-y-3 text-base">
         <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start">
-          <p className="font-semibold text-black text-left">
+          <p className="font-semibold text-white text-left">
             <a
               href="https://engg.dypvp.edu.in/"
               target="_blank"
@@ -438,11 +438,11 @@ export default function GuiPage() {
               {collegeName}
             </a>
           </p>
-          <p className="text-sm text-gray-600 sm:text-right mt-1 sm:mt-0">{timeline}</p>
+          <p className="text-sm text-gray-300 sm:text-right mt-1 sm:mt-0">{timeline}</p>
         </div>
         <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start">
-          <p className="text-gray-800 text-left">{degree}</p>
-          <p className="text-sm text-gray-600 sm:text-right mt-1 sm:mt-0">{cgpa}</p>
+          <p className="text-gray-100 text-left">{degree}</p>
+          <p className="text-sm text-gray-300 sm:text-right mt-1 sm:mt-0">{cgpa}</p>
         </div>
       </div>
     );
@@ -474,24 +474,24 @@ export default function GuiPage() {
     if (currentExperience) experiences.push(currentExperience as any); // Push the last one
 
     if (experiences.length === 0) {
-      return <p className="text-gray-500">Experience details are not formatted correctly or are incomplete in experience.txt.</p>;
+      return <p className="text-gray-400">Experience details are not formatted correctly or are incomplete in experience.txt.</p>;
     }
 
     return (
       <div className="space-y-8">
         {experiences.map((exp, index) => (
-          <div key={index} className="pb-6 border-b border-gray-200 last:border-b-0">
+          <div key={index} className="pb-6 border-b border-gray-700/50 last:border-b-0">
             <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start mb-1">
               <div className="flex items-center mb-1 sm:mb-0">
-                <Briefcase size={20} className="mr-2 text-gray-600" />
-                <h3 className="text-lg font-semibold text-black">{exp.org}</h3>
+                <Briefcase size={20} className="mr-2 text-gray-300" />
+                <h3 className="text-lg font-semibold text-white">{exp.org}</h3>
               </div>
-              <p className="text-sm text-gray-500 sm:text-right">{exp.timeline}</p>
+              <p className="text-sm text-gray-400 sm:text-right">{exp.timeline}</p>
             </div>
-            <h4 className="text-md font-medium text-gray-800 mb-2 ml-0 sm:ml-7">{exp.role}</h4>
+            <h4 className="text-md font-medium text-gray-100 mb-2 ml-0 sm:ml-7">{exp.role}</h4>
             <ul className="list-disc list-inside space-y-1 ml-0 sm:ml-7">
               {exp.description.map((desc, i) => (
-                <li key={i} className="text-gray-700 text-sm leading-relaxed">{desc}</li>
+                <li key={i} className="text-gray-200 text-sm leading-relaxed">{desc}</li>
               ))}
             </ul>
           </div>
@@ -509,11 +509,11 @@ export default function GuiPage() {
       .filter(line => line && !line.toLowerCase().startsWith('acchievements'));
 
     if (lines.length === 0) {
-      return <p className="text-gray-500">No achievements listed or content is improperly formatted in achievements.txt.</p>;
+      return <p className="text-gray-400">No achievements listed or content is improperly formatted in achievements.txt.</p>;
     }
 
     return (
-      <ul className="list-disc list-inside space-y-2 text-base text-gray-700 leading-relaxed">
+      <ul className="list-disc list-inside space-y-2 text-base text-gray-200 leading-relaxed">
         {lines.map((line, index) => (
           <li key={index}>
             {line.startsWith('- ') ? line.substring(2) : line}
@@ -537,7 +537,7 @@ export default function GuiPage() {
 
 
   return (
-    <div className="min-h-screen text-black font-sans relative">
+    <div className="min-h-screen text-white font-sans relative">
       <MountainParallaxBackground />
       {/* Hero Section */}
       <section className="h-screen flex flex-col items-center justify-center relative p-4">
@@ -612,17 +612,17 @@ export default function GuiPage() {
 
       {/* About Me Section */}
       {aboutMeContent && !aboutMeContent.startsWith('Error:') && (
-        <section className="py-16 md:py-24 bg-gray-50/90 relative z-[1]"> {/* Ensure cards are above background but below fixed elements if any */}
+        <section className="py-16 md:py-24 relative z-[1]"> {/* Ensure cards are above background but below fixed elements if any */}
           <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-            <Card ref={aboutMeRef} className="bg-white shadow-2xl rounded-2xl overflow-hidden">
+            <Card ref={aboutMeRef} className="shadow-2xl rounded-2xl overflow-hidden border border-gray-700/50 backdrop-blur-sm bg-black/20">
               <div className="p-8 sm:p-10 md:p-12">
                 <div className="flex items-center mb-6">
                   <User size={36} className="mr-4 text-[hsl(var(--accent))]" />
-                  <h2 className="text-3xl sm:text-4xl font-bold text-black">
+                  <h2 className="text-3xl sm:text-4xl font-bold text-white">
                     About Me
                   </h2>
                 </div>
-                <ul className="list-disc list-inside space-y-3 text-base leading-relaxed text-gray-700">
+                <ul className="list-disc list-inside space-y-3 text-base leading-relaxed text-gray-200">
                   <li>A <strong>quick learner</strong>, eager to explore new <strong>technologies</strong> and <strong>environments</strong>.</li>
                   <li>Passionate for <strong>innovative solutions</strong> and <strong>programming</strong>.</li>
                   <li>Embraces <strong>challenges</strong> as opportunities for <strong>growth</strong>, constantly seeking to expand <strong>skill set</strong>.</li>
@@ -641,7 +641,7 @@ export default function GuiPage() {
                       target="_blank"
                       rel="noopener noreferrer"
                       aria-label={`Connect with Aditya Rekhe on ${link.name}`}
-                      className="text-gray-500 hover:text-black transition-colors"
+                      className="text-gray-400 hover:text-white transition-colors"
                     >
                       <link.icon size={28} />
                     </a>
@@ -664,8 +664,8 @@ export default function GuiPage() {
           <SectionCard title="Skills" icon={<Wrench size={28} />} className="md:col-span-2">
             <div className="space-y-8">
               {parsedSkills.map((cat, idx) => (
-                <div key={idx} className="bg-gray-100 rounded-xl p-6 shadow-sm">
-                  <h3 className="font-semibold text-black mb-4 text-xl">{cat.category}</h3>
+                <div key={idx} className="bg-black/30 backdrop-blur-sm border border-slate-700/50 rounded-xl p-6 shadow-sm">
+                  <h3 className="font-semibold text-white mb-4 text-xl">{cat.category}</h3>
                   {cat.items.length > 0 ? (
                     <div className="flex flex-wrap gap-4 justify-center">
                       {cat.items.map(item => {
@@ -674,7 +674,7 @@ export default function GuiPage() {
                           <TooltipProvider key={item} delayDuration={100}>
                             <Tooltip>
                               <TooltipTrigger asChild>
-                                <div className="flex flex-col items-center justify-start p-3 bg-white rounded-lg shadow-sm w-28 h-28 text-center hover:shadow-md transition-shadow cursor-default">
+                                <div className="flex flex-col items-center justify-start p-3 bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 rounded-lg shadow-sm w-28 h-28 text-center hover:shadow-md transition-shadow cursor-default">
                                   {skillInfo.logoPath ? (
                                     <Image
                                       src={skillInfo.logoPath}
@@ -684,11 +684,11 @@ export default function GuiPage() {
                                       className="object-contain mb-2"
                                     />
                                   ) : (
-                                    <div className="w-12 h-12 flex items-center justify-center bg-gray-200 rounded-md mb-2">
-                                      <Wrench size={24} className="text-gray-500" />
+                                    <div className="w-12 h-12 flex items-center justify-center bg-slate-700/60 rounded-md mb-2">
+                                      <Wrench size={24} className="text-gray-400" />
                                     </div>
                                   )}
-                                  <span className="text-xs text-gray-700 line-clamp-2">
+                                  <span className="text-xs text-gray-200 line-clamp-2">
                                     {skillInfo.name}
                                   </span>
                                 </div>
@@ -702,7 +702,7 @@ export default function GuiPage() {
                       })}
                     </div>
                   ) : (
-                    <p className="text-sm italic text-gray-500">No specific skills listed for this category.</p>
+                    <p className="text-sm italic text-gray-400">No specific skills listed for this category.</p>
                   )}
                 </div>
               ))}
@@ -727,19 +727,19 @@ export default function GuiPage() {
               ].map((project, idx) => (
                 <Card
                   key={project.id || idx}
-                  className="bg-white shadow-lg border border-gray-200 rounded-xl overflow-hidden transition-all duration-300 ease-in-out hover:shadow-2xl hover:border-gray-300"
+                  className="shadow-lg border border-gray-700/50 rounded-xl overflow-hidden transition-all duration-300 ease-in-out hover:shadow-2xl hover:border-gray-600/70 backdrop-blur-sm bg-black/20"
                 >
-                  <CardHeader className="p-6 bg-gray-50 border-b border-gray-200">
-                    <CardTitle className="text-2xl text-black font-semibold">{project.domain}</CardTitle>
+                  <CardHeader className="p-6 bg-black/10 border-b border-gray-700/50">
+                    <CardTitle className="text-2xl text-white font-semibold">{project.domain}</CardTitle>
                   </CardHeader>
                   <CardContent className="p-6 space-y-6">
-                    <p className="text-base leading-relaxed text-gray-700">
+                    <p className="text-base leading-relaxed text-gray-200">
                       {project.description}
                     </p>
 
                     {project.techStack.length > 0 && (
                       <div>
-                        <h4 className="text-md font-semibold text-black mb-2">Tech Stack:</h4>
+                        <h4 className="text-md font-semibold text-white mb-2">Tech Stack:</h4>
                         <div className="flex flex-wrap gap-2">
                           {project.techStack.map(tech => (
                             <Badge key={tech} variant="secondary" className="px-3 py-1 text-sm">{tech}</Badge>
@@ -750,7 +750,7 @@ export default function GuiPage() {
 
                     {(project.githubLink || (project.websiteLink && project.websiteLink !== '#')) && (
                         <div>
-                            <h4 className="text-md font-semibold text-black mb-2">Links:</h4>
+                            <h4 className="text-md font-semibold text-white mb-2">Links:</h4>
                             <div className="flex flex-wrap gap-4 items-center">
                                 {project.githubLink && (
                                 <a href={project.githubLink} target="_blank" rel="noopener noreferrer" className="inline-flex items-center text-sm text-[hsl(var(--accent))] hover:underline">
@@ -768,9 +768,9 @@ export default function GuiPage() {
 
                     {project.galleryPaths.length > 0 && (
                       <div>
-                        <h4 className="text-md font-semibold text-black mb-2">Gallery:</h4>
+                        <h4 className="text-md font-semibold text-white mb-2">Gallery:</h4>
                         <Link href={`/gui/gallery/${encodeURIComponent(project.id)}`} passHref legacyBehavior>
-                          <Button className="text-sm bg-gray-100 text-gray-700 border border-gray-300 hover:bg-gray-200 hover:text-gray-800 rounded-md shadow-sm">
+                          <Button className="text-sm bg-slate-700/80 text-gray-100 border border-slate-600 hover:bg-slate-600/80 hover:text-white rounded-md shadow-sm backdrop-blur-sm">
                             <ImageIcon size={18} className="mr-2" /> View Gallery
                           </Button>
                         </Link>
@@ -792,31 +792,31 @@ export default function GuiPage() {
 
       </main>
 
-      <footer className="mt-20 pt-10 border-t border-gray-200 text-center text-sm text-gray-500 px-6 pb-6 bg-white/80 relative z-[1]">
+      <footer className="mt-20 pt-10 border-t border-gray-700/50 text-center text-sm px-6 pb-6 relative z-[1] backdrop-blur-sm bg-black/10">
         {(footerContactDetails.phone || footerContactDetails.email || footerContactDetails.location) && (
-          <div className="flex flex-col sm:flex-row justify-center items-center gap-x-6 gap-y-2 mb-6 text-gray-600">
+          <div className="flex flex-col sm:flex-row justify-center items-center gap-x-6 gap-y-2 mb-6 text-gray-300">
             {footerContactDetails.phone && (
-              <a href={`tel:${footerContactDetails.phone}`} className="inline-flex items-center hover:text-black hover:underline">
+              <a href={`tel:${footerContactDetails.phone}`} className="inline-flex items-center hover:text-white hover:underline">
                 <Phone size={16} className="mr-2" />
                 {footerContactDetails.phone}
               </a>
             )}
             {footerContactDetails.email && (
-              <a href={`mailto:${footerContactDetails.email}`} className="inline-flex items-center hover:text-black hover:underline">
+              <a href={`mailto:${footerContactDetails.email}`} className="inline-flex items-center hover:text-white hover:underline">
                 <Mail size={16} className="mr-2" />
                 {footerContactDetails.email}
               </a>
             )}
             {footerContactDetails.location && (
-              <p className="inline-flex items-center">
+              <p className="inline-flex items-center text-gray-300">
                 {/* Could add a MapPin icon here if desired */}
                 {footerContactDetails.location}
               </p>
             )}
           </div>
         )}
-        <p>&copy; {new Date().getFullYear()} Aditya Rekhe. All rights reserved.</p>
-        <p className="mt-1">Powered by ASR_Workspace</p>
+        <p className="text-gray-400">&copy; {new Date().getFullYear()} Aditya Rekhe. All rights reserved.</p>
+        <p className="mt-1 text-gray-400">Powered by ASR_Workspace</p>
       </footer>
     </div>
   );
