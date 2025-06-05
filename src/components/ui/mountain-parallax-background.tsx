@@ -39,7 +39,11 @@ const MountainLayer: FC<MountainLayerProps> = ({
 
 const MountainParallaxBackground: FC = () => {
   return (
-    <div className="fixed inset-0 -z-10 overflow-hidden bg-sky-200" aria-hidden="true">
+    <div
+      className="fixed inset-0 -z-10 overflow-hidden"
+      style={{ backgroundColor: '#d99759' }}
+      aria-hidden="true"
+    >
       {/* Layer 3: Distant, Hazy Mountains */}
       <MountainLayer
         d="M0,280 Q180,220 360,250 T720,230 Q900,210 1080,240 T1440,220 L1440,400 L0,400 Z"
