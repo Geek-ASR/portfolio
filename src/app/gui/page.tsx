@@ -76,7 +76,7 @@ interface SectionCardProps {
 }
 
 const SectionCard: React.FC<SectionCardProps> = React.memo(({ title, icon, children, className, cardRef }) => (
-  <Card ref={cardRef} className={cn("shadow-lg border border-white/20 backdrop-blur-sm bg-transparent", className)}>
+  <Card ref={cardRef} className={cn("shadow-lg border border-white/20 backdrop-blur-sm bg-card/75", className)}>
     <CardHeader className="p-6">
       <CardTitle className="flex items-center text-2xl text-white font-semibold">
         {icon && <span className="mr-3 text-[hsl(var(--accent))]">{icon}</span>}
@@ -614,7 +614,7 @@ export default function GuiPage() {
       {aboutMeContent && !aboutMeContent.startsWith('Error:') && (
         <section className="py-16 md:py-24 relative z-[1]"> {/* Ensure cards are above background but below fixed elements if any */}
           <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-            <Card ref={aboutMeRef} className="shadow-2xl rounded-2xl overflow-hidden border border-white/20 backdrop-blur-sm bg-transparent">
+            <Card ref={aboutMeRef} className="shadow-2xl rounded-2xl overflow-hidden border border-white/20 backdrop-blur-sm bg-card/75">
               <div className="p-8 sm:p-10 md:p-12">
                 <div className="flex items-center mb-6">
                   <User size={36} className="mr-4 text-[hsl(var(--accent))]" />
@@ -727,7 +727,7 @@ export default function GuiPage() {
               ].map((project, idx) => (
                 <Card
                   key={project.id || idx}
-                  className="shadow-lg border border-white/20 rounded-xl overflow-hidden transition-all duration-300 ease-in-out hover:shadow-2xl hover:border-white/30 backdrop-blur-sm bg-transparent"
+                  className="shadow-lg border border-white/20 rounded-xl overflow-hidden transition-all duration-300 ease-in-out hover:shadow-2xl hover:border-white/30 backdrop-blur-sm bg-card/75"
                 >
                   <CardHeader className="p-6 bg-black/10 border-b border-white/20">
                     <CardTitle className="text-2xl text-white font-semibold">{project.domain}</CardTitle>
