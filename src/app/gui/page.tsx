@@ -597,7 +597,7 @@ export default function GuiPage() {
 
           <div className="mt-6 md:mt-0 flex-shrink-0">
             <Image
-              src="https://images.unsplash.com/photo-1622542796254-5b9c46ab0d2f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxMHx8YWJzdHJhY3QlMjBhcnR8ZW58MHx8fHwxNzQ5MTI0OTIwfDA&ixlib=rb-4.1.0&q=80&w=1080"
+              src="https://images.unsplash.com/photo-1608311398753-6df2bde3177c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxwbmclMjBpbWFnZXN8ZW58MHx8fHwxNzQ5MTI1MjAyfDA&ixlib=rb-4.1.0&q=80&w=1080"
               alt="Aditya Rekhe"
               width={200}
               height={200}
@@ -820,3 +820,4 @@ export default function GuiPage() {
     </div>
   );
 }
+
