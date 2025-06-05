@@ -544,7 +544,7 @@ export default function GuiPage() {
             <Button
               variant="outline"
               size="icon"
-              className="bg-white border-black text-black hover:bg-gray-100 shadow-md"
+              className="bg-white/80 border-black text-black hover:bg-gray-100 shadow-md"
               aria-label="Back to Terminal"
             >
               <TerminalSquare className="h-6 w-6" />
@@ -552,7 +552,7 @@ export default function GuiPage() {
           </Link>
         </div>
 
-        <div className="flex flex-col md:flex-row items-center md:justify-between gap-8 lg:gap-12 w-full max-w-4xl">
+        <div className="relative z-[5] flex flex-col md:flex-row items-center md:justify-between gap-8 lg:gap-12 w-full max-w-4xl">
           <div className="text-center md:text-left">
             <h1 className="font-sans text-5xl md:text-6xl lg:text-7xl text-black">
               <div>
@@ -583,7 +583,6 @@ export default function GuiPage() {
               </div>
               <span className="sr-only">{`${line1Text} ${line2Text}`}</span>
             </h1>
-            {/* Subtitle container - ALWAYS RENDERED to reserve space */}
             <div className="mt-4 min-h-[2.5rem] md:min-h-[3rem]">
               {startSubtitleAnimation && (
                 <TypingEffect
