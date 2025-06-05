@@ -41,7 +41,7 @@ const MountainParallaxBackground: FC = () => {
   return (
     <div
       className="fixed inset-0 -z-10 overflow-hidden"
-      style={{ backgroundColor: '#65a3ae' }} 
+      style={{ backgroundColor: '#ABD3DA' }} 
       aria-hidden="true"
     >
       {/* Layer 5: Furthest mountains (uppermost in prompt) */}
