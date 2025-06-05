@@ -19,18 +19,16 @@ const MountainLayer: FC<MountainLayerProps> = ({
   opacityClass = 'opacity-100',
   yOffsetRange,
   heightClass,
-  viewBox = "0 0 1440 400", // Default viewBox, paths should be drawn relative to this
+  viewBox = "0 0 1440 400", 
 }) => {
   const { scrollYProgress } = useScroll();
-  // Transform Y from 0 (top of page scroll) to 1 (bottom of page scroll)
-  // to the specified yOffsetRange (e.g., [0, -50] means move up by 50px)
   const y = useTransform(scrollYProgress, [0, 1], yOffsetRange);
 
   return (
     <motion.svg
       style={{ y }}
       viewBox={viewBox}
-      preserveAspectRatio="xMidYMid slice" // Ensures the SVG content covers the area, maintaining aspect ratio
+      preserveAspectRatio="xMidYMid slice" 
       className={`absolute inset-x-0 bottom-0 w-full ${heightClass} ${fillClass} ${opacityClass}`}
       aria-hidden="true"
     >
@@ -42,40 +40,40 @@ const MountainLayer: FC<MountainLayerProps> = ({
 const MountainParallaxBackground: FC = () => {
   return (
     <div className="fixed inset-0 -z-10 overflow-hidden" aria-hidden="true">
-      {/* Layer 4: Furthest, darkest, moves least */}
+      {/* Layer 4: Furthest, darkest, gentle smooth hills */}
       <MountainLayer
-        d="M0,400 L0,250 Q180,200 360,260 Q540,190 720,270 Q900,180 1080,260 L1260,220 L1440,240 L1440,400 Z"
+        d="M0,400 L0,320 S 200,280 360,300 S 600,270 720,290 S 900,260 1080,280 S 1300,250 1440,270 L1440,400 Z"
         fillClass="fill-blue-900"
         opacityClass="opacity-100"
-        yOffsetRange={[0, -40]} // Moves up by max 40px
-        heightClass="h-[65vh]" // Covers lower 65% of viewport height
+        yOffsetRange={[0, -40]} 
+        heightClass="h-[65vh]" 
         viewBox="0 0 1440 400"
       />
-      {/* Layer 3 */}
+      {/* Layer 3: More defined, slightly larger mountains */}
       <MountainLayer
-        d="M0,400 L0,280 Q200,210 400,290 Q600,220 800,300 L1000,250 L1200,290 L1440,260 L1440,400 Z"
+        d="M0,400 L0,300 L150,330 L300,280 L450,320 L600,260 L750,310 L900,250 L1050,300 L1200,270 L1350,290 L1440,280 L1440,400 Z"
         fillClass="fill-blue-700"
         opacityClass="opacity-90"
-        yOffsetRange={[0, -80]} // Moves up by max 80px
+        yOffsetRange={[0, -80]} 
         heightClass="h-[75vh]"
         viewBox="0 0 1440 400"
       />
-      {/* Layer 2 */}
+      {/* Layer 2: Sharper peaks, more prominent */}
       <MountainLayer
-        d="M0,400 L0,300 Q180,220 360,310 Q540,230 720,320 Q900,240 1080,310 L1260,250 L1440,300 L1440,400 Z"
+        d="M0,400 L0,280 L200,350 L380,260 L550,340 L720,240 L900,330 L1050,250 L1200,320 L1350,270 L1440,300 L1440,400 Z"
         fillClass="fill-blue-600"
         opacityClass="opacity-85"
-        yOffsetRange={[0, -130]} // Moves up by max 130px
+        yOffsetRange={[0, -130]} 
         heightClass="h-[85vh]"
         viewBox="0 0 1440 400"
       />
-      {/* Layer 1: Closest, lightest, moves most */}
+      {/* Layer 1: Closest, most detailed, highest peaks */}
       <MountainLayer
-        d="M0,400 L0,330 Q250,240 500,340 Q750,250 1000,350 L1250,280 L1440,340 L1440,400 Z"
+        d="M0,400 L0,250 L100,320 L250,220 L400,340 L580,180 L720,300 L850,200 L1000,330 L1150,230 L1300,310 L1440,260 L1440,400 Z"
         fillClass="fill-blue-500"
         opacityClass="opacity-80"
-        yOffsetRange={[0, -200]} // Moves up by max 200px
-        heightClass="h-full" // Covers full height from bottom for the closest layer
+        yOffsetRange={[0, -200]} 
+        heightClass="h-full" 
         viewBox="0 0 1440 400"
       />
     </div>
