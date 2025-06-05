@@ -26,13 +26,13 @@ const MountainLayer: FC<MountainLayerProps> = ({
 
   return (
     <motion.svg
-      style={{ y }}
+      style={{ y, fill: fillColor }}
       viewBox={viewBox}
       preserveAspectRatio="xMidYMid slice"
       className={`absolute inset-x-0 top-0 w-full ${heightClass} ${opacityClass}`}
       aria-hidden="true"
     >
-      <path d={d} style={{ fill: fillColor }} />
+      <path d={d} />
     </motion.svg>
   );
 };
@@ -44,16 +44,7 @@ const MountainParallaxBackground: FC = () => {
       style={{ backgroundColor: '#ABD3DA' }} 
       aria-hidden="true"
     >
-      {/* Layer 5: Furthest mountains (uppermost in prompt) */}
-      <MountainLayer
-        d="M0,250 Q150,200 300,230 T600,210 Q750,190 900,220 T1200,200 L1440,240 L1440,400 L0,400 Z"
-        fillColor="#242328"
-        opacityClass="opacity-75"
-        yOffsetRange={[0, -40]}
-        heightClass="h-[calc(100vh+40px)]"
-        viewBox="0 0 1440 400"
-      />
-      {/* Layer 4: Next layer */}
+      {/* Layer 4: (Was Layer 4, now furthest) */}
       <MountainLayer
         d="M0,280 Q180,220 360,260 T720,240 Q900,210 1080,250 T1440,230 L1440,400 L0,400 Z"
         fillColor="#5c5964"
@@ -62,7 +53,7 @@ const MountainParallaxBackground: FC = () => {
         heightClass="h-[calc(100vh+70px)]"
         viewBox="0 0 1440 400"
       />
-      {/* Layer 3: Next layer */}
+      {/* Layer 3: (Was Layer 3) */}
       <MountainLayer
         d="M0,310 Q160,240 320,280 T640,260 Q800,230 960,270 T1280,250 L1440,280 L1440,400 L0,400 Z"
         fillColor="#807d8b"
@@ -71,7 +62,7 @@ const MountainParallaxBackground: FC = () => {
         heightClass="h-[calc(100vh+110px)]"
         viewBox="0 0 1440 400"
       />
-      {/* Layer 2: Next layer */}
+      {/* Layer 2: (Was Layer 2) */}
       <MountainLayer
         d="M0,340 Q140,270 280,310 T560,290 Q700,260 840,300 T1120,280 L1440,320 L1440,400 L0,400 Z"
         fillColor="#acaab3"
@@ -80,7 +71,7 @@ const MountainParallaxBackground: FC = () => {
         heightClass="h-[calc(100vh+160px)]"
         viewBox="0 0 1440 400"
       />
-      {/* Layer 1: Closest mountains (last layer in prompt) */}
+      {/* Layer 1: (Was Layer 1, Closest) */}
       <MountainLayer
         d="M0,370 Q120,300 240,340 T480,320 Q600,290 720,330 T960,310 L1200,350 L1440,330 L1440,400 L0,400 Z"
         fillColor="#c3c2c8"
