@@ -19,7 +19,7 @@ const MountainLayer: FC<MountainLayerProps> = ({
   opacityClass = 'opacity-100',
   yOffsetRange,
   heightClass,
-  viewBox = "0 0 1440 400", // Standard viewBox, content will scale
+  viewBox = "0 0 1440 400", 
 }) => {
   const { scrollYProgress } = useScroll();
   const y = useTransform(scrollYProgress, [0, 1], yOffsetRange);
@@ -28,7 +28,7 @@ const MountainLayer: FC<MountainLayerProps> = ({
     <motion.svg
       style={{ y }}
       viewBox={viewBox}
-      preserveAspectRatio="xMidYMid slice" // Ensures the SVG fills the container and maintains aspect ratio
+      preserveAspectRatio="xMidYMid slice"
       className={`absolute inset-x-0 top-0 w-full ${heightClass} ${fillClass} ${opacityClass}`}
       aria-hidden="true"
     >
@@ -42,7 +42,7 @@ const MountainParallaxBackground: FC = () => {
     <div className="fixed inset-0 -z-10 overflow-hidden" aria-hidden="true">
       {/* Layer 5: Deep Upper Sky (Furthest) */}
       <MountainLayer
-        d="M0,150 Q360,50 720,100 T1440,80 L1440,400 L0,400 Z" // High arching sky
+        d="M0,150 Q360,50 720,100 T1440,80 L1440,400 L0,400 Z"
         fillClass="fill-gray-900"
         opacityClass="opacity-100"
         yOffsetRange={[0, -30]}
@@ -51,34 +51,34 @@ const MountainParallaxBackground: FC = () => {
       />
       {/* Layer 4: Sunset Glow Band */}
       <MountainLayer
-        d="M0,200 Q360,180 720,190 T1440,170 L1440,280 Q720,300 0,270 Z" // Glow band, slightly uneven
+        d="M0,200 Q360,180 720,190 T1440,170 L1440,280 Q720,300 0,270 Z"
         fillClass="fill-red-600"
         opacityClass="opacity-90"
         yOffsetRange={[0, -60]}
         heightClass="h-[calc(100vh+60px)]"
         viewBox="0 0 1440 400"
       />
-      {/* Layer 3: Distant, Hazy Mountains */}
+      {/* Layer 3: Distant, Hazy Mountains (More compressed and higher base) */}
       <MountainLayer
-        d="M0,400 L0,280 C100,260 250,300 400,270 C550,240 650,280 720,260 C800,240 950,290 1100,250 L1250,280 L1440,240 L1440,400 Z"
+        d="M0,400 L0,280 Q150,270 300,285 Q450,300 600,280 Q750,260 900,275 Q1050,290 1200,270 L1440,290 L1440,400 Z"
         fillClass="fill-slate-700"
         opacityClass="opacity-85"
         yOffsetRange={[0, -100]}
         heightClass="h-[calc(100vh+100px)]"
         viewBox="0 0 1440 400"
       />
-      {/* Layer 2: Mid-Ground Mountains */}
+      {/* Layer 2: Mid-Ground Mountains (More compressed, starts lower) */}
       <MountainLayer
-        d="M0,400 L0,300 C150,330 300,280 450,310 C600,340 700,290 800,320 C900,350 1050,300 1200,330 L1350,290 L1440,320 L1440,400 Z"
+        d="M0,400 L0,310 Q200,300 400,315 Q600,330 800,310 Q1000,290 1200,305 L1440,320 L1440,400 Z"
         fillClass="fill-neutral-800"
         opacityClass="opacity-100"
         yOffsetRange={[0, -150]}
         heightClass="h-[calc(100vh+150px)]"
         viewBox="0 0 1440 400"
       />
-      {/* Layer 1: Foreground Mountains (Closest) */}
+      {/* Layer 1: Foreground Mountains (Closest, more prominent peaks, starts lower) */}
       <MountainLayer
-        d="M-5,400 L-5,320 C100,350 200,280 350,340 C500,400 580,300 720,350 C850,400 950,310 1100,360 C1250,410 1350,320 1445,370 L1445,400 Z"
+        d="M-5,400 L-5,340 C150,330 300,350 450,340 C600,330 750,360 900,350 C1050,340 1200,370 1350,360 L1445,350 L1445,400 Z"
         fillClass="fill-black"
         opacityClass="opacity-100"
         yOffsetRange={[0, -220]}
