@@ -597,7 +597,7 @@ export default function GuiPage() {
 
           <div className="mt-6 md:mt-0 flex-shrink-0">
             <Image
-              src="/profile.png"
+              src="https://images.unsplash.com/photo-1622542796254-5b9c46ab0d2f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxMHx8YWJzdHJhY3QlMjBhcnR8ZW58MHx8fHwxNzQ5MTI0OTIwfDA&ixlib=rb-4.1.0&q=80&w=1080"
               alt="Aditya Rekhe"
               width={200}
               height={200}
@@ -729,7 +729,7 @@ export default function GuiPage() {
                   className="bg-white shadow-lg border border-gray-200 rounded-xl overflow-hidden transition-all duration-300 ease-in-out hover:shadow-2xl hover:border-gray-300"
                 >
                   <CardHeader className="p-6 bg-gray-50 border-b border-gray-200">
-                    <CardTitle className="text-2xl text-black font-bold">{project.domain}</CardTitle>
+                    <CardTitle className="text-2xl text-black font-semibold">{project.domain}</CardTitle>
                   </CardHeader>
                   <CardContent className="p-6 space-y-6">
                     <p className="text-base leading-relaxed text-gray-700">
