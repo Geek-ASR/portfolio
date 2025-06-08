@@ -7,13 +7,12 @@ import { fileSystem, findNode, getRootFileContent, type Directory, type File as 
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { TerminalSquare, User, BookOpen, Wrench, Briefcase, Star, Mail, FolderGit2, Github, Linkedin, FileCode2, Instagram, ArrowLeft, ExternalLink, Image as ImageIcon, Phone, ChevronDown, Trophy, Zap, Lightbulb, GraduationCap, Building } from 'lucide-react';
 import React, { useState, useEffect, useRef } from 'react';
 import { cn } from '@/lib/utils';
-import TypingEffect from '@/components/terminal/TypingEffect'; // Keep for terminal, adapt for GUI if needed
+import TypingEffect from '@/components/terminal/TypingEffect';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import WaveBackground from '@/components/ui/wave-background'; // New Wave Background
+import WaveBackground from '@/components/ui/wave-background';
 import { motion } from 'framer-motion';
 
 
@@ -79,16 +78,15 @@ const SectionCard: React.FC<SectionCardProps> = React.memo(({ title, children, c
     <Card
       ref={cardRef}
       className={cn(
-        "shadow-xl border border-[hsl(var(--accent))]/30 backdrop-blur-md bg-card/10", // Glassmorphism: 10% opacity, blur, themed border
+        "shadow-xl border border-[hsl(var(--accent))]/30 backdrop-blur-md bg-card/10", 
         "transition-all duration-300",
         className
       )}
     >
       <CardHeader className="p-6">
-        <CardTitle className={cn("flex items-center text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-[hsl(var(--accent))] to-electricBlue pb-2", titleClassName)}>
+        <CardTitle className={cn("text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-[hsl(var(--accent))] to-electricBlue pb-2", titleClassName)}>
           {title}
         </CardTitle>
-        {/* Glowing underline for section headers */}
         <div className="h-0.5 w-1/4 bg-gradient-to-r from-[hsl(var(--accent))] to-electricBlue shadow-[0_0_8px_hsl(var(--accent)),_0_0_12px_hsl(var(--accent))]"></div>
       </CardHeader>
       <CardContent className="text-[hsl(var(--foreground))] text-base leading-relaxed p-6 pt-0">
@@ -103,14 +101,14 @@ const socialLinks = [
   { name: 'GitHub', icon: Github, url: 'https://github.com/Geek-ASR' },
   { name: 'LinkedIn', icon: Linkedin, url: 'https://www.linkedin.com/in/aditya-rekhe-94b27122a/' },
   { name: 'GeeksforGeeks', icon: FileCode2, url: 'https://www.geeksforgeeks.org/user/adityare545t/' },
-  { name: 'Instagram', icon: Instagram, url: '#' }, // Placeholder
+  { name: 'Instagram', icon: Instagram, url: '#' }, 
 ];
 
 interface SkillInfo {
   name: string;
   logoPath?: string;
   displayName: string;
-  color?: string; // For color-coded backgrounds
+  color?: string; 
 }
 
 function getSkillInfo(skillText: string): SkillInfo {
@@ -146,7 +144,7 @@ function getSkillInfo(skillText: string): SkillInfo {
     name: coreSkill,
     logoPath: logoFileName ? `/logos/${logoFileName}` : undefined,
     displayName: originalText,
-    color: colorMap[normalizedCoreSkill] || 'bg-slate-700/20 text-slate-300 border-slate-600/30', // Default color
+    color: colorMap[normalizedCoreSkill] || 'bg-slate-700/20 text-slate-300 border-slate-600/30', 
   };
 }
 
@@ -223,7 +221,7 @@ export default function GuiPage() {
   const heroSubtitle = "Software Engineer | Blockchain Enthusiast | Educator";
 
   useEffect(() => {
-    const timer = setTimeout(() => setStartSubtitleAnimation(true), (heroNameLine1.length + heroNameLine2.length) * 70); // Adjusted delay
+    const timer = setTimeout(() => setStartSubtitleAnimation(true), (heroNameLine1.length + heroNameLine2.length) * 70); 
     return () => clearTimeout(timer);
   }, [heroNameLine1.length, heroNameLine2.length]);
 
@@ -276,9 +274,18 @@ export default function GuiPage() {
   const renderEducation = () => { 
     if (!educationContent || educationContent.startsWith('Error:')) return formatPreText(educationContent);
     const lines = educationContent.split('\n').map(line => line.trim()).filter(line => line);
-    const contentLines = lines[0].toLowerCase() === 'edducation' ? lines.slice(1) : lines; // Corrected typo in check
-    if (contentLines.length < 4) return <p className="text-[hsl(var(--muted))]">Education details not formatted correctly.</p>;
-    const [collegeName, degree, timeline, cgpa] = contentLines;
+    const contentLines = lines[0].toLowerCase().includes('education') ? lines.slice(1) : lines; 
+    if (contentLines.length < 3) return <p className="text-[hsl(var(--muted))]">Education details not formatted correctly.</p>;
+    const [collegeName, degreeAndTimeline, cgpa] = contentLines;
+    
+    const timelineMatch = degreeAndTimeline.match(/(\s*-\s*[A-Za-z]{3,},\s*\d{4}\s*–\s*[A-Za-z]{3,},\s*\d{4})$/);
+    let degree = degreeAndTimeline;
+    let timeline = "";
+    if (timelineMatch) {
+      degree = degreeAndTimeline.replace(timelineMatch[0], "").trim();
+      timeline = timelineMatch[0].replace(/^\s*-\s*/, "").trim();
+    }
+
     return (
       <div className="space-y-3 text-base">
         <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start">
@@ -297,9 +304,9 @@ export default function GuiPage() {
     );
   };
 
-  const renderExperience = () => { // Updated for timeline style
+  const renderExperience = () => { 
     if (!experienceContent || experienceContent.startsWith('Error:')) return formatPreText(experienceContent);
-    const lines = experienceContent.split('\n').filter(line => line && !line.toLowerCase().startsWith('exxperience'));
+    const lines = experienceContent.split('\n').filter(line => line && !line.toLowerCase().startsWith('experience')); // Corrected filter
     const experiences: Array<{ org: string; timeline: string; role: string; description: string[] }> = [];
     let currentExperience: { org?: string; timeline?: string; role?: string; description: string[] } | null = null;
     for (const line of lines) {
@@ -458,7 +465,7 @@ export default function GuiPage() {
                 viewport={{ once: true, amount: 0.2 }}
                 transition={{ duration: 0.6 }}
              >
-             <Card className="shadow-2xl rounded-2xl overflow-hidden border border-[hsl(var(--accent))]/30 backdrop-blur-md bg-card/10"> {/* Glassmorphism 10% opacity */}
+             <Card className="shadow-2xl rounded-2xl overflow-hidden border border-[hsl(var(--accent))]/30 backdrop-blur-md bg-card/10">
               <CardHeader className="p-8 sm:p-10 md:p-12">
                 <CardTitle className="text-3xl sm:text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-[hsl(var(--accent))] to-electricBlue pb-2">
                   About Me
@@ -489,13 +496,13 @@ export default function GuiPage() {
 
       <main className="px-6 md:px-10 lg:px-16 py-16 grid grid-cols-1 gap-8 lg:gap-12 relative z-[1]">
         {educationContent && (
-          <SectionCard title="Education" className="md:col-span-1"> {/* Changed from md:col-span-2 */}
+          <SectionCard title="Education" className="md:col-span-1">
             {renderEducation()}
           </SectionCard>
         )}
 
         {skillsContent && parsedSkills.length > 0 && (
-          <SectionCard title="Skills" className="md:col-span-1"> {/* Changed from md:col-span-2 */}
+          <SectionCard title="Skills" className="md:col-span-1">
             <div className="space-y-10">
               {parsedSkills.map((cat, idx) => (
                 <div key={idx} className="bg-white/5 border border-[hsl(var(--accent))]/10 rounded-xl p-6 shadow-sm">
@@ -513,7 +520,7 @@ export default function GuiPage() {
                                   transition={{ type: "spring", stiffness: 300 }}
                                   className={cn(
                                     "flex flex-col items-center justify-start p-4 rounded-lg shadow-md w-32 h-32 text-center cursor-default border",
-                                    skillInfo.color // Apply color-coded background/text/border
+                                    skillInfo.color 
                                   )}
                                 >
                                   {skillInfo.logoPath ? (
@@ -540,13 +547,13 @@ export default function GuiPage() {
         )}
 
         {experienceContent && (
-          <SectionCard title="Experience" className="md:col-span-1"> {/* Changed from md:col-span-2 */}
+          <SectionCard title="Experience" className="md:col-span-1">
             {renderExperience()}
           </SectionCard>
         )}
 
         {projectsList.length > 0 && (
-          <SectionCard title="Projects" className="md:col-span-1"> {/* Changed from md:col-span-2 */}
+          <SectionCard title="Projects" className="md:col-span-1">
             <div className="space-y-10">
               {[...projectsList.filter(p => p.name !== 'project_details.pdf').map(projectFile => parseProjectContent(projectFile.content, projectFile.name)), asrPortfolioProject]
               .map((project, idx) => (
@@ -562,55 +569,47 @@ export default function GuiPage() {
                   <CardHeader className="p-6 bg-black/10 border-b border-[hsl(var(--accent))]/20">
                     <CardTitle className="text-2xl text-transparent bg-clip-text bg-gradient-to-r from-[hsl(var(--accent))] to-electricBlue font-semibold">{project.domain}</CardTitle>
                   </CardHeader>
-                  <CardContent className="p-6 space-y-4">
-                    <Accordion type="single" collapsible className="w-full">
-                      <AccordionItem value="description">
-                        <AccordionTrigger className="text-lg font-medium text-[hsl(var(--primary))] hover:text-[hsl(var(--accent))] data-[state=open]:text-[hsl(var(--accent))] transition-colors">Description</AccordionTrigger>
-                        <AccordionContent className="text-sm text-[hsl(var(--muted))] pt-2">
-                          {project.description}
-                        </AccordionContent>
-                      </AccordionItem>
+                  <CardContent className="p-6 space-y-6">
+                    <div>
+                      <h4 className="text-lg font-medium text-[hsl(var(--primary))] mb-2">Description</h4>
+                      <p className="text-sm text-[hsl(var(--muted))] whitespace-pre-line">{project.description}</p>
+                    </div>
 
-                      {project.techStack.length > 0 && (
-                        <AccordionItem value="tech-stack">
-                          <AccordionTrigger className="text-lg font-medium text-[hsl(var(--primary))] hover:text-[hsl(var(--accent))] data-[state=open]:text-[hsl(var(--accent))] transition-colors">Tech Stack</AccordionTrigger>
-                          <AccordionContent className="pt-2">
-                            <div className="flex flex-wrap gap-2">
-                              {project.techStack.map(tech => (
-                                <Badge key={tech} variant="secondary" className="px-3 py-1 text-sm bg-[hsl(var(--accent))]/10 text-[hsl(var(--accent))] border-[hsl(var(--accent))]/30 hover:bg-[hsl(var(--accent))]/20">{tech}</Badge>
-                              ))}
-                            </div>
-                          </AccordionContent>
-                        </AccordionItem>
-                      )}
+                    {project.techStack.length > 0 && (
+                      <div>
+                        <h4 className="text-lg font-medium text-[hsl(var(--primary))] mb-3">Tech Stack</h4>
+                        <div className="flex flex-wrap gap-2">
+                          {project.techStack.map(tech => (
+                            <Badge key={tech} variant="secondary" className="px-3 py-1 text-sm bg-[hsl(var(--accent))]/10 text-[hsl(var(--accent))] border-[hsl(var(--accent))]/30 hover:bg-[hsl(var(--accent))]/20">{tech}</Badge>
+                          ))}
+                        </div>
+                      </div>
+                    )}
 
-                      {(project.githubLink || (project.websiteLink && project.websiteLink !== '#') || project.galleryPaths.length > 0) && (
-                        <AccordionItem value="links-gallery">
-                          <AccordionTrigger className="text-lg font-medium text-[hsl(var(--primary))] hover:text-[hsl(var(--accent))] data-[state=open]:text-[hsl(var(--accent))] transition-colors">Links & Gallery</AccordionTrigger>
-                          <AccordionContent className="pt-2 space-y-3">
-                            <div className="flex flex-wrap gap-4 items-center">
-                              {project.githubLink && (
-                                <a href={project.githubLink} target="_blank" rel="noopener noreferrer" className="inline-flex items-center text-sm text-[hsl(var(--accent))] hover:text-electricBlue hover:underline">
-                                  <Github size={18} className="mr-2" /> GitHub Repository
-                                </a>
-                              )}
-                              {project.websiteLink && project.websiteLink !== '#' && (
-                                <a href={project.websiteLink} target="_blank" rel="noopener noreferrer" className="inline-flex items-center text-sm text-[hsl(var(--accent))] hover:text-electricBlue hover:underline">
-                                  <ExternalLink size={18} className="mr-2" /> Live Website
-                                </a>
-                              )}
-                            </div>
-                            {project.galleryPaths.length > 0 && (
+                    {(project.githubLink || (project.websiteLink && project.websiteLink !== '#') || project.galleryPaths.length > 0) && (
+                      <div>
+                        <h4 className="text-lg font-medium text-[hsl(var(--primary))] mb-3">Links & Gallery</h4>
+                        <div className="flex flex-wrap gap-x-6 gap-y-3 items-center">
+                          {project.githubLink && (
+                            <a href={project.githubLink} target="_blank" rel="noopener noreferrer" className="inline-flex items-center text-sm text-[hsl(var(--accent))] hover:text-electricBlue hover:underline">
+                              <Github size={18} className="mr-2" /> GitHub Repository
+                            </a>
+                          )}
+                          {project.websiteLink && project.websiteLink !== '#' && (
+                            <a href={project.websiteLink} target="_blank" rel="noopener noreferrer" className="inline-flex items-center text-sm text-[hsl(var(--accent))] hover:text-electricBlue hover:underline">
+                              <ExternalLink size={18} className="mr-2" /> Live Website
+                            </a>
+                          )}
+                          {project.galleryPaths.length > 0 && (
                               <Link href={`/gui/gallery/${encodeURIComponent(project.id)}`} passHref legacyBehavior>
-                                <Button className="text-sm bg-[hsl(var(--accent))]/10 text-[hsl(var(--accent))] border border-[hsl(var(--accent))]/30 hover:bg-[hsl(var(--accent))]/20 hover:text-[hsl(var(--accent))] rounded-md shadow-sm backdrop-blur-sm">
-                                  <ImageIcon size={18} className="mr-2" /> View Gallery
+                                <Button variant="outline" size="sm" className="text-sm bg-transparent border-[hsl(var(--accent))]/50 text-[hsl(var(--accent))] hover:bg-[hsl(var(--accent))]/10 hover:text-electricBlue hover:border-electricBlue/70 shadow-sm backdrop-blur-sm">
+                                  <ImageIcon size={16} className="mr-2" /> View Gallery
                                 </Button>
                               </Link>
                             )}
-                          </AccordionContent>
-                        </AccordionItem>
-                      )}
-                    </Accordion>
+                        </div>
+                      </div>
+                    )}
                   </CardContent>
                 </Card>
                 </motion.div>
@@ -620,7 +619,7 @@ export default function GuiPage() {
         )}
 
         {achievementsContent && (
-          <SectionCard title="Achievements" className="md:col-span-1"> {/* Changed from md:col-span-2 */}
+          <SectionCard title="Achievements" className="md:col-span-1">
              {renderAchievements()}
           </SectionCard>
         )}
@@ -640,3 +639,6 @@ export default function GuiPage() {
     </div>
   );
 }
+
+
+    
