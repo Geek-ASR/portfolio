@@ -473,7 +473,7 @@ export default function GuiPage() {
                  <div className="h-0.5 w-1/4 bg-gradient-to-r from-[hsl(var(--accent))] to-electricBlue shadow-[0_0_8px_hsl(var(--accent)),_0_0_12px_hsl(var(--accent))]"></div>
               </CardHeader>
               <CardContent className="p-8 sm:p-10 md:p-12 pt-0">
-                <ul className="space-y-4 text-base leading-relaxed text-[hsl(var(--foreground))]">
+                <ul className="space-y-6 text-base leading-relaxed text-[hsl(var(--foreground))]">
                   <li className="flex items-start"><Lightbulb className="h-6 w-6 text-[hsl(var(--accent))] mr-3 mt-1 shrink-0" />A <strong>quick learner</strong>, eager to explore new <strong>technologies</strong> and <strong>environments</strong>.</li>
                   <li className="flex items-start"><Zap className="h-6 w-6 text-[hsl(var(--accent))] mr-3 mt-1 shrink-0" />Passionate for <strong>innovative solutions</strong> and <strong>programming</strong>.</li>
                   <li className="flex items-start"><GraduationCap className="h-6 w-6 text-[hsl(var(--accent))] mr-3 mt-1 shrink-0" />Embraces <strong>challenges</strong> as opportunities for <strong>growth</strong>, constantly seeking to expand <strong>skill set</strong>.</li>
@@ -494,15 +494,15 @@ export default function GuiPage() {
         </section>
       )}
 
-      <main className="px-6 md:px-10 lg:px-16 py-16 grid grid-cols-1 gap-8 lg:gap-12 relative z-[1]">
+      <main className="px-6 md:px-10 lg:px-16 py-16 grid grid-cols-1 gap-y-16 lg:gap-y-24 relative z-[1]">
         {educationContent && (
-          <SectionCard title="Education" className="md:col-span-1">
+          <SectionCard title="Education">
             {renderEducation()}
           </SectionCard>
         )}
 
         {skillsContent && parsedSkills.length > 0 && (
-          <SectionCard title="Skills" className="md:col-span-1">
+          <SectionCard title="Skills">
             <div className="space-y-10">
               {parsedSkills.map((cat, idx) => (
                 <div key={idx} className="bg-white/5 border border-[hsl(var(--accent))]/10 rounded-xl p-6 shadow-sm">
@@ -547,13 +547,13 @@ export default function GuiPage() {
         )}
 
         {experienceContent && (
-          <SectionCard title="Experience" className="md:col-span-1">
+          <SectionCard title="Experience">
             {renderExperience()}
           </SectionCard>
         )}
 
         {projectsList.length > 0 && (
-          <SectionCard title="Projects" className="md:col-span-1">
+          <SectionCard title="Projects">
             <div className="space-y-10">
               {[...projectsList.filter(p => p.name !== 'project_details.pdf').map(projectFile => parseProjectContent(projectFile.content, projectFile.name)), asrPortfolioProject]
               .map((project, idx) => (
@@ -619,7 +619,7 @@ export default function GuiPage() {
         )}
 
         {achievementsContent && (
-          <SectionCard title="Achievements" className="md:col-span-1">
+          <SectionCard title="Achievements">
              {renderAchievements()}
           </SectionCard>
         )}
