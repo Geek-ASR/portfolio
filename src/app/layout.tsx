@@ -1,9 +1,14 @@
+
 import type {Metadata} from 'next';
-import { GeistSans } from 'geist/font/sans';
-import { GeistMono } from 'geist/font/mono';
-// Removed Pacifico import
+import { Inter } from 'next/font/google'; // Changed from Geist Sans/Mono
 import './globals.css';
 import { Toaster } from "@/components/ui/toaster";
+
+// Setup Inter font
+const inter = Inter({
+  subsets: ['latin'],
+  variable: '--font-inter', // CSS variable for Tailwind
+});
 
 export const metadata: Metadata = {
   title: 'ASRWorkspace',
@@ -16,8 +21,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${GeistSans.variable} ${GeistMono.variable}`} suppressHydrationWarning>
-      <body className="antialiased font-mono" suppressHydrationWarning>
+    <html lang="en" className={`${inter.variable}`} suppressHydrationWarning>
+      <body className="antialiased font-sans bg-[hsl(var(--background))] text-[hsl(var(--foreground))]" suppressHydrationWarning>
+        {/* The body background can be a solid color, and WaveBackground will overlay its gradient */}
         {children}
         <Toaster />
       </body>

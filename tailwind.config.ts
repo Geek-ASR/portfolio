@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 import defaultTheme from 'tailwindcss/defaultTheme';
 
@@ -11,15 +12,15 @@ export default {
   theme: {
   	extend: {
       fontFamily: {
-        sans: [`var(--font-geist-sans)`, ...defaultTheme.fontFamily.sans],
+        sans: ['var(--font-inter)', ...defaultTheme.fontFamily.sans], // Changed to Inter
+        // mono font can be kept if terminal page still uses it explicitly, or remove if not needed.
         mono: [`var(--font-geist-mono)`, ...defaultTheme.fontFamily.mono],
-        // Knewave and Pacifico removed as per previous requests
       },
   		colors: {
   			background: 'hsl(var(--background))',
   			foreground: 'hsl(var(--foreground))',
   			card: {
-  				DEFAULT: 'hsl(var(--card))',
+  				DEFAULT: 'hsl(var(--card))', // Opacity will be applied in components for glassmorphism
   				foreground: 'hsl(var(--card-foreground))'
   			},
   			popover: {
@@ -39,16 +40,17 @@ export default {
   				foreground: 'hsl(var(--muted-foreground))'
   			},
   			accent: {
-  				DEFAULT: 'hsl(var(--accent))',
+  				DEFAULT: 'hsl(var(--accent))', // Neon Cyan
   				foreground: 'hsl(var(--accent-foreground))'
   			},
+        electricBlue: 'hsl(190 100% 50%)', // #00BFFF
   			destructive: {
   				DEFAULT: 'hsl(var(--destructive))',
   				foreground: 'hsl(var(--destructive-foreground))'
   			},
-  			border: 'hsl(var(--border))',
+  			border: 'hsl(var(--border))', // Neon Cyan for specific borders
   			input: 'hsl(var(--input))',
-  			ring: 'hsl(var(--ring))',
+  			ring: 'hsl(var(--ring))', // Electric blue for rings
   			chart: {
   				'1': 'hsl(var(--chart-1))',
   				'2': 'hsl(var(--chart-2))',
@@ -89,15 +91,25 @@ export default {
   					height: '0'
   				}
   			},
-        'color-text-wave': {
-          '0%, 100%': { color: 'black' }, // Or your GUI's base text color
-          '15%, 35%': { color: 'hsl(var(--accent))' }, // Accent color for the wave peak
+        'color-text-wave-effect': { // Renamed for clarity
+          '0%, 100%': { color: 'hsl(var(--foreground))' },
+          '50%': { color: 'hsl(var(--accent))' },
+        },
+        'pulse-social': { // Added for social icon hover
+          '0%, 100%': { transform: 'scale(1)', opacity: '1' },
+          '50%': { transform: 'scale(1.1)', opacity: '0.8' },
+        },
+        'scroll-indicator-bounce': {
+          '0%, 100%': { transform: 'translateY(0)' },
+          '50%': { transform: 'translateY(-10px)' },
         }
   		},
   		animation: {
   			'accordion-down': 'accordion-down 0.2s ease-out',
   			'accordion-up': 'accordion-up 0.2s ease-out',
-        'color-text-wave': 'color-text-wave 2.5s ease-in-out', // Removed 'infinite'
+        'color-text-wave': 'color-text-wave-effect 3s ease-in-out',
+        'pulse-social': 'pulse-social 1.5s infinite', // For social icons
+        'scroll-indicator-bounce': 'scroll-indicator-bounce 2s infinite',
   		}
   	}
   },
