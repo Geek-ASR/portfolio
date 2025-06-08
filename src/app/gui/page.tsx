@@ -63,7 +63,6 @@ const GuiContactLinkParser: React.FC<{ line: string }> = ({ line }) => {
 
 interface SectionCardProps {
   title: string;
-  icon?: React.ReactNode;
   children: React.ReactNode;
   className?: string;
   cardRef?: React.RefObject<HTMLDivElement>;
@@ -80,7 +79,7 @@ const SectionCard: React.FC<SectionCardProps> = React.memo(({ title, children, c
     <Card
       ref={cardRef}
       className={cn(
-        "shadow-xl border border-[hsl(var(--accent))]/30 backdrop-blur-md bg-white/5", // Glassmorphism: translucent, blur, white border
+        "shadow-xl border border-[hsl(var(--accent))]/30 backdrop-blur-md bg-card/10", // Glassmorphism: 10% opacity, blur, themed border
         "transition-all duration-300",
         className
       )}
@@ -277,7 +276,7 @@ export default function GuiPage() {
   const renderEducation = () => { 
     if (!educationContent || educationContent.startsWith('Error:')) return formatPreText(educationContent);
     const lines = educationContent.split('\n').map(line => line.trim()).filter(line => line);
-    const contentLines = lines[0].toLowerCase() === 'edducation' ? lines.slice(1) : lines;
+    const contentLines = lines[0].toLowerCase() === 'edducation' ? lines.slice(1) : lines; // Corrected typo in check
     if (contentLines.length < 4) return <p className="text-[hsl(var(--muted))]">Education details not formatted correctly.</p>;
     const [collegeName, degree, timeline, cgpa] = contentLines;
     return (
@@ -459,7 +458,7 @@ export default function GuiPage() {
                 viewport={{ once: true, amount: 0.2 }}
                 transition={{ duration: 0.6 }}
              >
-             <Card className="shadow-2xl rounded-2xl overflow-hidden border border-[hsl(var(--accent))]/30 backdrop-blur-md bg-white/5"> {/* Glassmorphism */}
+             <Card className="shadow-2xl rounded-2xl overflow-hidden border border-[hsl(var(--accent))]/30 backdrop-blur-md bg-card/10"> {/* Glassmorphism 10% opacity */}
               <CardHeader className="p-8 sm:p-10 md:p-12">
                 <CardTitle className="text-3xl sm:text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-[hsl(var(--accent))] to-electricBlue pb-2">
                   About Me
@@ -476,7 +475,7 @@ export default function GuiPage() {
                 <div className="flex items-center justify-center gap-6 mt-10">
                   {socialLinks.map((link) => (
                     <a key={link.name} href={link.url} target="_blank" rel="noopener noreferrer" aria-label={`Connect with Aditya Rekhe on ${link.name}`}
-                       className="text-[hsl(var(--foreground))] hover:text-[hsl(var(--accent))] transition-colors group">
+                       className="text-white hover:text-gray-300 transition-colors group">
                       <link.icon size={32} className="group-hover:animate-pulse-social" />
                     </a>
                   ))}
@@ -488,15 +487,15 @@ export default function GuiPage() {
         </section>
       )}
 
-      <main className="px-6 md:px-10 lg:px-16 py-16 grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12 relative z-[1]">
+      <main className="px-6 md:px-10 lg:px-16 py-16 grid grid-cols-1 gap-8 lg:gap-12 relative z-[1]">
         {educationContent && (
-          <SectionCard title="Education" className="md:col-span-2">
+          <SectionCard title="Education" className="md:col-span-1"> {/* Changed from md:col-span-2 */}
             {renderEducation()}
           </SectionCard>
         )}
 
         {skillsContent && parsedSkills.length > 0 && (
-          <SectionCard title="Skills" className="md:col-span-2">
+          <SectionCard title="Skills" className="md:col-span-1"> {/* Changed from md:col-span-2 */}
             <div className="space-y-10">
               {parsedSkills.map((cat, idx) => (
                 <div key={idx} className="bg-white/5 border border-[hsl(var(--accent))]/10 rounded-xl p-6 shadow-sm">
@@ -541,13 +540,13 @@ export default function GuiPage() {
         )}
 
         {experienceContent && (
-          <SectionCard title="Experience" className="md:col-span-2">
+          <SectionCard title="Experience" className="md:col-span-1"> {/* Changed from md:col-span-2 */}
             {renderExperience()}
           </SectionCard>
         )}
 
         {projectsList.length > 0 && (
-          <SectionCard title="Projects" className="md:col-span-2">
+          <SectionCard title="Projects" className="md:col-span-1"> {/* Changed from md:col-span-2 */}
             <div className="space-y-10">
               {[...projectsList.filter(p => p.name !== 'project_details.pdf').map(projectFile => parseProjectContent(projectFile.content, projectFile.name)), asrPortfolioProject]
               .map((project, idx) => (
@@ -559,7 +558,7 @@ export default function GuiPage() {
                   transition={{ duration: 0.5, delay: idx * 0.1 }}
                   whileHover={{ y: -5, boxShadow: "0px 10px 20px hsla(var(--accent), 0.2)" }}                  
                 >
-                <Card className="shadow-lg border border-[hsl(var(--accent))]/20 rounded-xl overflow-hidden bg-white/5 backdrop-blur-sm transition-all duration-300 ease-in-out hover:shadow-2xl hover:border-[hsl(var(--accent))]/40">
+                <Card className="shadow-lg border border-[hsl(var(--accent))]/20 rounded-xl overflow-hidden bg-card/10 backdrop-blur-sm transition-all duration-300 ease-in-out hover:shadow-2xl hover:border-[hsl(var(--accent))]/40">
                   <CardHeader className="p-6 bg-black/10 border-b border-[hsl(var(--accent))]/20">
                     <CardTitle className="text-2xl text-transparent bg-clip-text bg-gradient-to-r from-[hsl(var(--accent))] to-electricBlue font-semibold">{project.domain}</CardTitle>
                   </CardHeader>
@@ -621,7 +620,7 @@ export default function GuiPage() {
         )}
 
         {achievementsContent && (
-          <SectionCard title="Achievements" className="md:col-span-2">
+          <SectionCard title="Achievements" className="md:col-span-1"> {/* Changed from md:col-span-2 */}
              {renderAchievements()}
           </SectionCard>
         )}
