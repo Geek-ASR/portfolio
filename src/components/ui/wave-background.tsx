@@ -26,7 +26,11 @@ const WaveLayer: FC<WaveLayerProps> = ({
 
   return (
     <motion.svg
-      style={{ y, fill: fillColor }}
+      style={{ 
+        y, 
+        fill: fillColor,
+        willChange: 'transform' // Added for smoother animation
+      }}
       viewBox="0 0 1440 320" // Common viewBox for waves
       preserveAspectRatio="xMidYMax slice" // Slice to fill, align bottom
       className={`absolute inset-x-0 bottom-0 w-full h-auto ${className}`} // Position at bottom
