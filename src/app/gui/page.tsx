@@ -412,7 +412,7 @@ export default function GuiPage() {
               priority
             />
           </div>
-          <h1 className="font-bold text-5xl md:text-6xl lg:text-7xl text-transparent bg-clip-text bg-gradient-to-r from-[hsl(var(--foreground))] to-[hsl(var(--muted))]">
+          <h1 className="font-bold text-5xl md:text-6xl lg:text-7xl animate-color-text-wave">
             <div>
               {heroNameLine1.split("").map((char, index) => (
                 <motion.span 
