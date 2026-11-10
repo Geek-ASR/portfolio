@@ -1,0 +1,53 @@
+# Builds the static site and publishes it to the `gh-pages` branch, which
+# GitHub Pages serves at https://geek-asr.github.io/portfolio/.
+#
+# One-time setup (only if the site is not live yet):
+#   Settings -> Pages -> Build and deployment -> Source: "Deploy from a branch"
+#   -> Branch: gh-pages, folder: / (root) -> Save.
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [master]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build static site
+        run: npm run build:pages
+
+      - name: Publish ./out to the gh-pages branch
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # The deployment commit is attributed to the author of the commit being deployed.
+          author_name="$(git log -1 --format=%an)"
+          author_email="$(git log -1 --format=%ae)"
+          cd out
+          git init -q -b gh-pages
+          git config user.name "$author_name"
+          git config user.email "$author_email"
+          git add -A
+          git commit -q -m "Deploy ${GITHUB_SHA}"
+          git push -f "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" gh-pages

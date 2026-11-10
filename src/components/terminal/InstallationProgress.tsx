@@ -1,8 +1,7 @@
-
 'use client';
 
 import type {FC} from 'react';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
 interface InstallationProgressProps {
   onFinished: () => void;
@@ -17,57 +16,54 @@ const statusMessages: { [key: number]: string } = {
   100: "Installation complete! System ready.",
 };
 
+const milestones = Object.keys(statusMessages).map(Number).sort((a, b) => a - b);
+
+const messageFor = (progress: number) => {
+  let message = statusMessages[0];
+  for (const key of milestones) {
+    if (progress >= key) message = statusMessages[key];
+    else break;
+  }
+  return message;
+};
+
+const bar = (progress: number, length: number) => {
+  const filled = Math.round((progress / 100) * length);
+  return `[${'#'.repeat(filled)}${' '.repeat(length - filled)}]`;
+};
+
 const InstallationProgress: FC<InstallationProgressProps> = ({ onFinished, speed = 40 }) => {
   const [currentProgress, setCurrentProgress] = useState(0);
-  const [currentMessage, setCurrentMessage] = useState(statusMessages[0]);
-  const barLength = 25; // Number of characters for the bar itself
+  const onFinishedRef = useRef(onFinished);
+  onFinishedRef.current = onFinished;
 
   useEffect(() => {
-    if (currentProgress >= 100) {
-      // Already handled by the interval's 100% check
-      return;
-    }
-
+    let progress = 0;
     const timer = setInterval(() => {
-      setCurrentProgress(prev => {
-        const nextVal = prev + 1;
-
-        if (nextVal >= 100) {
-          clearInterval(timer);
-          setCurrentMessage(statusMessages[100]);
-          setTimeout(() => {
-            onFinished();
-          }, 1000); // Display "Installation complete!" for 1 second
-          return 100;
-        }
-
-        let newMessage = currentMessage;
-        const progressKeys = Object.keys(statusMessages).map(Number).sort((a, b) => a - b);
-        for (const key of progressKeys) {
-          if (nextVal >= key) {
-            newMessage = statusMessages[key];
-          } else {
-            break;
-          }
-        }
-        setCurrentMessage(newMessage);
-        return nextVal;
-      });
+      progress += 1;
+      setCurrentProgress(progress);
+      if (progress >= 100) clearInterval(timer);
     }, speed);
 
     return () => clearInterval(timer);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [onFinished, speed]); // currentProgress is managed internally by setInterval
+  }, [speed]);
 
-  const filledLength = Math.round((currentProgress / 100) * barLength);
-  const emptyLength = barLength - filledLength;
-  const progressBar = `[${'#'.repeat(filledLength)}${' '.repeat(emptyLength)}]`;
+  useEffect(() => {
+    if (currentProgress < 100) return;
+    // Display "Installation complete!" for 1 second
+    const timer = setTimeout(() => onFinishedRef.current(), 1000);
+    return () => clearTimeout(timer);
+  }, [currentProgress]);
 
   return (
-    <div className="font-mono">
-      <span>{progressBar}</span>
-      <span className="ml-2 w-10 inline-block text-right">{currentProgress}%</span>
-      <span className="ml-3">{currentMessage}</span>
+    <div className="flex flex-wrap items-baseline gap-x-3 font-mono">
+      <span className="whitespace-pre">
+        {/* A shorter bar on phones so the line never overflows the screen. */}
+        <span className="sm:hidden">{bar(currentProgress, 14)}</span>
+        <span className="hidden sm:inline">{bar(currentProgress, 25)}</span>
+        <span className="ml-2 inline-block w-10 text-right">{currentProgress}%</span>
+      </span>
+      <span>{messageFor(currentProgress)}</span>
     </div>
   );
 };

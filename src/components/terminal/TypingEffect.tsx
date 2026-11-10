@@ -1,7 +1,6 @@
-
 'use client';
 
-import { useState, useEffect, type ReactNode } from 'react';
+import { useState, useEffect, useRef, type ReactNode } from 'react';
 
 interface TypingEffectProps {
   text: string | ReactNode;
@@ -18,49 +17,41 @@ const TypingEffect: React.FC<TypingEffectProps> = ({
   className,
   as: Component = 'span',
 }) => {
-  const [displayedText, setDisplayedText] = useState<string>('');
+  const [count, setCount] = useState(0);
+  const onFinishedRef = useRef(onFinished);
+  onFinishedRef.current = onFinished;
+
+  const isString = typeof text === 'string';
+  const length = isString ? (text as string).length : 0;
 
   useEffect(() => {
-    if (typeof text !== 'string' || !text) {
-      setDisplayedText(text as string); // Handle non-string or empty text immediately
-      if (onFinished) onFinished();
+    if (!isString || length === 0) {
+      onFinishedRef.current?.();
       return;
     }
 
-    // Display the first character immediately
-    setDisplayedText(text.charAt(0));
-
-    // If text is only one character, call onFinished and exit
-    if (text.length <= 1) {
-      if (onFinished) {
-        onFinished();
-      }
-      return;
-    }
-
-    let i = 1; // Start interval from the second character
+    setCount(0);
+    let typed = 0;
     const timer = setInterval(() => {
-      setDisplayedText((prev) => prev + text.charAt(i));
-      i++;
-      if (i >= text.length) { // Changed to >= to handle the last character correctly
+      typed += 1;
+      setCount(typed);
+      if (typed >= length) {
         clearInterval(timer);
-        if (onFinished) {
-          onFinished();
-        }
+        onFinishedRef.current?.();
       }
     }, speed);
 
     return () => clearInterval(timer);
-  }, [text, speed, onFinished]);
+  }, [text, speed, isString, length]);
 
-  if (typeof text !== 'string') {
+  if (!isString) {
     return <Component className={className}>{text}</Component>;
   }
 
   // Preserve whitespace, especially newlines
   return (
     <Component className={className} style={{ whiteSpace: 'pre-wrap' }}>
-      {displayedText}
+      {(text as string).slice(0, count)}
     </Component>
   );
 };

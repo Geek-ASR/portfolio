@@ -142,3 +142,228 @@
     text-shadow: 0 0 5px hsl(var(--accent)), 0 0 10px hsl(var(--accent)), 0 0 15px hsl(var(--accent));
   }
 }
+
+/* -------------------------------------------------------------------------- */
+/* Page                                                                       */
+/* -------------------------------------------------------------------------- */
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+/* Anchored sections stop below the sticky GUI navigation bar. */
+.section-anchor {
+  scroll-margin-top: 4.5rem;
+}
+
+.no-scrollbar {
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.text-glow-soft {
+  text-shadow: 0 0 10px hsl(var(--accent) / 0.6);
+}
+
+.hero-photo {
+  box-shadow: 0 0 20px hsl(var(--accent)), 0 0 35px hsl(var(--accent) / 0.7), 0 0 50px hsl(var(--accent) / 0.4);
+}
+
+/* "Hello, I am Aditya Rekhe": a colour wave that keeps travelling across the letters. */
+.hero-wave-letter {
+  animation: hero-wave 4s ease-in-out infinite;
+}
+@keyframes hero-wave {
+  0%, 30%, 100% {
+    color: hsl(var(--foreground));
+    text-shadow: none;
+  }
+  15% {
+    color: hsl(var(--accent));
+    text-shadow: 0 0 18px hsl(var(--accent) / 0.55);
+  }
+}
+
+/* -------------------------------------------------------------------------- */
+/* Terminal                                                                   */
+/* -------------------------------------------------------------------------- */
+
+/* The terminal fills exactly one screen. dvh keeps it correct on phones, where
+   the browser's address bar slides in and out. */
+.terminal-screen {
+  height: 100vh;
+  height: 100dvh;
+  min-height: 22rem;
+}
+
+.terminal {
+  /* No ligatures: "###" in the progress bar must stay three separate characters. */
+  font-variant-ligatures: none;
+  font-feature-settings: "liga" 0, "calt" 0;
+  padding-left: max(0.75rem, env(safe-area-inset-left));
+  padding-right: max(0.75rem, env(safe-area-inset-right));
+}
+@media (min-width: 640px) {
+  .terminal {
+    padding-left: max(1rem, env(safe-area-inset-left));
+    padding-right: max(1rem, env(safe-area-inset-right));
+  }
+}
+
+.terminal-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: hsl(var(--accent) / 0.45) transparent;
+}
+.terminal-scroll::-webkit-scrollbar {
+  width: 8px;
+}
+.terminal-scroll::-webkit-scrollbar-thumb {
+  border-radius: 9999px;
+  background: hsl(var(--accent) / 0.45);
+}
+
+/* Output wraps anywhere, so long links never push the terminal wider than the screen. */
+.tty-output {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+/* A clickable command inside terminal output. */
+.tty-cmd {
+  display: inline;
+  text-align: left;
+  text-indent: 0;
+  cursor: pointer;
+  border-radius: 2px;
+  text-decoration: underline dotted hsl(var(--accent) / 0.7);
+  text-underline-offset: 3px;
+  transition: background-color 150ms ease;
+}
+.tty-cmd:hover,
+.tty-cmd:focus-visible {
+  outline: none;
+  background-color: hsl(var(--accent) / 0.2);
+  text-decoration-style: solid;
+}
+
+.tty-link {
+  color: hsl(var(--accent));
+  text-indent: 0;
+}
+.tty-link:hover,
+.tty-link:focus-visible {
+  outline: none;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* Block cursor shown while a clicked command is being typed into the prompt. */
+.terminal-cursor {
+  display: inline-block;
+  width: 0.6em;
+  height: 1.1em;
+  margin-left: 1px;
+  vertical-align: text-bottom;
+  background: hsl(var(--accent));
+  animation: terminal-blink 1s steps(1) infinite;
+}
+@keyframes terminal-blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+/* Quick-command chips: only on phones and touch screens, where typing is slow. */
+.terminal-chips {
+  display: none;
+  scrollbar-width: none;
+}
+.terminal-chips::-webkit-scrollbar {
+  display: none;
+}
+@media (max-width: 639px), (pointer: coarse) {
+  .terminal-chips {
+    display: flex;
+  }
+}
+
+/* iOS zooms the page when an input smaller than 16px is focused. Below the md
+   breakpoint the terminal text is smaller than that, so the input is rendered
+   at 16px and scaled back down to match the surrounding text. */
+@media (max-width: 767px) {
+  .terminal-input-wrap {
+    display: flex;
+    align-items: center;
+    height: 1.625em;
+    overflow: hidden;
+  }
+  .terminal-input {
+    flex: none;
+    font-size: 16px;
+    line-height: 1.625;
+    transform-origin: left center;
+    transform: scale(0.875);
+    width: 114.286%;
+  }
+}
+@media (max-width: 639px) {
+  .terminal-input {
+    transform: scale(0.8125);
+    width: 123.077%;
+  }
+}
+
+/* -------------------------------------------------------------------------- */
+/* "Scroll down for GUI" strip below the terminal                             */
+/* -------------------------------------------------------------------------- */
+.scroll-hint {
+  padding-bottom: max(0.625rem, env(safe-area-inset-bottom));
+  background: linear-gradient(to bottom, hsl(var(--background)), #0b181e);
+}
+.scroll-hint-letter {
+  display: inline-block;
+  animation: scroll-hint-wave 2.6s ease-in-out infinite;
+}
+@keyframes scroll-hint-wave {
+  0%, 45%, 100% {
+    color: inherit;
+    transform: translateY(0);
+    text-shadow: none;
+  }
+  20% {
+    color: hsl(var(--accent));
+    transform: translateY(-3px);
+    text-shadow: 0 0 10px hsl(var(--accent) / 0.9);
+  }
+}
+.scroll-hint-arrow {
+  animation: scroll-hint-bounce 1.3s ease-in-out infinite;
+}
+@keyframes scroll-hint-bounce {
+  0%, 100% {
+    transform: translateY(-3px);
+    opacity: 0.45;
+  }
+  50% {
+    transform: translateY(3px);
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .hero-wave-letter,
+  .scroll-hint-letter,
+  .scroll-hint-arrow,
+  .terminal-cursor {
+    animation: none;
+  }
+  .scroll-hint-letter {
+    color: hsl(var(--accent));
+  }
+}
